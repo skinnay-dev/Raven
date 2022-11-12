@@ -452,31 +452,31 @@ local function SparkleEffect(bar, color)
 
 			for i = 1, 8 do -- create sparklers
 				local name = "Raven_Animation" .. tostring(sparkleCount) .. "_Spark" .. tostring(i)
-				local tex = a.frame:CreateTexture(name, "ARTWORK") -- texture to be animated
-				tex:SetTexture("Interface\\Cooldown\\star4")
-				tex:SetBlendMode("ADD")
-				a.sparkleTextures[i] = tex
+				local animTarget = a.frame:CreateTexture(name, "ARTWORK") -- texture to be animated
+				animTarget:SetTexture("Interface\\Cooldown\\star4")
+				animTarget:SetBlendMode("ADD")
+				a.sparkleTextures[i] = animTarget
 				local s = sparkles[i]
 
 				x = a.anim:CreateAnimation("Alpha")
-				x:SetTarget(name); x:SetFromAlpha(0); x:SetToAlpha(1); x:SetSmoothing("IN")
+				x:SetTarget(animTarget); x:SetFromAlpha(0); x:SetToAlpha(1); x:SetSmoothing("IN")
 				x:SetStartDelay(s.delay); x:SetDuration(0.15); x:SetOrder(1)
 
 				x = a.anim:CreateAnimation("Alpha")
-				x:SetTarget(name); x:SetFromAlpha(1); x:SetToAlpha(0.25); x:SetSmoothing("OUT")
+				x:SetTarget(animTarget); x:SetFromAlpha(1); x:SetToAlpha(0.25); x:SetSmoothing("OUT")
 				x:SetStartDelay(s.delay + s.duration - 0.15); x:SetDuration(0.15); x:SetOrder(1)
 
 				x = a.anim:CreateAnimation("Rotation")
-				x:SetTarget(name); x:SetDegrees(60); x:SetStartDelay(s.delay); x:SetDuration(s.duration); x:SetOrder(1)
+				x:SetTarget(animTarget); x:SetDegrees(60); x:SetStartDelay(s.delay); x:SetDuration(s.duration); x:SetOrder(1)
 
 				x = a.anim:CreateAnimation("Scale")
-				x:SetTarget(name); x:SetScale(s.scale, s.scale); x:SetStartDelay(s.delay); x:SetDuration(0.25); x:SetOrder(1); x:SetSmoothing("IN")
+				x:SetTarget(animTarget); x:SetScale(s.scale, s.scale); x:SetStartDelay(s.delay); x:SetDuration(0.25); x:SetOrder(1); x:SetSmoothing("IN")
 
 				x = a.anim:CreateAnimation("Scale")
-				x:SetTarget(name); x:SetScale(0.1, 0.1); x:SetStartDelay(s.delay + s.duration - 0.25); x:SetDuration(0.25); x:SetOrder(1); x:SetSmoothing("OUT")
+				x:SetTarget(animTarget); x:SetScale(0.1, 0.1); x:SetStartDelay(s.delay + s.duration - 0.25); x:SetDuration(0.25); x:SetOrder(1); x:SetSmoothing("OUT")
 
 				x = a.anim:CreateAnimation("Translation")
-				x:SetTarget(name); x:SetOffset(s.x, s.y)
+				x:SetTarget(animTarget); x:SetOffset(s.x, s.y)
 				x:SetStartDelay(s.delay); x:SetDuration(0.5); x:SetOrder(1)
 				a.sparkleTranslators[i] = x -- save to set size
 			end
@@ -1172,7 +1172,10 @@ function MOD.Nest_GetBars(bg) return bg.bars end
 
 -- Delete a bar from a bar group, moving it to recycled bar table
 function MOD.Nest_DeleteBar(bg, bar)
-	if MOD.tooltipBar == bar then MOD.tooltipBar = nil; GameTooltip:Hide() end -- disable tooltip update when bar is deleted
+	if MOD.tooltipBar == bar then -- disable tooltip update when bar is deleted
+		MOD.tooltipBar = nil
+		GameTooltip:Hide()
+	end
 	local config = MOD.Nest_SupportedConfigurations[bg.configuration]
 	if config.bars == "timeline" and bg.tlSplash then BarGroup_TimelineAnimation(bg, bar, config) end
 
@@ -1382,7 +1385,18 @@ end
 -- Update a bar group's anchor, showing it only if the bar group is unlocked
 local function BarGroup_UpdateAnchor(bg, config)
 	local pFrame = bg.attributes.parentFrame
-	if pFrame and GetClickFrame(pFrame) then bg.frame:SetParent(pFrame) else bg.frame:SetParent(UIParent) end
+
+	if pFrame then
+		local parentFrame = GetClickFrame(pFrame)
+
+		if parentFrame then
+			bg.frame:SetParent(parentFrame)
+		else
+			bg.frame:SetParent(UIParent)
+		end
+	else
+		bg.frame:SetParent(UIParent)
+	end
 
 	bg.anchor:SetText(bg.name)
 	local lw, lh = bg.width, bg.height
@@ -2088,33 +2102,31 @@ local function Bar_UpdateSettings(bg, bar, config)
 		local bb_r, bb_g, bb_b = MOD.Nest_AdjustColor(bar.br, bar.bg, bar.bb, bg.bgSaturation or 0, bg.bgBrightness or 0)
 		local count = bg.segmentCount -- create, size and position segments on demand
 		if bg.segmentOverride and bat.segmentCount then count = bat.segmentCount end -- override with bar setting
-		if count and (count >= 1) and (count <= 10) and bar.segments then
+		if count and (count >= 1) and (count <= 10) then
 			local x = fill * count
 			local fullSegments = math.floor(x) -- how many full segments to show
 			local px = x - fullSegments -- how much is left over
 			for i = 1, count do
 				local f = bar.segments[i]
-				if f then
-					local sf, sb = f.fgTexture, f.bgTexture
-					if bg.segmentGradient and (count > 1) then -- override standard foreground color with gradient
-						local sc = (i - 1) / (count - 1) -- for individual colors, select based on the segment number
-						if bg.segmentGradientAll then sc = fill end -- for colors all together, select based on current value
-						local c1, c2 = bg.segmentGradientStartColor or defaultGreen, bg.segmentGradientEndColor or defaultRed
-						bf_r, bf_g, bf_b = MOD.Nest_IntermediateColor(c1.r, c1.g, c1.b, c2.r, c2.g, c2.b, sc)
+				local sf, sb = f.fgTexture, f.bgTexture
+				if bg.segmentGradient and (count > 1) then -- override standard foreground color with gradient
+					local sc = (i - 1) / (count - 1) -- for individual colors, select based on the segment number
+					if bg.segmentGradientAll then sc = fill end -- for colors all together, select based on current value
+					local c1, c2 = bg.segmentGradientStartColor or defaultGreen, bg.segmentGradientEndColor or defaultRed
+					bf_r, bf_g, bf_b = MOD.Nest_IntermediateColor(c1.r, c1.g, c1.b, c2.r, c2.g, c2.b, sc)
+				end
+				sf:SetVertexColor(bf_r, bf_g, bf_b); sb:SetVertexColor(bb_r, bb_g, bb_b)
+				if i <= (fullSegments + ((px >= (1 / f.segmentWidth)) and 1 or 0)) then -- configure all visible segments including partial
+					sf:SetAlpha(bg.fgAlpha); PSetSize(sf, f.segmentWidth, f.segmentHeight) -- settings that might be changed for partial segments
+					if i > fullSegments then -- partial segment
+						if bg.segmentFadePartial then sf:SetAlpha(bg.fgAlpha * px) end
+						if bg.segmentShrinkWidth then PSetWidth(sf, f.segmentWidth * px) end
+						if bg.segmentShrinkHeight then PSetHeight(sf, f.segmentHeight * px) end
 					end
-					sf:SetVertexColor(bf_r, bf_g, bf_b); sb:SetVertexColor(bb_r, bb_g, bb_b)
-					if i <= (fullSegments + ((px >= (1 / f.segmentWidth)) and 1 or 0)) then -- configure all visible segments including partial
-						sf:SetAlpha(bg.fgAlpha); PSetSize(sf, f.segmentWidth, f.segmentHeight) -- settings that might be changed for partial segments
-						if i > fullSegments then -- partial segment
-							if bg.segmentFadePartial then sf:SetAlpha(bg.fgAlpha * px) end
-							if bg.segmentShrinkWidth then PSetWidth(sf, f.segmentWidth * px) end
-							if bg.segmentShrinkHeight then PSetHeight(sf, f.segmentHeight * px) end
-						end
-						sf:Show(); sb:Show(); f:Show()
-					else -- empty segment
-						sf:Hide()
-						if bg.segmentHideEmpty then sb:Hide(); f:Hide() else sb:Show(); f:Show() end
-					end
+					sf:Show(); sb:Show(); f:Show()
+				else -- empty segment
+					sf:Hide()
+					if bg.segmentHideEmpty then sb:Hide(); f:Hide() else sb:Show(); f:Show() end
 				end
 			end
 		elseif (w > 0) and (h > 0) then -- non-zero dimensions to fix the zombie bar bug

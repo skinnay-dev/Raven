@@ -3496,7 +3496,7 @@ MOD.OptionsTable = {
 							disabled = function(info) return not conditions.name or (conditions.name == "") end,
 							get = function(info)
 								local t = MOD:GetColor(conditions.name)
-								if not t then return nil end
+								if not t then return 0, 0, 0, 1 end
 								return t.r, t.g, t.b, t.a
 							end,
 							set = function(info, r, g, b, a)
@@ -3549,7 +3549,7 @@ MOD.OptionsTable = {
 							disabled = function(info) return not conditions.name or (conditions.name == "") end,
 							get = function(info)
 								local t = MOD:GetExpireColor(conditions.name)
-								if not t then return nil end
+								if not t then return 0, 0, 0, 1 end
 								return t.r, t.g, t.b, t.a
 							end,
 							set = function(info, r, g, b, a)

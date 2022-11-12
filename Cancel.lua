@@ -106,7 +106,9 @@ local function Overlay_OnEnter(b)
 			if not ttanchor or (ttanchor == "DEFAULT") then ttanchor = "ANCHOR_BOTTOMLEFT" else ttanchor = "ANCHOR_" .. ttanchor end
 			GameTooltip:SetOwner(b, ttanchor)
 		end
+
 		GameTooltip:ClearLines() -- clear current tooltip contents
+
 		if b.aura_tt == "weapon" then
 			if b.aura_id then
 				local slotid = b.aura_id
@@ -133,7 +135,10 @@ end
 MOD.Overlay_OnEnter = Overlay_OnEnter -- save for tooltip update
 
 -- Hide tooltip when leaving an overlay
-local function Overlay_OnLeave(b) MOD.tooltipOverlay = nil; GameTooltip:Hide() end
+local function Overlay_OnLeave(b)
+	MOD.tooltipOverlay = nil
+	GameTooltip:Hide()
+end
 
 -- Allocate an overlay and initialize the common secure attributes for cancelaura
 local function AllocateOverlay()
@@ -142,15 +147,19 @@ local function AllocateOverlay()
 		overlayPool[b] = nil
 	else
 		overlayCount = overlayCount + 1
-		b = CreateFrame("Button", "RavenOverlay" .. overlayCount, UIParent, "SecureActionButtonTemplate")
+		b = CreateFrame("Button", "RavenOverlay" .. overlayCount, UIParent, "SecureActionButtonTemplate, SecureHandlerBaseTemplate")
 		b:SetAttribute("unit", "player")
 		b:SetAttribute("filter", "HELPFUL")
 		b:SetScript("OnEnter", Overlay_OnEnter)
 		b:SetScript("OnLeave", Overlay_OnLeave)
 		b:EnableMouse(true)
-		b:RegisterForClicks("RightButtonUp")
+		b:RegisterForClicks("RightButtonDown", "RightButtonUp")
 		-- b:SetNormalTexture("Interface\\AddOns\\Raven\\Borders\\IconDefault") -- for debugging only
 	end
+
+	-- Reset identifying attributes to prevent RMB targeting the wrong buff when the overlay is reused
+	b:SetAttribute("index", nil)
+	b:SetAttribute("target-slot", nil)
 	return b
 end
 
@@ -349,33 +358,28 @@ function MOD:RefreshInCombatBar()
 	end
 end
 
--- Return a macro to cancel a buff on a weapon with the specified icon
-local function GetTempWeaponCancelMacro(id)
-	TemporaryEnchantFrame_Update(GetWeaponEnchantInfo())
-	local t1, t2 = TempEnchant1:GetID(), TempEnchant2:GetID()
-	local macro, slot = nil, weaponSlots[id]
-	if slot == t1 then
-		macro = "/click TempEnchant1 RightButton"
-	elseif slot == t2 then
-		macro = "/click TempEnchant2 RightButton"
-	end
-	return macro
-end
-
 -- Activate an overlay for a bar by filling in secure attributes and placing it on top of a bar's icon
 local function ActivateOverlay(bar, frame)
 	if not InCombatLockdown() then
 		local bat = bar.attributes
 		local tt, id, unit = bat.tooltipType, bat.tooltipID, bat.tooltipUnit
+
 		if ((tt == "buff") or (tt == "weapon")) and unit and UnitIsUnit(unit, "player") then
 			local b = bar.overlay
-			if not b then b = AllocateOverlay(); bar.overlay = b end -- allocate one if necessary
-			if tt == "buff" then
-				b:SetAttribute("type2", "cancelaura"); b:SetAttribute("index", id)
-			elseif tt == "weapon" then
-				local macro = GetTempWeaponCancelMacro(id)
-				if macro then b:SetAttribute("type2", "macro"); b:SetAttribute("macrotext2", macro) end
+
+			if not b then -- allocate one if necessary
+				b = AllocateOverlay()
+				bar.overlay = b
 			end
+
+			if tt == "buff" then
+				b:SetAttribute("type2", "cancelaura")
+				b:SetAttribute("index", id)
+			elseif tt == "weapon" then
+				b:SetAttribute("type2", "cancelaura")
+				b:SetAttribute("target-slot", weaponSlots[id])
+			end
+
 			b.aura_id = id
 			b.aura_tt = tt
 			b.aura_caster = bat.caster
@@ -387,7 +391,8 @@ local function ActivateOverlay(bar, frame)
 			b:SetAllPoints(frame)
 			b:SetFrameStrata(frame:GetFrameStrata()) -- make sure using the same strata as the reference frame
 			b:SetFrameLevel(frame:GetFrameLevel() + 5) -- and also make sure on top of the reference frame
-			b:EnableMouse(true); b:Show()
+			b:EnableMouse(true)
+			b:Show()
 		end
 	end
 end
@@ -395,9 +400,14 @@ end
 -- Deactivate an overlay by clearing anything that could cause taint and hiding it
 local function DeactivateOverlay(b)
 	if b then
-		if MOD.tooltipOverlay == b then MOD.tooltipOverlay = nil; GameTooltip:Hide() end
+		if MOD.tooltipOverlay == b then
+			MOD.tooltipOverlay = nil;
+			GameTooltip:Hide()
+		end
+
 		b:ClearAllPoints()
-		b:EnableMouse(false); b:Hide()
+		b:EnableMouse(false);
+		b:Hide()
 	end
 end
 
@@ -405,7 +415,10 @@ end
 local function ReleaseOverlay(bar)
 	local b = bar.overlay
 	if b then
-		if not InCombatLockdown() then DeactivateOverlay(b) end -- already deactivated if in combat
+		if not InCombatLockdown() then -- already deactivated if in combat
+			DeactivateOverlay(b)
+		end
+
 		overlayPool[b] = true
 		bar.overlay = nil
 	end
@@ -416,17 +429,30 @@ local function Overlays_EnterCombat()
 	InCombatBar_OnMouseUp()
 	local bgs = MOD.Nest_GetBarGroups()
 	for _, bg in pairs(bgs) do
-		for _, bar in pairs(bg.bars) do if bar.overlay then DeactivateOverlay(bar.overlay) end end
+		for _, bar in pairs(bg.bars) do
+			if bar.overlay then
+				DeactivateOverlay(bar.overlay)
+			end
+		end
 	end
 end
 
 -- When leave combat, trigger update so overlays get reactivated
-local function Overlays_LeaveCombat() MOD:UpdateInCombatBar(); MOD.Nest_TriggerUpdate() end
+local function Overlays_LeaveCombat()
+	MOD:UpdateInCombatBar()
+	MOD.Nest_TriggerUpdate()
+end
 
 -- Initialize the overlays used to cancel player buffs
 function MOD:InitializeOverlays()
-	local cbs = { activate = ActivateOverlay, deactivate = DeactivateOverlay, release = ReleaseOverlay }
+	local cbs = {
+		activate = ActivateOverlay,
+		deactivate = DeactivateOverlay,
+		release = ReleaseOverlay
+	}
+
 	self:RegisterEvent("PLAYER_REGEN_DISABLED", Overlays_EnterCombat)
 	self:RegisterEvent("PLAYER_REGEN_ENABLED", Overlays_LeaveCombat)
+
 	MOD.Nest_RegisterCallbacks(cbs)
 end
