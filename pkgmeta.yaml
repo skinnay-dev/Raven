@@ -27,3 +27,5 @@ externals:
 
 move-folders:
     Raven/Raven_Options: Raven_Options
+
+manual-changelog: CHANGELOG.txt
