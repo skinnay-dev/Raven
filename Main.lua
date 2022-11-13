@@ -871,6 +871,7 @@ function MOD:OnEnable()
 	else -- register events that are not implemented in classic
 		self:RegisterEvent("PLAYER_FOCUS_CHANGED")
 		self:RegisterEvent("PLAYER_TALENT_UPDATE", CheckTalentSpecialization)
+		self:RegisterEvent("TRAIT_CONFIG_UPDATED", CheckTalentSpecialization)
 		self:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED", CheckTalentSpecialization)
 		self:RegisterEvent("VEHICLE_UPDATE")
 		self:RegisterEvent("RUNE_POWER_UPDATE", TriggerCooldownUpdate)
