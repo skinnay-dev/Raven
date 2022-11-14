@@ -28,7 +28,13 @@ local addonEnabled = false -- set when the addon is enabled
 local optionsLoaded = false -- set when the load-on-demand options panel module has been loaded
 local optionsFailed = false -- set if loading the option panel module failed
 
+
+function CheckIfShadowlands()
+	local v, b, d, t = GetBuildInfo()
+	return (v == "10.0.0") -- Pre-patch runs as DragonFlight version 10.0.0
+end
 MOD.isClassic = (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC) or (WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC) or (WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC)
+MOD.IsShadowlands = CheckIfShadowlands()
 MOD.updateOptions = false -- set this to cause the options panel to update (checked every half second)
 MOD.LocalSpellNames = {} -- must be defined in first module loaded
 local LSPELL = MOD.LocalSpellNames
@@ -57,6 +63,8 @@ MOD.bookSpells = {} -- table of spells currently available in the spell book
 MOD.suppress = true -- this is set when certain special effects are to be disabled (e.g., at start up)
 MOD.combatTimer = 0 -- if not 0 then this is set to the time when the player last entered combat
 MOD.status = {} -- global status info cached by conditions module on every update
+
+
 
 local doUpdate = true -- set by any event that can change bars (used to throttle major updates)
 local forceUpdate = false -- set to cause immediate update (reserved for critical changes like to player's target or focus)
@@ -166,7 +174,7 @@ end
 -- This table is used to fix the "not cast by player" bug for Jade Spirit, River's Song, and Dancing Steel introduced in 5.1
 -- and the legendary meta gem procs Tempus Repit, Fortitude, Capacitance, and Lucidity added in 5.2
 local fixEnchants = { [104993] = true, [120032] = true, [118334] = true, [118335] = true, [116660] = true,
-	[137590] = true, [137593] = true, [137331] = true, [137323] = true, [137247] = true, [137596] = true }
+					  [137590] = true, [137593] = true, [137331] = true, [137323] = true, [137247] = true, [137596] = true }
 
 -- Initialization called when addon is loaded
 function MOD:OnInitialize()
@@ -357,8 +365,8 @@ local function AddTracker(dstGUID, dstName, isBuff, name, icon, count, btype, du
 	if spellID then tag = tag .. tostring(spellID) .. ":" end
 
 	t[1], t[2], t[3], t[4], t[5], t[6], t[7], t[8], t[9], t[10], t[11], t[12], t[13], t[14], t[15], t[16], t[17], t[18], t[19], t[20], t[21], t[22] =
-		true, 0, count, btype, duration, caster, isStealable, icon, tag, expire, "spell id", spellID, name, spellID,
-		boss, UnitName("player"), apply, nil, vehicle, dstGUID, dstName, marker
+	true, 0, count, btype, duration, caster, isStealable, icon, tag, expire, "spell id", spellID, name, spellID,
+	boss, UnitName("player"), apply, nil, vehicle, dstGUID, dstName, marker
 end
 
 -- Remove tracker entries for a unit, if marker is specified then only remove if tracker tag not equal
@@ -521,15 +529,15 @@ local function SpellAlertFilter(alerts, spellName, spellID, srcFlags, dstGUID)
 
 	if alerts.include then
 		local found = (alerts.isTarget and srcTarget) or (alerts.isFocus and srcFocus) or
-			(alerts.isPlayer and byPlayer) or (alerts.isNPC and byNPC) or
-			(alerts.includeTarget and dstTarget) or (alerts.includeFocus and dstFocus) or (alerts.includePlayer and dstPlayer)
+				(alerts.isPlayer and byPlayer) or (alerts.isNPC and byNPC) or
+				(alerts.includeTarget and dstTarget) or (alerts.includeFocus and dstFocus) or (alerts.includePlayer and dstPlayer)
 		if not found then return false end
 	end
 
 	if alerts.exclude then
 		local found = (alerts.notTarget and srcTarget) or (alerts.notFocus and srcFocus) or
-			(alerts.notPlayer and byPlayer) or (alerts.notNPC and byNPC) or
-			(alerts.excludeTarget and dstTarget) or (alerts.excludeFocus and dstFocus) or (alerts.excludePlayer and dstPlayer)
+				(alerts.notPlayer and byPlayer) or (alerts.notNPC and byNPC) or
+				(alerts.excludeTarget and dstTarget) or (alerts.excludeFocus and dstFocus) or (alerts.excludePlayer and dstPlayer)
 		if found then return false end
 	end
 	return true
@@ -753,7 +761,7 @@ local function CombatLogTracker() -- no longer passes in arguments with the even
 		local stat, opts, pst = MOD.status, MOD.db.global.SpellAlerts, "solo"
 		if GetNumGroupMembers() > 0 then if IsInRaid() then pst = "raid" else pst = "party" end end
 		if ((stat.inArena and opts.showArena) or ((pst == "solo") and opts.showSolo) or ((pst == "party") and opts.showParty) or ((pst == "raid") and opts.showRaid)) and
-			(stat.inInstance or opts.showNotInstance) then -- check if spell alerts are enabled given player's current status
+				(stat.inInstance or opts.showNotInstance) then -- check if spell alerts are enabled given player's current status
 
 			if eventEndCast[e] then EndCastAlert(srcGUID) elseif eventKill[e] then EndCastAlert(dstGUID) end -- end spell cast alerts when complete or interrupted
 			if (e == "SPELL_CAST_SUCCESS") or ((e == "SPELL_CAST_START") and not MOD.db.global.SpellAlerts.hideCasting) then
@@ -864,14 +872,13 @@ function MOD:OnEnable()
 	if MOD.isClassic then -- register events specific to classic
 		if MOD.LCD then -- in classic, add library callback so target auras are handled correctly
 			MOD.LCD.RegisterCallback(Raven, "UNIT_BUFF", function(e, unit)
-			if unit ~= "target" then return end
-			MOD:UNIT_AURA(e, unit)
+				if unit ~= "target" then return end
+				MOD:UNIT_AURA(e, unit)
 			end)
 		end
 	else -- register events that are not implemented in classic
 		self:RegisterEvent("PLAYER_FOCUS_CHANGED")
 		self:RegisterEvent("PLAYER_TALENT_UPDATE", CheckTalentSpecialization)
-		self:RegisterEvent("TRAIT_CONFIG_UPDATED", CheckTalentSpecialization)
 		self:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED", CheckTalentSpecialization)
 		self:RegisterEvent("VEHICLE_UPDATE")
 		self:RegisterEvent("RUNE_POWER_UPDATE", TriggerCooldownUpdate)
@@ -997,9 +1004,20 @@ function MOD:BAG_UPDATE(e)
 	TriggerCooldownUpdate()
 	table.wipe(bagCooldowns) -- update bag item cooldown table
 	for bag = 0, NUM_BAG_SLOTS do
-		local numSlots = GetContainerNumSlots(bag)
+		local numSlots
+		if MOD.IsShadowlands then
+			numSlots = GetContainerNumSlots(bag)
+		else
+			numSlots = C_Container.GetContainerNumSlots(bag)
+		end
+
 		for slot = 1, numSlots do
-			local itemID = GetContainerItemID(bag, slot)
+			local itemID
+			if MOD.IsShadowlands then
+				itemID = GetContainerItemID(bag, slot)
+			else
+				itemID = C_Container.GetContainerItemID(bag, slot)
+			end
 			if itemID then
 				local _, spellID = GetItemSpell(itemID)
 				if spellID then bagCooldowns[itemID] = spellID end
@@ -1303,7 +1321,7 @@ local function AddAura(unit, name, isBuff, spellID, count, btype, duration, cast
 		local n = (tagCache[tag] or 0) + 1; tagCache[tag] = n; tag = tag .. tostring(n) -- tag must be unique for multiples of same aura
 
 		b[1], b[2], b[3], b[4], b[5], b[6], b[7], b[8], b[9], b[10], b[11], b[12], b[13], b[14], b[15], b[16], b[17], b[18], b[19], b[20], b[21] =
-			isBuff, 0, count, btype, duration, caster, steal, icon, tag, expire, tt_type, tt_arg, name, spellID, boss, cname, apply, isNPC, vehicle, tt_color, tt_label
+		isBuff, 0, count, btype, duration, caster, steal, icon, tag, expire, tt_type, tt_arg, name, spellID, boss, cname, apply, isNPC, vehicle, tt_color, tt_label
 
 		auraTable[#auraTable + 1] = b
 		if auraCache then auraCache[name] = true end
@@ -1431,6 +1449,31 @@ end
 -- Weapon buffs are usually formatted in tooltips as name strings followed by remaining time in parentheses
 -- This routine scans the tooltip for the first line that is in this format and extracts the weapon buff name without rank or time
 local function GetWeaponBuffName(weaponSlot)
+	local ttInfo = C_TooltipInfo.GetInventoryItem("player", weaponSlot, false)
+
+	for i = 1, 30 do
+		if ttInfo.lines[i] then
+			if  ttInfo.lines[i].args[2] then
+				local text = ttInfo.lines[i].args[2].stringVal
+				if text then
+					local name = text:match("^(.+) %(%d+ [^$)]+%)$") -- extract up to left paren if match weapon buff format
+					if name then
+						name = (name:match("^(.*) %d+$")) or name -- remove any trailing numbers
+						return name
+					end
+				else
+					break
+				end
+			end
+
+		end
+
+	end
+
+	return nil
+end
+
+local function GetWeaponBuffNameShadowlands(weaponSlot)
 	local tt = MOD:GetBuffTooltip()
 	tt:SetInventoryItem("player", weaponSlot)
 
@@ -1481,7 +1524,14 @@ local function GetWeaponBuffs()
 	local mh, mhms, mhc, mx, oh, ohms, ohc, ox = GetWeaponEnchantInfo()
 	if mh then -- add the mainhand buff, if any, to the table
 		local islot = INVSLOT_MAINHAND
-		local mhbuff = GetWeaponBuffName(islot)
+		local mhbuff
+		if MOD.IsShadowlands then
+			mhbuff = GetWeaponBuffNameShadowlands(islot)
+		else
+			mhbuff = GetWeaponBuffName(islot)
+		end
+		local name, rank, icon, castTime, minRange, maxRange
+		= GetSpellInfo(spellId or spellName or spellLink)
 
 		if not mhbuff then -- if tooltip scan fails then use fallback of weapon name or slot name
 			local weaponLink = GetInventoryItemLink("player", islot)
@@ -1503,7 +1553,12 @@ local function GetWeaponBuffs()
 
 	if oh then -- add the offhand buff, if any, to the table
 		local islot = INVSLOT_OFFHAND
-		local ohbuff = GetWeaponBuffName(islot)
+		local ohbuff
+		if MOD.IsShadowlands then
+			ohbuff = GetWeaponBuffNameShadowlands(islot)
+		else
+			ohbuff = GetWeaponBuffName(islot)
+		end
 
 		if not ohbuff then -- if tooltip scan fails then use fallback of weapon name or slot name
 			local weaponLink = GetInventoryItemLink("player", islot)

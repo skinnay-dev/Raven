@@ -87,7 +87,12 @@ local barTemplate = { -- these fields are preserved when a bar is deleted
 }
 
 -- Check if using Tukui skin for icon and bar borders (which may require a reloadui)
-local function UseTukui() return Raven.frame.CreateBackdrop and Raven.frame.SetOutside and Raven.db.global.TukuiSkin end
+local function UseTukui()
+	if Raven.frame then
+		return Raven.frame.CreateBackdrop and Raven.frame.SetOutside and Raven.db.global.TukuiSkin
+	end
+	return nil
+end
 local function GetTukuiFont(font) if Raven.db.global.TukuiFont and ChatFrame1 then return ChatFrame1:GetFont() else return font end end
 local function PS(x) if pixelPerfect and type(x) == "number" then return pixelScale * math.floor(x / pixelScale + 0.5) else return x end end
 
