@@ -1,2 +1,3 @@
 Adjusted changelog workflow.
 Added support for DragonFlight BETA
+Added Fix to not disrupt classic builds with BETA fixes
