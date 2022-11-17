@@ -275,7 +275,7 @@ local function Anchor_Clicked(anchor, bgName, button)
 			if bp.configuration > MOD.Nest_MaxBarConfiguration then -- special case order for cycling icon configurations
 				local c, i = bp.configuration, MOD.Nest_MaxBarConfiguration + 1
 				if c == i then c = i + 2 elseif c == (i + 1) then c = i + 3 elseif c == (i + 2) then c = i + 1 elseif c == (i + 3) then c = i
-					elseif c == (i + 4) then c = i + 5 elseif c == (i + 5) then c = i + 4 end
+				elseif c == (i + 4) then c = i + 5 elseif c == (i + 5) then c = i + 4 end
 				bp.configuration = c
 			else
 				bp.configuration = bp.configuration + 1
@@ -604,27 +604,27 @@ function MOD:UpdateBarGroup(bp)
 		MOD.Nest_SetBarGroupLock(bg, bp.locked)
 		MOD.Nest_SetBarGroupAttribute(bg, "parentFrame", bp.parentFrame)
 		MOD.Nest_SetBarGroupLabelFont(bg, media:Fetch("font", bp.labelFont), bp.labelFSize, bp.labelAlpha, bp.labelColor,
-			bp.labelOutline, bp.labelShadow, bp.labelThick, bp.labelMono, bp.labelSpecial)
+				bp.labelOutline, bp.labelShadow, bp.labelThick, bp.labelMono, bp.labelSpecial)
 		MOD.Nest_SetBarGroupTimeFont(bg, media:Fetch("font", bp.timeFont), bp.timeFSize, bp.timeAlpha, bp.timeColor,
-			bp.timeOutline, bp.timeShadow, bp.timeThick, bp.timeMono, bp.timeSpecial)
+				bp.timeOutline, bp.timeShadow, bp.timeThick, bp.timeMono, bp.timeSpecial)
 		MOD.Nest_SetBarGroupIconFont(bg, media:Fetch("font", bp.iconFont), bp.iconFSize, bp.iconAlpha, bp.iconColor,
-			bp.iconOutline, bp.iconShadow, bp.iconThick, bp.iconMono, bp.iconSpecial)
+				bp.iconOutline, bp.iconShadow, bp.iconThick, bp.iconMono, bp.iconSpecial)
 		MOD.Nest_SetBarGroupBarLayout(bg, bp.barWidth, bp.barHeight, bp.iconSize, bp.scale, bp.spacingX, bp.spacingY,
-			bp.iconOffsetX, bp.iconOffsetY, bp.labelOffset, bp.labelInset, bp.labelWrap, bp.labelAlign, bp.labelCenter, bp.labelAdjust, bp.labelAuto, bp.labelWidth,
-			bp.timeOffset, bp.timeInset, bp.timeAlign, bp.timeIcon, bp.iconOffset, bp.iconInset, bp.iconHide, bp.iconAlign,
-			bp.configuration, bp.growDirection, bp.wrap, bp.wrapDirection, bp.snapCenter, bp.fillBars, bp.maxBars, bp.strata)
+				bp.iconOffsetX, bp.iconOffsetY, bp.labelOffset, bp.labelInset, bp.labelWrap, bp.labelAlign, bp.labelCenter, bp.labelAdjust, bp.labelAuto, bp.labelWidth,
+				bp.timeOffset, bp.timeInset, bp.timeAlign, bp.timeIcon, bp.iconOffset, bp.iconInset, bp.iconHide, bp.iconAlign,
+				bp.configuration, bp.growDirection, bp.wrap, bp.wrapDirection, bp.snapCenter, bp.fillBars, bp.maxBars, bp.strata)
 		MOD.Nest_SetBarGroupBackdrop(bg, panelTexture, backdropTexture, bp.backdropWidth, bp.backdropInset, bp.backdropPadding, bp.backdropColor, bp.backdropFill,
-			bp.backdropOffsetX, bp.backdropOffsetY, bp.backdropPadW, bp.backdropPadH)
+				bp.backdropOffsetX, bp.backdropOffsetY, bp.backdropPadW, bp.backdropPadH)
 		MOD.Nest_SetBarGroupBorder(bg, borderTexture, bp.borderWidth, bp.borderOffset, bp.borderColor)
 		MOD.Nest_SetBarGroupTextures(bg, fgtexture, bp.fgAlpha, bgtexture, bp.bgAlpha, not bp.showNoDurationBackground,
-			bp.fgSaturation, bp.fgBrightness, bp.bgSaturation, bp.bgBrightness)
+				bp.fgSaturation, bp.fgBrightness, bp.bgSaturation, bp.bgBrightness)
 		MOD.Nest_SetBarGroupVisibles(bg, not bp.hideIcon, not bp.hideClock, not bp.hideBar, not bp.hideSpark, not bp.hideLabel, not bp.hideValue)
 		if bp.timelineTexture then bgtexture = media:Fetch("statusbar", bp.timelineTexture) else bgtexture = nil end
 		if bp.timelineBorderTexture then fgtexture = (bp.timelineBorderTexture ~= "None") and media:Fetch("border", bp.timelineBorderTexture) or nil end
 		MOD.Nest_SetBarGroupTimeline(bg, bp.timelineWidth, bp.timelineHeight, bp.timelineDuration, bp.timelineExp, bp.timelineHide, bp.timelineAlternate,
-			bp.timelineSwitch, bp.timelinePercent, bp.timelineSplash, bp.timelineSplashX, bp.timelineSplashY, bp.timelineOffset, bp.timelineDelta,
-			bgtexture, bp.timelineAlpha, bp.timelineColor or gc, bp.timelineLabels or defaultLabels,
-			fgtexture, bp.timelineBorderWidth, bp.timelineBorderOffset, bp.timelineBorderColor or gc)
+				bp.timelineSwitch, bp.timelinePercent, bp.timelineSplash, bp.timelineSplashX, bp.timelineSplashY, bp.timelineOffset, bp.timelineDelta,
+				bgtexture, bp.timelineAlpha, bp.timelineColor or gc, bp.timelineLabels or defaultLabels,
+				fgtexture, bp.timelineBorderWidth, bp.timelineBorderOffset, bp.timelineBorderColor or gc)
 		MOD.Nest_SetBarGroupAttribute(bg, "targetFirst", bp.targetFirst) -- for multi-target tracking, sort target first
 		MOD.Nest_SetBarGroupAttribute(bg, "noMouse", bp.noMouse) -- disable interactivity
 		MOD.Nest_SetBarGroupAttribute(bg, "iconMouse", bp.iconMouse) -- mouse-only interactivity
@@ -640,8 +640,8 @@ function MOD:UpdateBarGroup(bp)
 		MOD.Nest_SetBarGroupAttribute(bg, "noDurationFirst", bp.noDurationFirst) -- controls in no duration sorts first or last
 		if bp.segmentBars then
 			MOD.Nest_SetBarGroupSegments(bg, bp.segmentCount, bp.segmentOverride, bp.segmentSpacing, bp.segmentHideEmpty, bp.segmentFadePartial, bp.segmentShrinkWidth,
-				bp.segmentShrinkHeight, bp.segmentGradient, bp.segmentGradientAll, bp.segmentGradientStartColor, bp.segmentGradientEndColor, bp.segmentBorderColor,
-				bp.segmentAdvanced, bp.segmentCurve, bp.segmentRotate, bp.segmentTexture)
+					bp.segmentShrinkHeight, bp.segmentGradient, bp.segmentGradientAll, bp.segmentGradientStartColor, bp.segmentGradientEndColor, bp.segmentBorderColor,
+					bp.segmentAdvanced, bp.segmentCurve, bp.segmentRotate, bp.segmentTexture)
 		else
 			MOD.Nest_SetBarGroupSegments(bg, nil) -- segmentCount must be set for segments to be displayed so this disables them
 		end
@@ -658,7 +658,7 @@ local function ShowStripe(bp, bg)
 	if bp.stripeCheckCondition and bp.stripeCondition and MOD:CheckCondition(bp.stripeCondition) then sc = bp.stripeAltColor end
 	local borderTexture = (bp.stripeBorderTexture ~= "None") and media:Fetch("border", bp.stripeBorderTexture) or nil
 	MOD.Nest_SetBarGroupStripe(bg, bp.stripeFullWidth, bp.stripeWidth, bp.stripeHeight, bp.stripeInset, bp.stripeOffset,
-		bp.stripeBarInset, bp.stripeBarOffset, bgtexture, sc, borderTexture, bp.stripeBorderWidth, bp.stripeBorderOffset, bp.stripeBorderColor or gc)
+			bp.stripeBarInset, bp.stripeBarOffset, bgtexture, sc, borderTexture, bp.stripeBorderWidth, bp.stripeBorderOffset, bp.stripeBorderColor or gc)
 end
 
 -- Update the positions of all anchored bar groups plus make sure valid positions in all bar groups
@@ -1014,23 +1014,52 @@ function MOD:GetTooltipNumber(ttType, ttID, ttUnit, ttOffset)
 	if not ttOffset or ttOffset > #numberPatterns then ttOffset = 1 end -- determine offset into numberPatterns
 	local tt = nil
 	if ttType == "buff" then
-		tt = MOD:GetBuffTooltip(); tt:SetUnitAura(ttUnit, ttID, "HELPFUL") -- fill in the tooltip for the buff
+		if MOD.isClassic then
+			tt = MOD:GetBuffTooltip(); tt:SetUnitAura(ttUnit, ttID, "HELPFUL") -- fill in the tooltip for the buff
+		else
+			tt = C_TooltipInfo.GetUnitAura(ttUnit, ttID, "HELPFUL")
+		end
 	elseif ttType == "debuff" then
-		tt = MOD:GetBuffTooltip(); tt:SetUnitAura(ttUnit, ttID, "HARMFUL") -- fill in the tooltip for the debuff
+		if MOD.isClassic then
+			tt = MOD:GetBuffTooltip(); tt:SetUnitAura(ttUnit, ttID, "HARMFUL") -- fill in the tooltip for the debuff
+		else
+			tt = C_TooltipInfo.GetUnitAura(ttUnit, ttID, "HARMFUL")
+		end
 	elseif (ttType == "spell id") or (ttType == "internal") or (ttType == "alert") then
-		tt = MOD:GetBuffTooltip(); tt:SetSpellByID(ttID)
+		if MOD.isClassic then
+			tt = MOD:GetBuffTooltip(); tt:SetSpellByID(ttID)
+		else
+			tt = C_TooltipInfo.GetSpellByID(ttID)
+		end
 	elseif (tt == "item id") then
-		GameTooltip:SetItemByID(ttID)
+		if MOD.isClassic then
+			GameTooltip:SetItemByID(ttID)
+		else
+			tt = C_TooltipInfo.GetItemByID(ttID)
+		end
 	elseif (ttType == "inventory") or (ttType == "weapon") then
-		tt = MOD:GetBuffTooltip()
-		if ttID then tt:SetInventoryItem("player", ttID) end
+		if MOD.isClassic then
+			tt = MOD:GetBuffTooltip()
+		end
+		if ttID then
+			if MOD.isClassic then
+				tt:SetInventoryItem("player", ttID)
+			else
+				tt = C_TooltipInfo.GetInventoryItem("player", ttID)
+			end
+		end
 	end
 	if tt then
 		local pattern = numberPatterns[ttOffset]
 		local t = ""
 		for i = 1, 30 do
-			local s = tt.tooltiplines[i]:GetText()
-			if s then t = t .. s else break end
+			if (tt.lines[i]) then
+				local s = tt.lines[i].args[2].stringVal
+				if s then t = t .. s else break end
+			else
+				break
+			end
+
 		end
 		t = string.gsub(uncolor(t), ",", "") -- remove escape sequences and commas since they impact conversion of numbers
 		return string.match(t, pattern) -- extract number from the tooltip, if one exists for the specified offset
@@ -1254,9 +1283,9 @@ local function UpdateBar(bp, vbp, bg, b, icon, timeLeft, duration, count, btype,
 		if inStartBG and not vbp.selectAll then -- check filters for auto bar group start effects
 			-- filters include: isPlayer, isPet, isBoss, isDispel, isStealable, isPoison, isCurse, isMagic, isDisease, isEnrage
 			inStartBG = (b.isPlayer and vbp.selectPlayer) or (b.isPet and vbp.selectPet) or (b.isBoss and vbp.selectBoss) or
-				(b.isDispel and vbp.selectDispel) or (b.isStealable and vbp.selectStealable) or
-				(b.isPoison and vbp.selectPoison) or (b.isCurse and vbp.selectCurse) or (b.isMagic and vbp.selectMagic) or
-				(b.isDisease and vbp.selectDisease) or (b.isEnrage and vbp.selectEnrage)
+					(b.isDispel and vbp.selectDispel) or (b.isStealable and vbp.selectStealable) or
+					(b.isPoison and vbp.selectPoison) or (b.isCurse and vbp.selectCurse) or (b.isMagic and vbp.selectMagic) or
+					(b.isDisease and vbp.selectDisease) or (b.isEnrage and vbp.selectEnrage)
 		end
 
 		if elapsed == 0 then
@@ -1286,16 +1315,16 @@ local function UpdateBar(bp, vbp, bg, b, icon, timeLeft, duration, count, btype,
 
 		if inExpireBar and b.colorExpiring then -- change bar, label and time colors when expiring
 			t = (b.spellExpireColors and MOD:GetExpireColor(b.action, b.spellID)) or b.expireColor or rc; if t.a > 0 then
-				MOD.Nest_SetForegroundColor(bar, t.r, t.g, t.b)
-				if b.expireFGBG then MOD.Nest_SetBackgroundColor(bar, t.r, t.g, t.b) end
-			end
+			MOD.Nest_SetForegroundColor(bar, t.r, t.g, t.b)
+			if b.expireFGBG then MOD.Nest_SetBackgroundColor(bar, t.r, t.g, t.b) end
+		end
 			t = b.expireLabelColor or vc; if t.a > 0 then MOD.Nest_SetLabelColor(bar, t.r, t.g, t.b) end
 			t = b.expireTimeColor or vc; if t.a > 0 then MOD.Nest_SetTimeColor(bar, t.r, t.g, t.b) end
 		elseif inExpireBG and vbp.colorExpiring then
 			t = (vbp.spellExpireColors and MOD:GetExpireColor(b.action, b.spellID)) or vbp.expireColor or rc; if t.a > 0 then
-				MOD.Nest_SetForegroundColor(bar, t.r, t.g, t.b)
-				if vbp.expireFGBG then MOD.Nest_SetBackgroundColor(bar, t.r, t.g, t.b) end
-			end
+			MOD.Nest_SetForegroundColor(bar, t.r, t.g, t.b)
+			if vbp.expireFGBG then MOD.Nest_SetBackgroundColor(bar, t.r, t.g, t.b) end
+		end
 			t = vbp.expireLabelColor or vc; if t.a > 0 then MOD.Nest_SetLabelColor(bar, t.r, t.g, t.b) end
 			t = vbp.expireTimeColor or vc; if t.a > 0 then MOD.Nest_SetTimeColor(bar, t.r, t.g, t.b) end
 		else
@@ -1495,7 +1524,7 @@ function MOD:CheckCastBy(caster, cb)
 	end
 	local isOurs = isMine or isPet
 	return ((cb == "player") and isMine) or (cb == "anyone") or ((cb == "pet") and isPet) or ((cb == "other") and not isOurs) or ((cb == "ours") and isOurs) or
-		((cb == "nother") and not (isOurs or isTarget)) or ((cb == "target") and isTarget) or ((cb == "focus") and isFocus)
+			((cb == "nother") and not (isOurs or isTarget)) or ((cb == "target") and isTarget) or ((cb == "focus") and isFocus)
 end
 
 -- Check if an action is in the associated filter bar group
@@ -1588,25 +1617,25 @@ local function DetectNewBuffs(unit, n, aura, isBuff, bp, vbp, bg)
 	local isTabard = isMine and icon and (icon == tabardIcon) -- test if on player, same icon as equipped tabard, not cancellable
 	local isCastable = aura[17] and not isWeapon
 	local isOther = not isStealable and not isCastable and not isNPC and not isVehicle and not isMagic and not isEffect and
-		not isWeapon and not isBoss and not isEnrage and not isTracking and not isResource and not isMount and not isTabard
+			not isWeapon and not isBoss and not isEnrage and not isTracking and not isResource and not isMount and not isTabard
 	local id, gname = nil, nil
 	local checkAll = (unit == "all")
 	if checkAll then id = aura[20]; gname = aura[21] end -- these fields are only valid if unit == "all"
 	local includeTypes = not bp.detectBuffTypes or (bp.detectStealable and isStealable) or (bp.detectCastable and isCastable)
-		or (bp.detectNPCBuffs and isNPC) or (bCcuffs and isVehicle) or (bp.detectBossBuffs and isBoss) or (bp.detectEnrageBuffs and isEnrage)
-		or (bp.detectMagicBuffs and isMagic) or (bp.detectEffectBuffs and isEffect) or (bp.detectAlertBuffs and isAlert) or (bp.detectWeaponBuffs and isWeapon)
-		or (bp.detectTracking and isTracking) or (bp.detectResources and isResource) or (bp.detectMountBuffs and isMount)
-		or (bp.detectTabardBuffs and isTabard) or (bp.detectMinionBuffs and isMinion) or (bp.detectOtherBuffs and isOther)
+			or (bp.detectNPCBuffs and isNPC) or (bCcuffs and isVehicle) or (bp.detectBossBuffs and isBoss) or (bp.detectEnrageBuffs and isEnrage)
+			or (bp.detectMagicBuffs and isMagic) or (bp.detectEffectBuffs and isEffect) or (bp.detectAlertBuffs and isAlert) or (bp.detectWeaponBuffs and isWeapon)
+			or (bp.detectTracking and isTracking) or (bp.detectResources and isResource) or (bp.detectMountBuffs and isMount)
+			or (bp.detectTabardBuffs and isTabard) or (bp.detectMinionBuffs and isMinion) or (bp.detectOtherBuffs and isOther)
 	local excludeTypes = not bp.excludeBuffTypes or not ((bp.excludeStealable and isStealable) or (bp.excludeCastable and isCastable)
-		or (bp.excludeNPCBuffs and isNPC) or (bp.excludeVehicleBuffs and isVehicle) or (bp.excludeBossBuffs and isBoss) or (bp.excludeEnrageBuffs and isEnrage)
-		or (bp.excludeMagicBuffs and isMagic) or (bp.excludeEffectBuffs and isEffect) or (bp.excludeAlertBuffs and isAlert) or (bp.excludeWeaponBuffs and isWeapon)
-		or (bp.excludeTracking and isTracking) or (bp.excludeResources and isResource) or (bp.excludeMountBuffs and isMount)
-		or (bp.excludeTabardBuffs and isTabard) or (bp.excludeMinionBuffs and isMinion) or (bp.excludeOtherBuffs and isOther))
+			or (bp.excludeNPCBuffs and isNPC) or (bp.excludeVehicleBuffs and isVehicle) or (bp.excludeBossBuffs and isBoss) or (bp.excludeEnrageBuffs and isEnrage)
+			or (bp.excludeMagicBuffs and isMagic) or (bp.excludeEffectBuffs and isEffect) or (bp.excludeAlertBuffs and isAlert) or (bp.excludeWeaponBuffs and isWeapon)
+			or (bp.excludeTracking and isTracking) or (bp.excludeResources and isResource) or (bp.excludeMountBuffs and isMount)
+			or (bp.excludeTabardBuffs and isTabard) or (bp.excludeMinionBuffs and isMinion) or (bp.excludeOtherBuffs and isOther))
 	if ((checkAll and not (bp.noPlayerBuffs and (id == UnitGUID("player"))) and not (bp.noPetBuffs and (id == UnitGUID("pet")))
 			and not (bp.noTargetBuffs and (id == UnitGUID("target"))) and not (bp.noFocusBuffs and (id == UnitGUID("focus")))) or
 			(not checkAll and not (bp.noPlayerBuffs and UnitIsUnit(unit, "player")) and not (bp.noPetBuffs and UnitIsUnit(unit, "pet"))
-			and not (bp.noTargetBuffs and UnitIsUnit(unit, "target")) and not (bp.noFocusBuffs and UnitIsUnit(unit, "focus")) and
-			MOD:CheckCastBy(tc, bp.detectBuffsCastBy))) and CheckTimeAndDuration(bp, aura[2], aura[5]) and includeTypes and excludeTypes then
+					and not (bp.noTargetBuffs and UnitIsUnit(unit, "target")) and not (bp.noFocusBuffs and UnitIsUnit(unit, "focus")) and
+					MOD:CheckCastBy(tc, bp.detectBuffsCastBy))) and CheckTimeAndDuration(bp, aura[2], aura[5]) and includeTypes and excludeTypes then
 
 		local b, tag = detectedBar, aura[9]
 		table.wipe(b); b.enableBar = true; b.sorder = 0; b.action = n; b.spellID = spellID; b.barType = "Buff"
@@ -1675,23 +1704,23 @@ local function DetectNewDebuffs(unit, n, aura, isBuff, bp, vbp, bg)
 	local isAlert = (tt == "alert")
 	local isPoison, isCurse, isMagic, isDisease = (aura[4] == "Poison"), (aura[4] == "Curse"), (aura[4] == "Magic"), (aura[4] == "Disease")
 	local isOther = not isBoss and not isEffect and not isPoison and not isCurse and not isMagic and not isDisease
-		and not isDispel and not isInflict and not isNPC and not isVehicle
+			and not isDispel and not isInflict and not isNPC and not isVehicle
 	local isMine = (tc == "player")
 	local id, gname = aura[20], aura[21]
 	local checkAll = (unit == "all")
 	local includeTypes = not bp.filterDebuffTypes or (bp.detectDispellable and isDispel) or (bp.detectInflictable and isInflict)
-		or (bp.detectNPCDebuffs and isNPC) or (bp.detectVehicleDebuffs and isVehicle) or (bp.detectBossDebuffs and isBoss)
-		or (bp.detectPoison and isPoison) or (bp.detectCurse and isCurse) or (bp.detectMagic and isMagic) or (bp.detectDisease and isDisease)
-		or (bp.detectEffectDebuffs and isEffect) or (bp.detectAlertDebuffs and isAlert) or (bp.detectOtherDebuffs and isOther)
+			or (bp.detectNPCDebuffs and isNPC) or (bp.detectVehicleDebuffs and isVehicle) or (bp.detectBossDebuffs and isBoss)
+			or (bp.detectPoison and isPoison) or (bp.detectCurse and isCurse) or (bp.detectMagic and isMagic) or (bp.detectDisease and isDisease)
+			or (bp.detectEffectDebuffs and isEffect) or (bp.detectAlertDebuffs and isAlert) or (bp.detectOtherDebuffs and isOther)
 	local excludeTypes = not bp.excludeDebuffTypes or not ((bp.excludeDispellable and isDispel) or (bp.excludeInflictable and isInflict)
-		or (bp.excludeNPCDebuffs and isNPC) or (bp.excludeVehicleDebuffs and isVehicle) or (bp.excludeBossDebuffs and isBoss)
-		or (bp.excludePoison and isPoison) or (bp.excludeCurse and isCurse) or (bp.excludeMagic and isMagic) or (bp.excludeDisease and isDisease)
-		or (bp.excludeEffectDebuffs and isEffect) or (bp.excludeAlertDebuffs and isAlert) or (bp.excludeOtherDebuffs and isOther))
+			or (bp.excludeNPCDebuffs and isNPC) or (bp.excludeVehicleDebuffs and isVehicle) or (bp.excludeBossDebuffs and isBoss)
+			or (bp.excludePoison and isPoison) or (bp.excludeCurse and isCurse) or (bp.excludeMagic and isMagic) or (bp.excludeDisease and isDisease)
+			or (bp.excludeEffectDebuffs and isEffect) or (bp.excludeAlertDebuffs and isAlert) or (bp.excludeOtherDebuffs and isOther))
 	if ((checkAll and not (bp.noPlayerDebuffs and (id == UnitGUID("player"))) and not (bp.noPetDebuffs and (id == UnitGUID("pet")))
 			and not (bp.noTargetDebuffs and (id == UnitGUID("target"))) and not (bp.noFocusDebuffs and (id == UnitGUID("focus")))) or
 			(not checkAll and not (bp.noPlayerDebuffs and UnitIsUnit(unit, "player")) and not (bp.noPetDebuffs and UnitIsUnit(unit, "pet"))
-			and not (bp.noTargetDebuffs and UnitIsUnit(unit, "target")) and not (bp.noFocusDebuffs and UnitIsUnit(unit, "focus")) and
-			MOD:CheckCastBy(tc, bp.detectDebuffsCastBy))) and CheckTimeAndDuration(bp, aura[2], aura[5]) and includeTypes and excludeTypes then
+					and not (bp.noTargetDebuffs and UnitIsUnit(unit, "target")) and not (bp.noFocusDebuffs and UnitIsUnit(unit, "focus")) and
+					MOD:CheckCastBy(tc, bp.detectDebuffsCastBy))) and CheckTimeAndDuration(bp, aura[2], aura[5]) and includeTypes and excludeTypes then
 
 		local b, tag = detectedBar, aura[9]
 		table.wipe(b); b.enableBar = true; b.sorder = 0; b.action = n; b.spellID = aura[14]; b.barType = "Debuff"
@@ -1851,18 +1880,18 @@ local function CheckShow(bp)
 	if GetNumGroupMembers() > 0 then if IsInRaid() then pst = "raid" else pst = "party" end end
 
 	if InCinematic() or (not MOD.isClassic and C_PetBattles.IsInBattle() and not bp.showPetBattle) or (UnitOnTaxi("player") and not bp.showOnTaxi) or
-		(pst == "solo" and not bp.showSolo) or (pst == "party" and not bp.showParty) or (pst == "raid" and not bp.showRaid) or
-		(stat.inCombat and not bp.showCombat) or (not stat.inCombat and not bp.showOOC) or
-		(not MOD.db.profile.hideBlizz and not bp.showBlizz) or (MOD.db.profile.hideBlizz and not bp.showNotBlizz) or
-		(stat.isResting and not bp.showResting) or (stat.isStealthed and not bp.showStealth) or
-		(stat.isMounted and not bp.showMounted) or (stat.inVehicle and not bp.showVehicle) or
-		(stat.targetEnemy and not bp.showEnemy) or (stat.targetFriend and not bp.showFriend) or (stat.targetNeutral and not bp.showNeutral) or
-		(stat.inInstance and not bp.showInstance) or (not stat.inInstance and not bp.showNotInstance) or
-		(stat.inArena and not bp.showArena) or (stat.inBattleground and not bp.showBattleground) or
-		(UnitIsUnit("focus", "target") and not bp.showFocusTarget) or
-		(bp.showClasses and bp.showClasses[MOD.myClass]) or
-		(bp.showSpecialization and bp.showSpecialization ~= "" and not MOD.CheckSpec(bp.showSpecialization, bp.specializationList)) or
-		(bp.checkCondition and IsOn(bp.condition) and not MOD:CheckCondition(bp.condition)) then return false end
+			(pst == "solo" and not bp.showSolo) or (pst == "party" and not bp.showParty) or (pst == "raid" and not bp.showRaid) or
+			(stat.inCombat and not bp.showCombat) or (not stat.inCombat and not bp.showOOC) or
+			(not MOD.db.profile.hideBlizz and not bp.showBlizz) or (MOD.db.profile.hideBlizz and not bp.showNotBlizz) or
+			(stat.isResting and not bp.showResting) or (stat.isStealthed and not bp.showStealth) or
+			(stat.isMounted and not bp.showMounted) or (stat.inVehicle and not bp.showVehicle) or
+			(stat.targetEnemy and not bp.showEnemy) or (stat.targetFriend and not bp.showFriend) or (stat.targetNeutral and not bp.showNeutral) or
+			(stat.inInstance and not bp.showInstance) or (not stat.inInstance and not bp.showNotInstance) or
+			(stat.inArena and not bp.showArena) or (stat.inBattleground and not bp.showBattleground) or
+			(UnitIsUnit("focus", "target") and not bp.showFocusTarget) or
+			(bp.showClasses and bp.showClasses[MOD.myClass]) or
+			(bp.showSpecialization and bp.showSpecialization ~= "" and not MOD.CheckSpec(bp.showSpecialization, bp.specializationList)) or
+			(bp.checkCondition and IsOn(bp.condition) and not MOD:CheckCondition(bp.condition)) then return false end
 	return true
 end
 
