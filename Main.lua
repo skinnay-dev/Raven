@@ -29,12 +29,7 @@ local optionsLoaded = false -- set when the load-on-demand options panel module 
 local optionsFailed = false -- set if loading the option panel module failed
 
 
-function CheckIfShadowlands()
-	local v, b, d, t = GetBuildInfo()
-	return (v == "10.0.0") -- Pre-patch runs as DragonFlight version 10.0.0
-end
 MOD.isClassic = (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC) or (WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC) or (WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC)
-MOD.isShadowlands = CheckIfShadowlands()
 MOD.updateOptions = false -- set this to cause the options panel to update (checked every half second)
 MOD.LocalSpellNames = {} -- must be defined in first module loaded
 local LSPELL = MOD.LocalSpellNames
@@ -1006,7 +1001,7 @@ function MOD:BAG_UPDATE(e)
 	table.wipe(bagCooldowns) -- update bag item cooldown table
 	for bag = 0, NUM_BAG_SLOTS do
 		local numSlots
-		if (MOD.isShadowlands or MOD.isClassic) then
+		if MOD.isClassic then
 			numSlots = GetContainerNumSlots(bag)
 		else
 			numSlots = C_Container.GetContainerNumSlots(bag)
@@ -1014,7 +1009,7 @@ function MOD:BAG_UPDATE(e)
 
 		for slot = 1, numSlots do
 			local itemID
-			if (MOD.isShadowlands or MOD.isClassic) then
+			if MOD.isClassic then
 				itemID = GetContainerItemID(bag, slot)
 			else
 				itemID = C_Container.GetContainerItemID(bag, slot)
@@ -1526,7 +1521,7 @@ local function GetWeaponBuffs()
 	if mh then -- add the mainhand buff, if any, to the table
 		local islot = INVSLOT_MAINHAND
 		local mhbuff
-		if (MOD.isShadowlands or MOD.isClassic) then
+		if MOD.isClassic then
 			mhbuff = GetWeaponBuffNameShadowlands(islot)
 		else
 			mhbuff = GetWeaponBuffName(islot)
@@ -1555,7 +1550,7 @@ local function GetWeaponBuffs()
 	if oh then -- add the offhand buff, if any, to the table
 		local islot = INVSLOT_OFFHAND
 		local ohbuff
-		if (MOD.isShadowlands or MOD.isClassic) then
+		if MOD.isClassic then
 			ohbuff = GetWeaponBuffNameShadowlands(islot)
 		else
 			ohbuff = GetWeaponBuffName(islot)
