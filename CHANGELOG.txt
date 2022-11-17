@@ -1,3 +1,5 @@
 Adjusted changelog workflow.
 Added support for DragonFlight BETA
 Added Fix to not disrupt classic builds with BETA fixes
+Removed temporary shadowlands check needed during pre-patch
+Fixed issue with using tooltip text for bars info
