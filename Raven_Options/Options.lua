@@ -2092,6 +2092,12 @@ MOD.OptionsTable = {
 									get = function(info) return MOD.db.profile.hideBlizzHoly end,
 									set = function(info, value) MOD.db.profile.hideBlizzHoly = value; MOD:UpdateAllBarGroups() end,
 								},
+								HideEssence = {
+									type = "toggle", order = 20, name = L["Essence"],
+									desc = L["Hide default user interface for essence."],
+									get = function(info) return MOD.db.profile.hideBlizzEssence end,
+									set = function(info, value) MOD.db.profile.hideBlizzEssence = value; MOD:UpdateAllBarGroups() end,
+								},
 								HideStagger = {
 									type = "toggle", order = 25, name = L["Stagger"],
 									desc = L["Hide default user interface for stagger."],
@@ -10398,6 +10404,30 @@ MOD.OptionsTable = {
 											disabled = function(info) return IsTestFieldOff("Player Status", "checkHolyPower") end,
 											get = function(info) return GetTestField("Player Status", "minHolyPower") end,
 											set = function(info, value) SetTestField("Player Status", "minHolyPower", value) end,
+										},
+									},
+								},
+								CheckEssenceGroup = {
+									type = "group", order = 71, name = L["Essence"], inline = true,
+									args = {
+										CheckEssenceEnable = {
+											type = "toggle", order = 1, name = L["Enable"], width = "half",
+											desc = L["If checked, test the player's essence."],
+											get = function(info) return IsTestFieldOn("Player Status", "checkEssence") end,
+											set = function(info, value) local v = Off if value then v = true end SetTestField("Player Status", "checkEssence", v) end,
+										},
+										CheckEssence = {
+											type = "toggle", order = 2, name = L["Minimum"],
+											desc = L["If checked, player's essence must be at least this many charges, otherwise must be less."],
+											disabled = function(info) return IsTestFieldOff("Player Status", "checkEssence") end,
+											get = function(info) return GetTestField("Player Status", "checkEssence") == true end,
+											set = function(info, value) SetTestField("Player Status", "checkEssence", value) end,
+										},
+										EssenceRange = {
+											type = "range", order = 3, name = "", min = 1, max = 5, step = 1,
+											disabled = function(info) return IsTestFieldOff("Player Status", "checkEssence") end,
+											get = function(info) return GetTestField("Player Status", "minEssence") end,
+											set = function(info, value) SetTestField("Player Status", "minEssence", value) end,
 										},
 									},
 								},

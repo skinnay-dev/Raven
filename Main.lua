@@ -288,6 +288,8 @@ local function CheckBlizzFrames()
 
 	if MOD.myClass == "PALADIN" then HideShow("holy", _G.PaladinPowerBarFrame, p.hideBlizzHoly) end
 
+	if MOD.myClass == "EVOKER" then HideShow("essence", _G.EvokerPowerBarFrame, p.hideBlizzEssence) end
+
 	local totems = false; for i = 1, MAX_TOTEMS do if GetTotemInfo(i) then totems = true end end
 	if totems then HideShow("totems", _G.TotemFrame, p.hideBlizzTotems) end
 end
@@ -1702,6 +1704,7 @@ local function GetPowerBuffs()
 	local power, id = nil, nil
 	local myClass = MOD.myClass
 	if myClass == "PALADIN" and IsSpellKnown(35395) then power = UnitPower("player", Enum.PowerType.HolyPower); id = 85247
+	elseif myClass == "EVOKER" and IsSpellKnown(361469) then power = UnitPower("player", Enum.PowerType.Essence); id = 359618
 	elseif myClass == "PRIEST" and IsSpellKnown(8092) then power = UnitPower("player", Enum.PowerType.Insanity); id = 57496
 	elseif myClass == "WARLOCK" then power = UnitPower("player", Enum.PowerType.SoulShards); id = 138556
 	elseif myClass == "SHAMAN" and IsSpellKnown(193786) then power = UnitPower("player", Enum.PowerType.Maelstrom); id = 190185

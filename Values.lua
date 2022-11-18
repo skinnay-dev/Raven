@@ -241,6 +241,15 @@ local function ValueHolyPower(unit, fmt)
 	return true, p, pmax, s, nil, nil, nil, nil, c.r, c.g, c.b
 end
 
+local function ValueEssence(unit, fmt)
+	local p = UnitPower("player", Enum.PowerType.Essence)
+	local pmax = UnitPowerMax("player", Enum.PowerType.Essence)
+	if not p or not pmax or (pmax == 0) then return false end
+	local c = PowerBarColor["ESSENCE"] or rc
+	local s = GetFormattedText(fmt, p, pmax)
+	return true, p, pmax, s, nil, nil, nil, nil, c.r, c.g, c.b
+end
+
 local function ValueSoulShards(unit, fmt)
 	local p = UnitPower("player", Enum.PowerType.SoulShards)
 	local pmax = UnitPowerMax("player", Enum.PowerType.SoulShards)
@@ -676,6 +685,7 @@ local functionTable = {
 	[L["Clock"]] = { func = ValueClock, unit = false, fmts = onlyCustom },
 	[L["Combo Points"]] = { func = ValueComboPoints, unit = false, frequent = true, segment = true, fmts = integerRange },
 	[L["Durability"]] = { func = ValueDurability, unit = false, fmt = "pct", fmts = integerRange },
+	[L["Essence"]] = { func = ValueEssence, unit = false, frequent = true, segment = true, fmts = integerRange },
 	[L["Experience"]] = { func = ValuePlayerXP, unit = false, fmt = "pct", fmts = integerRange },
 	[L["Facing"]] = { func = ValueFacing, unit = false, frequent = true },
 	[L["Gold"]] = { func = ValueGold, unit = false, fmts = onlyCustom },
@@ -724,6 +734,7 @@ function MOD:InitializeValues()
 		valueFunctions[L["Chi"]] = nil
 		valueFunctions[L["Arcane Charges"]] = nil
 		valueFunctions[L["Holy Power"]] = nil
+		valueFunctions[L["Essence"]] = nil
 		valueFunctions[L["Soul Shards"]] = nil
 		valueFunctions[L["Runes"]] = nil
 		valueFunctions[L["Rune 1"]] = nil

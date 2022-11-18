@@ -1,4 +1,4 @@
-﻿-- 한글화 작업 : 달라란@삼이공
+-- 한글화 작업 : 달라란@삼이공
 local AceLocale = LibStub:GetLibrary("AceLocale-3.0")
 local L = AceLocale:NewLocale("Raven", "koKR")
 if not L then return end
@@ -115,6 +115,7 @@ L["Level String"] = function(x, level) return string.format("레벨 %s %d", x, l
 L["Health String"] = function(x, minHealth) return string.format("생명력 %s %d%%", x, minHealth) end
 L["Power String"] = function(x, minPower) return string.format("힘 %s %d", x, minPower) end
 L["Holy Power String"] = function(x, minPower) return string.format("신성한 힘 %s %d", x, minPower) end
+L["Essence String"] = function(x, minPower) return string.format("Essence %s %d", x, minPower) end
 L["Shards String"] = function(x, minShards) return string.format("조각 %s %d", x, minShards) end
 L["Eclipse String"] = function(x, power) return string.format("일/월식 힘 %s %d", x, power) end
 L["Solar Eclipse"] = "일식"

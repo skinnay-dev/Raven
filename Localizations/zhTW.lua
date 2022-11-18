@@ -114,6 +114,7 @@ L["Level String"] = function(x, level) return string.format("等級 %s %d", x, l
 L["Health String"] = function(x, minHealth) return string.format("生命值 %s %d%%", x, minHealth) end
 L["Power String"] = function(x, minPower) return string.format("能量值 %s %d", x, minPower) end
 L["Holy Power String"] = function(x, minPower) return string.format("聖能 %s %d", x, minPower) end
+L["Essence String"] = function(x, minPower) return string.format("Essence %s %d", x, minPower) end
 L["Shards String"] = function(x, minShards) return string.format("靈魂碎片 %s %d", x, minShards) end
 L["Eclipse String"] = function(x, power) return string.format("月蝕能量 %s %d", x, power) end
 L["Solar Eclipse"] = true

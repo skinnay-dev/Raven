@@ -1051,6 +1051,7 @@ MOD.DefaultProfile = {
 		hideBlizzChi = false,			-- hide Blizzard combo points
 		hideBlizzArcane = false,		-- hide Blizzard arcane charges
 		hideBlizzHoly = false,			-- hide Blizzard holy power
+		hideBlizzEssence = false,		-- hide Blizzard essence
 		hideBlizzShards = false,		-- hide Blizzard soul shards
 		hideBlizzInsanity = false,		-- hide Blizzard insanity
 		hideBlizzTotems = false,		-- hide Blizzard totems

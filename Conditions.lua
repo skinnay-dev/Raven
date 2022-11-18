@@ -32,7 +32,8 @@ MOD.conditionTests = {
 		checkHealth = nil, minHealth = 100, checkPower = nil, minPower = 100, checkHolyPower = nil, minHolyPower = 1,
 		checkShards = nil, minShards = 1, checkChi = nil, minChi = 1, checkLunarPower = nil, minLunarPower = 1,
 		checkInsanity = nil, minInsanity = 100, checkMaelstrom = nil, minMaelstrom = 150, checkArcane = nil, minArcane = 1,
-		checkComboPoints = nil, minComboPoints = 5, checkRunes = nil, minRunes = 1, checkTotems = nil, totem = nil },
+		checkComboPoints = nil, minComboPoints = 5, checkRunes = nil, minRunes = 1, checkTotems = nil, totem = nil,
+		checkEssence = nil, minEssence = 1,},
 	["Pet Status"] = { enable = false, exists = nil, inCombat = nil, checkTarget = nil,
 		checkHealth = nil, minHealth = 100, checkPower = nil, minPower = 100, checkFamily = nil, family = nil, checkSpec = nil, spec = nil },
 	["Target Status"] = { enable = false, exists = nil, isPlayer = nil, isEnemy = nil, isFriend = nil, isNeutral = nil, inRange = nil, isSteal = nil, isDead = nil,
@@ -457,6 +458,7 @@ local function CheckTestAND(ttype, t)
 		if IsOn(t.checkHealth) and IsOn(t.minHealth) and (t.checkHealth ~= (stat.health >= t.minHealth)) then return false end
 		if IsOn(t.checkPower) and IsOn(t.minPower) and (t.checkPower ~= (stat.power >= t.minPower)) then return false end
 		if IsOn(t.checkHolyPower) and IsOn(t.minHolyPower) and (t.checkHolyPower ~= (stat.holyPower >= t.minHolyPower)) then return false end
+		if IsOn(t.checkEssence) and IsOn(t.minEssence) and (t.checkEssence ~= (stat.essence >= t.minEssence)) then return false end
 		if IsOn(t.checkInsanity) and IsOn(t.minInsanity) and (t.checkInsanity ~= (stat.insanity >= t.minInsanity)) then return false end
 		if IsOn(t.checkMaelstrom) and IsOn(t.minMaelstrom) and (t.checkMaelstrom ~= (stat.maelstrom >= t.minMaelstrom)) then return false end
 		if IsOn(t.checkChi) and IsOn(t.minChi) and (t.checkChi ~= (stat.chi >= t.minChi)) then return false end
@@ -586,6 +588,7 @@ local function CheckTestOR(ttype, t)
 		if IsOn(t.checkHealth) and IsOn(t.minHealth) and (t.checkHealth == (stat.health >= t.minHealth)) then return true end
 		if IsOn(t.checkPower) and IsOn(t.minPower) and (t.checkPower == (stat.power >= t.minPower)) then return true end
 		if IsOn(t.checkHolyPower) and IsOn(t.minHolyPower) and (t.checkHolyPower == (stat.holyPower >= t.minHolyPower)) then return true end
+		if IsOn(t.checkEssence) and IsOn(t.minEseence) and (t.checkEssence == (stat.essence >= t.minEssence)) then return true end
 		if IsOn(t.checkInsanity) and IsOn(t.minInsanity) and (t.checkInsanity == (stat.insanity >= t.minInsanity)) then return true end
 		if IsOn(t.checkMaelstrom) and IsOn(t.minMaelstrom) and (t.checkMaelstrom == (stat.maelstrom >= t.minMaelstrom)) then return true end
 		if IsOn(t.checkChi) and IsOn(t.minChi) and (t.checkChi == (stat.chi >= t.minChi)) then return true end
@@ -738,7 +741,9 @@ function MOD:UpdateConditions()
 	stat.level = UnitLevel("player")
 	local m = UnitHealthMax("player"); if m > 0 then stat.health = (100 * UnitHealth("player") / m) else stat.health = 0 end
 	m = UnitPowerMax("player"); if m > 0 then stat.power = (100 * UnitPower("player") / m) else stat.power = 0 end
+
 	if MOD.myClass == "PALADIN" then stat.holyPower = UnitPower("player", Enum.PowerType.HolyPower) else stat.holyPower = 0 end
+	if MOD.myClass == "EVOKER" then stat.essence = UnitPower("player", Enum.PowerType.Essence) else stat.essence = 0 end
 	if MOD.myClass == "WARLOCK" then stat.shards = UnitPower("player", Enum.PowerType.SoulShards) else stat.shards = 0 end
 	if MOD.myClass == "PRIEST" then stat.insanity = UnitPower("player", Enum.PowerType.Insanity) else stat.insanity = 0 end
 	if MOD.myClass == "MONK" then stat.chi = UnitPower("player", Enum.PowerType.Chi) else stat.chi = 0 end
@@ -976,6 +981,8 @@ function MOD:GetConditionText(name)
 						a = a .. d .. L["Power String"](x, t.minPower); d = ", " end
 					if IsOn(t.checkHolyPower) and t.minHolyPower then local x = "<"; if t.checkHolyPower then x = ">=" end;
 						a = a .. d .. L["Holy Power String"](x, t.minHolyPower); d = ", " end
+					if IsOn(t.checkEssence) and t.minEssence then local x = "<"; if t.checkEssence then x = ">=" end;
+						a = a .. d .. L["Essence String"](x, t.minEssence); d = ", " end
 					if IsOn(t.checkShards) and t.minShards then local x = "<"; if t.checkShards then x = ">=" end;
 						a = a .. d .. L["Shards String"](x, t.minShards); d = ", " end
 					if IsOn(t.checkArcane) and t.minArcane then local x = "<"; if t.checkArcane then x = ">=" end;
