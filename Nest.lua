@@ -1790,7 +1790,7 @@ local function Bar_UpdateLayout(bg, bar, config)
 		bi:SetTextColor(bar.ibr, bar.ibg, bar.ibb, bg.iconAlpha)
 	else
 		local t = bg.iconColor
-		bi:SetTextColor(t.r, t.g, t.b, bg.iconAlpha)
+		bi:SetTextColor(t.r or 0, t.g or 0, t.b or 0, bg.iconAlpha)
 	end
 	bi:SetShadowColor(0, 0, 0, bg.iconShadow and 1 or 0)
 
