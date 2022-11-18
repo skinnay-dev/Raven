@@ -165,12 +165,44 @@ end
 -- Range checking spell tables and functions
 local range_spells = {}
 local range_tables = {
-	enemy = { DEATHKNIGHT = { 49576, 127344 }, DRUID = { 8921, 339, 6795 }, HUNTER = { 193455, 19434, 193265 }, MAGE = { 133 }, PALADIN = { 62124, 20271 },
-		PRIEST = { 589 }, ROGUE = { 1725 }, SHAMAN = { 403, 188196, 187837 }, WARLOCK = { 215279, 196657 }, WARRIOR = { 355 }, DEMONHUNTER = { 185123 } },
-	friend = { DRUID = { 5185 }, MAGE = { 130 }, PALADIN = { 633, 1044 }, HUNTER = { 34477 },
-		PRIEST = { 2061 }, ROGUE = { 57934 }, SHAMAN = { 546, 8004 }, WARLOCK = { 20707, 5697 }, WARRIOR = { 198304 } },
-	pet = { HUNTER = { 136 }, WARLOCK = { 755 } },
-	dead = { DEATHKNIGHT = { 61999 }, DRUID = { 50769, 20484 }, PALADIN = { 7328 }, PRIEST = { 2006 }, SHAMAN = { 2008 } },
+	enemy = {
+		DEATHKNIGHT = { 49576, 127344 },
+		DRUID = { 8921, 339, 6795 },
+		EVOKER = { 361469 },
+		HUNTER = { 193455, 19434, 193265 },
+		MAGE = { 133 },
+		PALADIN = { 62124, 20271 },
+		PRIEST = { 589 },
+		ROGUE = { 1725 },
+		SHAMAN = { 403, 188196, 187837 },
+		WARLOCK = { 215279, 196657 },
+		WARRIOR = { 355 },
+		DEMONHUNTER = { 185123 }
+	},
+	friend = {
+		DRUID = { 5185 },
+		EVOKER = { 361469 },
+		MAGE = { 130 },
+		PALADIN = { 633, 1044 },
+		HUNTER = { 34477 },
+		PRIEST = { 2061 },
+		ROGUE = { 57934 },
+		SHAMAN = { 546, 8004 },
+		WARLOCK = { 20707, 5697 },
+		WARRIOR = { 198304 }
+	},
+	pet = {
+		HUNTER = { 136 },
+		WARLOCK = { 755 }
+	},
+	dead = {
+		DEATHKNIGHT = { 61999 },
+		DRUID = { 50769, 20484 },
+		EVOKER = { 361227 },
+		PALADIN = { 7328 },
+		PRIEST = { 2006 },
+		SHAMAN = { 2008 }
+	},
 }
 
 -- Initialize the range spell tables with spell names

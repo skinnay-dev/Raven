@@ -91,9 +91,19 @@ MOD.ColorPalette = {
 
 -- Global palette of class colors
 MOD.ClassColors = {
-	DEATHKNIGHT = MOD.HexColor("C41F3B"), DRUID = MOD.HexColor("FF7D0A"), HUNTER = MOD.HexColor("ABD473"), MAGE = MOD.HexColor("40C7EB"),
-	PALADIN = MOD.HexColor("F58CBA"), PRIEST = MOD.HexColor("FFFFFF"), ROGUE = MOD.HexColor("FFF569"), SHAMAN = MOD.HexColor("0070DE"),
-	WARLOCK = MOD.HexColor("8787ED"), WARRIOR = MOD.HexColor("C79C6E"), MONK = MOD.HexColor("00FF96"), DEMONHUNTER = MOD.HexColor("A330C9"),
+	DEATHKNIGHT = MOD.HexColor("C41F3B"),
+	DRUID = MOD.HexColor("FF7D0A"),
+	EVOKER = MOD.HexColor("33937F"),
+	HUNTER = MOD.HexColor("ABD473"),
+	MAGE = MOD.HexColor("40C7EB"),
+	PALADIN = MOD.HexColor("F58CBA"),
+	PRIEST = MOD.HexColor("FFFFFF"),
+	ROGUE = MOD.HexColor("FFF569"),
+	SHAMAN = MOD.HexColor("0070DE"),
+	WARLOCK = MOD.HexColor("8787ED"),
+	WARRIOR = MOD.HexColor("C79C6E"),
+	MONK = MOD.HexColor("00FF96"),
+	DEMONHUNTER = MOD.HexColor("A330C9"),
 }
 
 -- Remove unneeded variables from the profile before logout
@@ -783,6 +793,12 @@ function MOD:SetDispelDefaults()
 			dispelTypes.Poison = true; dispelTypes.Curse = true; dispelTypes.Magic = true
 		elseif RavenCheckSpellKnown(2782) then -- Remove Corruption
 			dispelTypes.Poison = true; dispelTypes.Curse = true
+		end
+	elseif MOD.myClass == "EVOKER" then
+		if RavenCheckSpellKnown(360823) then -- Naturalize
+			dispelTypes.Poison = true; dispelTypes.Magic = true
+		elseif RavenCheckSpellKnown(365585) then
+			dispelTypes.Poison = true -- Expunge
 		end
 	elseif MOD.myClass == "MONK" then
 		if RavenCheckSpellKnown(115450) then -- Detox (healer)
