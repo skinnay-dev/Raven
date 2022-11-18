@@ -25,6 +25,7 @@ Nest.lua
 Presets\DeathKnight.lua
 Presets\DemonHunter.lua
 Presets\Druid.lua
+Presets\Evoker.lua
 Presets\Hunter.lua
 Presets\Mage.lua
 Presets\Monk.lua
