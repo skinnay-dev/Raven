@@ -1,2 +1,0 @@
-Fixed issue with using tooltip text for bars info
-Fixed issue with BarIconText causing craches in certain setups
