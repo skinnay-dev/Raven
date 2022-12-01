@@ -5344,6 +5344,15 @@ MOD.OptionsTable = {
 												if not t then SetBarGroupField("showClasses", { DRUID = not value } ) else t.DRUID = not value end
 											end
 										},
+										Evoker = {
+											-- @TODO: AceLocale-3.0 doesn't have a localized version of Evoker yet.
+											type = "toggle", order = 15, name = "Evoker", width = "half",
+											get = function(info) local t = GetBarGroupField("showClasses"); return not t or not t.EVOKER end,
+											set = function(info, value)
+												local t = GetBarGroupField("showClasses")
+												if not t then SetBarGroupField("showClasses", { EVOKER = not value } ) else t.EVOKER = not value end
+											end
+										},
 										Hunter = {
 											type = "toggle", order = 15, name = L["Hunter"], width = "half",
 											get = function(info) local t = GetBarGroupField("showClasses"); return not t or not t.HUNTER end,
@@ -14307,6 +14316,15 @@ MOD.barOptions = {
 				set = function(info, value)
 					local t = GetBarField(info, "showClasses")
 					if not t then SetBarField(info, "showClasses", { DRUID = not value } ) else t.DRUID = not value end
+				end
+			},
+			Evoker = {
+				-- @TODO: AceLocale-3.0 doesn't have a localized version of Evoker yet.
+				type = "toggle", order = 10, name = "Evoker", width = "half",
+				get = function(info) local t = GetBarField(info, "showClasses"); return not t or not t.EVOKER end,
+				set = function(info, value)
+					local t = GetBarField(info, "showClasses")
+					if not t then SetBarField(info, "showClasses", { EVOKER = not value } ) else t.EVOKER = not value end
 				end
 			},
 			Hunter = {
