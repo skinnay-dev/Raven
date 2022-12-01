@@ -1,4 +1,4 @@
-## Interface: 100000
+## Interface: 100002
 ## Title: Raven
 ## Notes: Monitors buffs, debuffs and cooldowns and provides timer bars and icons plus helpful notifications
 ## Author: Tomber
