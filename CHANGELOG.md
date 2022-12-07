@@ -1,3 +1,3 @@
-# 1 December 2022
+# 7 December 2022
 
-- Added Evokers as an option when limiting icons/bars to specific specs.
+- Added toc-file for Wrath of the Lich King.
