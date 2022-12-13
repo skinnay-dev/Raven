@@ -48,10 +48,10 @@ local valuebars = { -- settings used to enter parameters for value bars
 local weaponBuffs = { [L["Mainhand Weapon"]] = true, [L["Offhand Weapon"]] = true }
 
 local anchorTips = { BOTTOMLEFT = "BOTTOMLEFT", CURSOR = "CURSOR", DEFAULT = "DEFAULT", LEFT = "LEFT", RIGHT = "RIGHT",
-	TOPLEFT = "TOPLEFT", TOPRIGHT = "TOPRIGHT" }
+					 TOPLEFT = "TOPLEFT", TOPRIGHT = "TOPRIGHT" }
 
 local anchorPoints = { BOTTOM = "BOTTOM", BOTTOMLEFT = "BOTTOMLEFT", BOTTOMRIGHT = "BOTTOMRIGHT", CENTER = "CENTER", LEFT = "LEFT",
-	RIGHT = "RIGHT", TOP = "TOP", TOPLEFT = "TOPLEFT", TOPRIGHT = "TOPRIGHT" }
+					   RIGHT = "RIGHT", TOP = "TOP", TOPLEFT = "TOPLEFT", TOPRIGHT = "TOPRIGHT" }
 
 local stratas = { BACKGROUND = "BACKGROUND", LOW = "LOW", MEDIUM = "MEDIUM", HIGH = "HIGH" }
 
@@ -333,12 +333,12 @@ local function LinkStandardBarGroups()
 	for n, bg in pairs(bgs) do
 		if IsOn(bg) then
 			if (standard.PlayerBuffs and (n == L["Buffs"])) or
-			(standard.ShortBuffs and (n == L["Short Buffs"])) or (standard.LongBuffs and (n == L["Long Buffs"])) or
-			(standard.PlayerDebuffs and (n == L["Debuffs"])) or (standard.Cooldowns and (n == L["Cooldowns"])) or
-			(standard.Target and (n == L["Target"])) or (standard.Focus and (n == L["Focus"])) or
-			(standard.BuffTracker and (n == L["Buff Tracker"])) or (standard.DebuffTracker and (n == L["Debuff Tracker"])) or
-			(standard.Totems and (n == L["Totems"])) or (standard.Runes and (n == L["Runes"])) or (standard.Timeline and (n == L["Timeline"])) or
-			(standard.Notifications and (n == L["Notifications"])) then
+					(standard.ShortBuffs and (n == L["Short Buffs"])) or (standard.LongBuffs and (n == L["Long Buffs"])) or
+					(standard.PlayerDebuffs and (n == L["Debuffs"])) or (standard.Cooldowns and (n == L["Cooldowns"])) or
+					(standard.Target and (n == L["Target"])) or (standard.Focus and (n == L["Focus"])) or
+					(standard.BuffTracker and (n == L["Buff Tracker"])) or (standard.DebuffTracker and (n == L["Debuff Tracker"])) or
+					(standard.Totems and (n == L["Totems"])) or (standard.Runes and (n == L["Runes"])) or (standard.Timeline and (n == L["Timeline"])) or
+					(standard.Notifications and (n == L["Notifications"])) then
 				bg.linkSettings = not bg.linkSettings
 				MOD:InitializeBarGroupSettings(bg)
 			end
@@ -353,12 +353,12 @@ local function DeleteStandardBarGroups()
 	for n, bg in pairs(bgs) do
 		if IsOn(bg) then
 			if (standard.PlayerBuffs and (n == L["Buffs"])) or
-			(standard.ShortBuffs and (n == L["Short Buffs"])) or (standard.LongBuffs and (n == L["Long Buffs"])) or
-			(standard.PlayerDebuffs and (n == L["Debuffs"])) or (standard.Cooldowns and (n == L["Cooldowns"])) or
-			(standard.Target and (n == L["Target"])) or (standard.Focus and (n == L["Focus"])) or
-			(standard.BuffTracker and (n == L["Buff Tracker"])) or (standard.DebuffTracker and (n == L["Debuff Tracker"])) or
-			(standard.Totems and (n == L["Totems"])) or (standard.Runes and (n == L["Runes"])) or (standard.Timeline and (n == L["Timeline"])) or
-			(standard.Notifications and (n == L["Notifications"])) then
+					(standard.ShortBuffs and (n == L["Short Buffs"])) or (standard.LongBuffs and (n == L["Long Buffs"])) or
+					(standard.PlayerDebuffs and (n == L["Debuffs"])) or (standard.Cooldowns and (n == L["Cooldowns"])) or
+					(standard.Target and (n == L["Target"])) or (standard.Focus and (n == L["Focus"])) or
+					(standard.BuffTracker and (n == L["Buff Tracker"])) or (standard.DebuffTracker and (n == L["Debuff Tracker"])) or
+					(standard.Totems and (n == L["Totems"])) or (standard.Runes and (n == L["Runes"])) or (standard.Timeline and (n == L["Timeline"])) or
+					(standard.Notifications and (n == L["Notifications"])) then
 				MOD:ReleaseBarGroup(bg)
 				MOD.db.profile.BarGroups[n] = Off
 				for _, bp in pairs(MOD.db.profile.BarGroups) do if IsOn(bp) and (bp.anchor == n) then bp.anchor = false end end
@@ -371,8 +371,8 @@ end
 -- Check if any standard bar groups are selected
 local function AnySelectedStandardBarGroups(exists)
 	if not exists then return standard.PlayerBuffs or standard.ShortBuffs or standard.LongBuffs or standard.PlayerDebuffs or standard.Cooldowns or
-		standard.Target or standard.Focus or standard.Totems or standard.Runes or standard.Notifications or
-		standard.BuffTracker or standard.DebuffTracker or standard.Timeline end
+			standard.Target or standard.Focus or standard.Totems or standard.Runes or standard.Notifications or
+			standard.BuffTracker or standard.DebuffTracker or standard.Timeline end
 	return CheckBarGroupsExist()
 end
 
@@ -527,7 +527,7 @@ end
 
 -- Default bar information tables
 local unitList = { player = "Player", pet = "Pet", target = "Target", focus = "Focus",
-	mouseover = "Mouseover", pettarget = "Pet's Target", targettarget = "Target's Target", focustarget = "Focus's Target" }
+				   mouseover = "Mouseover", pettarget = "Pet's Target", targettarget = "Target's Target", focustarget = "Focus's Target" }
 local castList = { player = "Player", pet = "Pet", other = "Other", anyone = "Anyone" }
 local lastdatecheck = ""
 local lastdatecount = 0
@@ -1844,7 +1844,7 @@ MOD.OptionsTable = {
 							set = function(info, value) standard.PlayerBuffs = value end,
 						},
 						spacer = { type = "description", order = 6, width = "double",
-							name = function() return L["All buffs on the player."] .. BarGroupString(L["Buffs"]) end,
+								   name = function() return L["All buffs on the player."] .. BarGroupString(L["Buffs"]) end,
 						},
 						spacerA = { type = "description", name = "", order = 7 },
 						ShortBuffs = {
@@ -1853,7 +1853,7 @@ MOD.OptionsTable = {
 							set = function(info, value) standard.ShortBuffs = value end,
 						},
 						spacer0 = { type = "description", order = 11, width = "double",
-							name = function() return L["Buffs on the player lasting less than 2 minutes."] .. BarGroupString(L["Short Buffs"]) end,
+									name = function() return L["Buffs on the player lasting less than 2 minutes."] .. BarGroupString(L["Short Buffs"]) end,
 						},
 						spacer0A = { type = "description", name = "", order = 12 },
 						LongBuffs = {
@@ -1862,7 +1862,7 @@ MOD.OptionsTable = {
 							set = function(info, value) standard.LongBuffs = value end,
 						},
 						spacer1 = { type = "description", order = 21, width = "double",
-							name = function() return L["Buffs on the player lasting at least 2 minutes."] .. BarGroupString(L["Long Buffs"]) end,
+									name = function() return L["Buffs on the player lasting at least 2 minutes."] .. BarGroupString(L["Long Buffs"]) end,
 						},
 						spacer1A = { type = "description", name = "", order = 22 },
 						Debuffs = {
@@ -1871,7 +1871,7 @@ MOD.OptionsTable = {
 							set = function(info, value) standard.PlayerDebuffs = value end,
 						},
 						spacer2 = { type = "description", order = 26, width = "double",
-							name = function() return L["Debuffs on the player."] .. BarGroupString(L["Debuffs"]) end,
+									name = function() return L["Debuffs on the player."] .. BarGroupString(L["Debuffs"]) end,
 						},
 						spacer2A = { type = "description", name = "", order = 27 },
 						Cooldowns = {
@@ -1880,7 +1880,7 @@ MOD.OptionsTable = {
 							set = function(info, value) standard.Cooldowns = value end,
 						},
 						spacer3 = { type = "description", order = 31, width = "double",
-							name = function() return L["Cooldowns for the player lasting at least 2 seconds."] .. BarGroupString(L["Cooldowns"]) end,
+									name = function() return L["Cooldowns for the player lasting at least 2 seconds."] .. BarGroupString(L["Cooldowns"]) end,
 						},
 						spacer3A = { type = "description", name = "", order = 32 },
 						Target = {
@@ -1889,7 +1889,7 @@ MOD.OptionsTable = {
 							set = function(info, value) standard.Target = value end,
 						},
 						spacer4 = { type = "description", order = 36, width = "double",
-							name = function() return L["Buffs and debuffs cast by the player on the target."] .. BarGroupString(L["Target"]) end,
+									name = function() return L["Buffs and debuffs cast by the player on the target."] .. BarGroupString(L["Target"]) end,
 						},
 						spacer4A = { type = "description", name = "", order = 37 },
 						Focus = {
@@ -1898,10 +1898,10 @@ MOD.OptionsTable = {
 							set = function(info, value) standard.Focus = value end,
 						},
 						spacer5 = { type = "description", order = 41, width = "double",
-							name = function() return L["Buffs and debuffs cast by the player on the focus."] .. BarGroupString(L["Focus"]) end,
+									name = function() return L["Buffs and debuffs cast by the player on the focus."] .. BarGroupString(L["Focus"]) end,
 						},
 						spacer5A = { type = "description", name = "", order = 42,
-							hidden = function(info) return (MOD.myClass ~= "DEATHKNIGHT") and (MOD.myClass ~= "SHAMAN") end,
+									 hidden = function(info) return (MOD.myClass ~= "DEATHKNIGHT") and (MOD.myClass ~= "SHAMAN") end,
 						},
 						Totems = {
 							type = "toggle", order = 45, name = L["Totems"],
@@ -1916,12 +1916,12 @@ MOD.OptionsTable = {
 							set = function(info, value) standard.Runes = value end,
 						},
 						spacer6_DK = { type = "description", order = 46, width = "double",
-							name = function() return L["Rune cooldown bars for Death Knight players."] .. BarGroupString(L["Runes"]) end,
-							hidden = function(info) return MOD.myClass ~= "DEATHKNIGHT" end,
+									   name = function() return L["Rune cooldown bars for Death Knight players."] .. BarGroupString(L["Runes"]) end,
+									   hidden = function(info) return MOD.myClass ~= "DEATHKNIGHT" end,
 						},
 						spacer6_SHAMAN = { type = "description", order = 46, width = "double",
-							name = function() return L["Totem tracker bars for Shaman players."] .. BarGroupString(L["Totems"]) end,
-							hidden = function(info) return MOD.myClass ~= "SHAMAN" end,
+										   name = function() return L["Totem tracker bars for Shaman players."] .. BarGroupString(L["Totems"]) end,
+										   hidden = function(info) return MOD.myClass ~= "SHAMAN" end,
 						},
 						spacer6A = { type = "description", name = "", order = 47 },
 						Notifications = {
@@ -1930,7 +1930,7 @@ MOD.OptionsTable = {
 							set = function(info, value) standard.Notifications = value end,
 						},
 						spacer7 = { type = "description", order = 51, width = "double",
-							name = function() return L["Common class-specific notifications."] .. BarGroupString(L["Notifications"]) end,
+									name = function() return L["Common class-specific notifications."] .. BarGroupString(L["Notifications"]) end,
 						},
 						spacer7A = { type = "description", name = "", order = 52 },
 						Hots = {
@@ -1939,7 +1939,7 @@ MOD.OptionsTable = {
 							set = function(info, value) standard.BuffTracker = value end,
 						},
 						spacer8 = { type = "description", order = 61, width = "double",
-							name = function() return L["Buff tracker string"] .. BarGroupString(L["Buff Tracker"]) end,
+									name = function() return L["Buff tracker string"] .. BarGroupString(L["Buff Tracker"]) end,
 						},
 						spacer8A = { type = "description", name = "", order = 62 },
 						Dots = {
@@ -1948,7 +1948,7 @@ MOD.OptionsTable = {
 							set = function(info, value) standard.DebuffTracker = value end,
 						},
 						spacer9 = { type = "description", order = 66, width = "double",
-							name = function() return L["Debuff tracker string"] .. BarGroupString(L["Debuff Tracker"]) end,
+									name = function() return L["Debuff tracker string"] .. BarGroupString(L["Debuff Tracker"]) end,
 						},
 						spacer9A = { type = "description", name = "", order = 67 },
 						Timeline = {
@@ -1957,7 +1957,7 @@ MOD.OptionsTable = {
 							set = function(info, value) standard.Timeline = value end,
 						},
 						spacer10 = { type = "description", order = 71, width = "double",
-							name = function() return L["Timeline string"] .. BarGroupString(L["Timeline"]) end,
+									 name = function() return L["Timeline string"] .. BarGroupString(L["Timeline"]) end,
 						},
 						spacer10A = { type = "description", name = "", order = 72 },
 						ConfigureBars = {
@@ -2493,7 +2493,7 @@ MOD.OptionsTable = {
 									set = function(info, r, g, b, a)
 										local t = MOD.db.global.Defaults.labelColor
 										if not t then MOD.db.global.Defaults.labelColor = { r = r, g = g, b = b, a = a }
-											else t.r = r; t.g = g; t.b = b; t.a = a end
+										else t.r = r; t.g = g; t.b = b; t.a = a end
 										MOD:UpdateAllBarGroups()
 									end,
 								},
@@ -2563,7 +2563,7 @@ MOD.OptionsTable = {
 									set = function(info, r, g, b, a)
 										local t = MOD.db.global.Defaults.timeColor
 										if not t then MOD.db.global.Defaults.timeColor = { r = r, g = g, b = b, a = a }
-											else t.r = r; t.g = g; t.b = b; t.a = a end
+										else t.r = r; t.g = g; t.b = b; t.a = a end
 										MOD:UpdateAllBarGroups()
 									end,
 								},
@@ -2633,7 +2633,7 @@ MOD.OptionsTable = {
 									set = function(info, r, g, b, a)
 										local t = MOD.db.global.Defaults.iconColor
 										if not t then MOD.db.global.Defaults.iconColor = { r = r, g = g, b = b, a = a }
-											else t.r = r; t.g = g; t.b = b; t.a = a end
+										else t.r = r; t.g = g; t.b = b; t.a = a end
 										MOD:UpdateAllBarGroups()
 									end,
 								},
@@ -2703,7 +2703,7 @@ MOD.OptionsTable = {
 									set = function(info, r, g, b, a)
 										local t = MOD.db.global.Defaults.backdropFill
 										if not t then MOD.db.global.Defaults.backdropFill = { r = r, g = g, b = b, a = a }
-											else t.r = r; t.g = g; t.b = b; t.a = a end
+										else t.r = r; t.g = g; t.b = b; t.a = a end
 										MOD:UpdateAllBarGroups()
 									end,
 								},
@@ -2763,7 +2763,7 @@ MOD.OptionsTable = {
 									set = function(info, r, g, b, a)
 										local t = MOD.db.global.Defaults.backdropColor
 										if not t then MOD.db.global.Defaults.backdropColor = { r = r, g = g, b = b, a = a }
-											else t.r = r; t.g = g; t.b = b; t.a = a end
+										else t.r = r; t.g = g; t.b = b; t.a = a end
 										MOD:UpdateAllBarGroups()
 									end,
 								},
@@ -2798,7 +2798,7 @@ MOD.OptionsTable = {
 									set = function(info, r, g, b, a)
 										local t = MOD.db.global.Defaults.borderColor
 										if not t then MOD.db.global.Defaults.borderColor = { r = r, g = g, b = b, a = a }
-											else t.r = r; t.g = g; t.b = b; t.a = a end
+										else t.r = r; t.g = g; t.b = b; t.a = a end
 										MOD:UpdateAllBarGroups()
 									end,
 								},
@@ -3189,7 +3189,7 @@ MOD.OptionsTable = {
 						Border = {
 							type = "toggle", order = 10, name = L["Hide Custom Border"],
 							disabled = function(info) return (MOD.MSQ and MOD.db.global.ButtonFacadeIcons) or
-								(Raven.frame.SetTemplate and MOD.db.global.TukuiSkin and MOD.db.global.TukuiIcon) end,
+									(Raven.frame.SetTemplate and MOD.db.global.TukuiSkin and MOD.db.global.TukuiIcon) end,
 							desc = L["By default, icons are displayed with a custom border and can be informatively colored using settings in the bar group Appearance tab. If this option is checked then custom borders are hidden."],
 							get = function(info) return MOD.db.global.HideBorder end,
 							set = function(info, value) MOD.db.global.HideBorder = value; MOD:UpdateAllBarGroups() end,
@@ -3197,8 +3197,8 @@ MOD.OptionsTable = {
 						Trim = {
 							type = "toggle", order = 20, name = L["Trim Icon Texture"],
 							disabled = function(info) return (MOD.MSQ and MOD.db.global.ButtonFacadeIcons) or
-								(Raven.frame.SetTemplate and MOD.db.global.TukuiSkin and MOD.db.global.TukuiIcon)
-								or not MOD.db.global.HideBorder end,
+									(Raven.frame.SetTemplate and MOD.db.global.TukuiSkin and MOD.db.global.TukuiIcon)
+									or not MOD.db.global.HideBorder end,
 							desc = L["When hiding custom borders, the full icon texture is displayed by default but when this option is enabled the texture is trimmed to remove the outer edge."],
 							get = function(info) return MOD.db.global.TrimIcon end,
 							set = function(info, value) MOD.db.global.TrimIcon = value; MOD:UpdateAllBarGroups() end,
@@ -3213,8 +3213,8 @@ MOD.OptionsTable = {
 						PixelBorder = {
 							type = "toggle", order = 32, name = L["Pixel Icon Border"],
 							disabled = function(info) return (MOD.MSQ and MOD.db.global.ButtonFacadeIcons) or
-								(Raven.frame.SetTemplate and MOD.db.global.TukuiSkin and MOD.db.global.TukuiIcon) or
-								not MOD.db.global.PixelPerfect or not MOD.db.global.HideBorder end,
+									(Raven.frame.SetTemplate and MOD.db.global.TukuiSkin and MOD.db.global.TukuiIcon) or
+									not MOD.db.global.PixelPerfect or not MOD.db.global.HideBorder end,
 							desc = L["If checked, icons will be displayed with a border one pixel wide (requires /reload)."],
 							get = function(info) return MOD.db.global.PixelIconBorder end,
 							set = function(info, value) MOD.db.global.PixelIconBorder = value; MOD:UpdateAllBarGroups() end,
@@ -3253,8 +3253,8 @@ MOD.OptionsTable = {
 						DefaultBackdropColor = {
 							type = "color", order = 55, name = L["Backdrop"], hasAlpha = true, width = "half",
 							disabled = function(info) return (MOD.MSQ and MOD.db.global.ButtonFacadeIcons) or
-								(Raven.frame.SetTemplate and MOD.db.global.TukuiSkin and MOD.db.global.TukuiIcon) or
-								not MOD.db.global.PixelPerfect or not MOD.db.global.HideBorder or not MOD.db.global.PixelIconBorder end,
+									(Raven.frame.SetTemplate and MOD.db.global.TukuiSkin and MOD.db.global.TukuiIcon) or
+									not MOD.db.global.PixelPerfect or not MOD.db.global.HideBorder or not MOD.db.global.PixelIconBorder end,
 							desc = L["Set color for icon backdrop (displayed only if pixel icon borders are enabled)."],
 							get = function(info) local t = MOD.db.global.DefaultIconBackdropColor; return t.r, t.g, t.b, t.a end,
 							set = function(info, r, g, b, a)
@@ -3727,7 +3727,7 @@ MOD.OptionsTable = {
 									name = function(info)
 										local t = lists.spell
 										if t and string.find(t, "^#%d+") then return MOD:GetLabel(t) else return "" end
-										end,
+									end,
 								},
 							},
 						},
@@ -3894,7 +3894,7 @@ MOD.OptionsTable = {
 									style = "dropdown",
 								},
 								Space2 = { type = "description", name = "", order = 20,
-									hidden = function(info) return not MOD.db.global.EnemySpellCastAlerts.enabled end,
+										   hidden = function(info) return not MOD.db.global.EnemySpellCastAlerts.enabled end,
 								},
 								BuffAlert = {
 									type = "toggle", order = 30, name = L["Buff"], width = "half",
@@ -4097,7 +4097,7 @@ MOD.OptionsTable = {
 									style = "dropdown",
 								},
 								Space2 = { type = "description", name = "", order = 20,
-									hidden = function(info) return not MOD.db.global.FriendSpellCastAlerts.enabled end,
+										   hidden = function(info) return not MOD.db.global.FriendSpellCastAlerts.enabled end,
 								},
 								BuffAlert = {
 									type = "toggle", order = 30, name = L["Buff"], width = "half",
@@ -4300,7 +4300,7 @@ MOD.OptionsTable = {
 									style = "dropdown",
 								},
 								Space2 = { type = "description", name = "", order = 20,
-									hidden = function(info) return not MOD.db.global.EnemyBuffAlerts.enabled end,
+										   hidden = function(info) return not MOD.db.global.EnemyBuffAlerts.enabled end,
 								},
 								BuffAlert = {
 									type = "toggle", order = 30, name = L["Buff"], width = "half",
@@ -4489,7 +4489,7 @@ MOD.OptionsTable = {
 									style = "dropdown",
 								},
 								Space2 = { type = "description", name = "", order = 20,
-									hidden = function(info) return not MOD.db.global.FriendDebuffAlerts.enabled end,
+										   hidden = function(info) return not MOD.db.global.FriendDebuffAlerts.enabled end,
 								},
 								BuffAlert = {
 									type = "toggle", order = 30, name = L["Buff"], width = "half",
@@ -5769,9 +5769,9 @@ MOD.OptionsTable = {
 											type = "range", order = 25, name = L["Expire Time"], min = 0, max = 300, step = 0.1,
 											desc = L["Set number of seconds before timer bar finishes to show expire effects."],
 											disabled = function(info) return not GetBarGroupField("colorExpiring") and not GetBarGroupField("shineExpiring") and
-												not GetBarGroupField("flashExpiring") and not GetBarGroupField("glowExpiring") and not GetBarGroupField("pulseExpiring") and
-												not GetBarGroupField("desatExpiring") and not GetBarGroupField("expireMSBT") and not GetBarGroupField("soundSpellExpire") and
-												not (GetBarGroupField("soundAltExpire") and GetBarGroupField("soundAltExpire") ~= "None") end,
+													not GetBarGroupField("flashExpiring") and not GetBarGroupField("glowExpiring") and not GetBarGroupField("pulseExpiring") and
+													not GetBarGroupField("desatExpiring") and not GetBarGroupField("expireMSBT") and not GetBarGroupField("soundSpellExpire") and
+													not (GetBarGroupField("soundAltExpire") and GetBarGroupField("soundAltExpire") ~= "None") end,
 											get = function(info) return GetBarGroupField("flashTime") end,
 											set = function(info, value) SetBarGroupField("flashTime", value) end,
 										},
@@ -5779,9 +5779,9 @@ MOD.OptionsTable = {
 											type = "range", order = 26, name = L["Expire Percentage"], min = 0, max = 100, step = 1,
 											desc = L["Set minimum percentage of duration for the Expire Time setting (use whichever is longer)."],
 											disabled = function(info) return not GetBarGroupField("colorExpiring") and not GetBarGroupField("shineExpiring") and
-												not GetBarGroupField("flashExpire") and not GetBarGroupField("glowExpiring") and not GetBarGroupField("pulseExpiring") and
-												not GetBarGroupField("desatExpiring") and not GetBarGroupField("expireMSBT") and not GetBarGroupField("soundSpellExpire") and
-												not (GetBarGroupField("soundAltExpire") and GetBarGroupField("soundAltExpire") ~= "None") end,
+													not GetBarGroupField("flashExpire") and not GetBarGroupField("glowExpiring") and not GetBarGroupField("pulseExpiring") and
+													not GetBarGroupField("desatExpiring") and not GetBarGroupField("expireMSBT") and not GetBarGroupField("soundSpellExpire") and
+													not (GetBarGroupField("soundAltExpire") and GetBarGroupField("soundAltExpire") ~= "None") end,
 											get = function(info) return GetBarGroupField("expirePercentage") or 0 end,
 											set = function(info, value) SetBarGroupField("expirePercentage", value) end,
 										},
@@ -5789,9 +5789,9 @@ MOD.OptionsTable = {
 											type = "range", order = 27, name = L["Minimum Duration"], min = 0, max = 60, step = 0.1,
 											desc = L["Set minimum duration in minutes required to trigger expire special effects."],
 											disabled = function(info) return not GetBarGroupField("colorExpiring") and not GetBarGroupField("shineExpiring") and
-												not GetBarGroupField("flashExpire") and not GetBarGroupField("glowExpiring") and not GetBarGroupField("pulseExpiring") and
-												not GetBarGroupField("desatExpiring") and not GetBarGroupField("expireMSBT") and not GetBarGroupField("soundSpellExpire") and
-												not (GetBarGroupField("soundAltExpire") and GetBarGroupField("soundAltExpire") ~= "None") end,
+													not GetBarGroupField("flashExpire") and not GetBarGroupField("glowExpiring") and not GetBarGroupField("pulseExpiring") and
+													not GetBarGroupField("desatExpiring") and not GetBarGroupField("expireMSBT") and not GetBarGroupField("soundSpellExpire") and
+													not (GetBarGroupField("soundAltExpire") and GetBarGroupField("soundAltExpire") ~= "None") end,
 											get = function(info) return (GetBarGroupField("expireMinimum") or 0) / 60 end,
 											set = function(info, value) if value == 0 then value = nil else value = value * 60 end
 												SetBarGroupField("expireMinimum", value) end,
@@ -5801,9 +5801,9 @@ MOD.OptionsTable = {
 											type = "toggle", order = 31, name = L["Use Spell Expire Time"],
 											desc = L["Use spell's expire time when set on the Spells tab."],
 											disabled = function(info) return not GetBarGroupField("colorExpiring") and not GetBarGroupField("shineExpiring") and
-												not GetBarGroupField("flashExpire") and not GetBarGroupField("glowExpiring") and not GetBarGroupField("pulseExpiring") and
-												not GetBarGroupField("desatExpiring") and not GetBarGroupField("expireMSBT") and not GetBarGroupField("soundSpellExpire") and
-												not (GetBarGroupField("soundAltExpire") and GetBarGroupField("soundAltExpire") ~= "None") end,
+													not GetBarGroupField("flashExpire") and not GetBarGroupField("glowExpiring") and not GetBarGroupField("pulseExpiring") and
+													not GetBarGroupField("desatExpiring") and not GetBarGroupField("expireMSBT") and not GetBarGroupField("soundSpellExpire") and
+													not (GetBarGroupField("soundAltExpire") and GetBarGroupField("soundAltExpire") ~= "None") end,
 											get = function(info) return not GetBarGroupField("spellExpireTimes") end,
 											set = function(info, value) SetBarGroupField("spellExpireTimes", not value) end,
 										},
@@ -5811,9 +5811,9 @@ MOD.OptionsTable = {
 											type = "toggle", order = 32, name = L["Use Spell Expire Color"],
 											desc = L["Use spell's expire color when set on the Spells tab."],
 											disabled = function(info) return not GetBarGroupField("colorExpiring") and not GetBarGroupField("shineExpiring") and
-												not GetBarGroupField("flashExpire") and not GetBarGroupField("glowExpiring") and not GetBarGroupField("pulseExpiring") and
-												not GetBarGroupField("desatExpiring") and not GetBarGroupField("expireMSBT") and not GetBarGroupField("soundSpellExpire") and
-												not (GetBarGroupField("soundAltExpire") and GetBarGroupField("soundAltExpire") ~= "None") end,
+													not GetBarGroupField("flashExpire") and not GetBarGroupField("glowExpiring") and not GetBarGroupField("pulseExpiring") and
+													not GetBarGroupField("desatExpiring") and not GetBarGroupField("expireMSBT") and not GetBarGroupField("soundSpellExpire") and
+													not (GetBarGroupField("soundAltExpire") and GetBarGroupField("soundAltExpire") ~= "None") end,
 											get = function(info) return GetBarGroupField("spellExpireColors") end,
 											set = function(info, value) SetBarGroupField("spellExpireColors", value) end,
 										},
@@ -7651,6 +7651,12 @@ MOD.OptionsTable = {
 									desc = L["Include shared potion/elixir cooldowns (an item subject to the shared cooldown must be in your bags in order for the cooldown to be detected)."],
 									get = function(info) return GetBarGroupField("detectPotionCooldowns") end,
 									set = function(info, value) SetBarGroupField("detectPotionCooldowns", value) end,
+								},
+								GlobalCooldown = {
+									type = "toggle", order = 35, name = L["Global Cooldown"],
+									desc = L["Include Cobal Cooldown"],
+									get = function(info) return GetBarGroupField("detectGlobalCooldown") end,
+									set = function(info, value) SetBarGroupField("detectGlobalCooldown", value) end,
 								},
 								OtherCooldowns = {
 									type = "toggle", order = 40, name = L["Other"],
@@ -13020,7 +13026,7 @@ MOD.OptionsTable = {
 											get = function(info)
 												if not GetTestField("Debuff Type", "hasDebuff") then SetTestField("Debuff Type", "hasDebuff", "Poison") end
 												return GetTestField("Debuff Type", "hasDebuff") == "Poison"
-												end,
+											end,
 											set = function(info, value) if value then SetTestField("Debuff Type", "hasDebuff", "Poison") end end,
 										},
 										CheckDiseaseDebuff = {
@@ -14638,9 +14644,9 @@ MOD.barOptions = {
 						type = "range", order = 25, name = L["Expire Time"], min = 0, max = 300, step = 0.1,
 						desc = L["Set number of seconds before timer bar finishes to show expire effects (may be overridden by spell expire time, see bar group expire effects options)."],
 						disabled = function(info) return not GetBarField(info, "colorExpiring") and not GetBarField(info, "shineExpiring") and
-							not GetBarField(info, "flashExpiring") and not GetBarField(info, "glowExpiring") and not GetBarField(info, "pulseExpiring") and
-							not GetBarField(info, "desatExpiring") and not GetBarField(info, "expireMSBT") and not GetBarField(info, "soundSpellExpire") and
-							not (GetBarField(info, "soundAltExpire") and GetBarField(info, "soundAltExpire") ~= "None") end,
+								not GetBarField(info, "flashExpiring") and not GetBarField(info, "glowExpiring") and not GetBarField(info, "pulseExpiring") and
+								not GetBarField(info, "desatExpiring") and not GetBarField(info, "expireMSBT") and not GetBarField(info, "soundSpellExpire") and
+								not (GetBarField(info, "soundAltExpire") and GetBarField(info, "soundAltExpire") ~= "None") end,
 						get = function(info) return GetBarField(info, "flashTime") end,
 						set = function(info, value) SetBarField(info, "flashTime", value) end,
 					},
@@ -14648,9 +14654,9 @@ MOD.barOptions = {
 						type = "range", order = 26, name = L["Expire Percentage"], min = 0, max = 100, step = 1,
 						desc = L["Set minimum percentage of duration for the Expire Time setting (use whichever is longer)."],
 						disabled = function(info) return not GetBarField(info, "colorExpiring") and not GetBarField(info, "shineExpiring") and
-							not GetBarField(info, "flashExpire") and not GetBarField(info, "glowExpiring") and not GetBarField(info, "pulseExpiring") and
-							not GetBarField(info, "desatExpiring") and not GetBarField(info, "expireMSBT") and not GetBarField(info, "soundSpellExpire") and
-							not (GetBarField(info, "soundAltExpire") and GetBarField(info, "soundAltExpire") ~= "None") end,
+								not GetBarField(info, "flashExpire") and not GetBarField(info, "glowExpiring") and not GetBarField(info, "pulseExpiring") and
+								not GetBarField(info, "desatExpiring") and not GetBarField(info, "expireMSBT") and not GetBarField(info, "soundSpellExpire") and
+								not (GetBarField(info, "soundAltExpire") and GetBarField(info, "soundAltExpire") ~= "None") end,
 						get = function(info) return GetBarField(info, "expirePercentage") or 0 end,
 						set = function(info, value) SetBarField(info, "expirePercentage", value) end,
 					},
@@ -14658,9 +14664,9 @@ MOD.barOptions = {
 						type = "range", order = 27, name = L["Minimum Duration"], min = 0, max = 60, step = 0.1,
 						desc = L["Set minimum duration in minutes required to trigger expire special effects."],
 						disabled = function(info) return not GetBarField(info, "colorExpiring") and not GetBarField(info, "shineExpiring") and
-							not GetBarField(info, "flashExpire") and not GetBarField(info, "glowExpiring") and not GetBarField(info, "pulseExpiring") and
-							not GetBarField(info, "desatExpiring") and not GetBarField(info, "expireMSBT") and not GetBarField(info, "soundSpellExpire") and
-							not (GetBarField(info, "soundAltExpire") and GetBarField(info, "soundAltExpire") ~= "None") end,
+								not GetBarField(info, "flashExpire") and not GetBarField(info, "glowExpiring") and not GetBarField(info, "pulseExpiring") and
+								not GetBarField(info, "desatExpiring") and not GetBarField(info, "expireMSBT") and not GetBarField(info, "soundSpellExpire") and
+								not (GetBarField(info, "soundAltExpire") and GetBarField(info, "soundAltExpire") ~= "None") end,
 						get = function(info) return (GetBarField(info, "expireMinimum") or 0) / 60 end,
 						set = function(info, value) if value == 0 then value = nil else value = value * 60 end
 							SetBarField(info, "expireMinimum", value) end,
@@ -14670,9 +14676,9 @@ MOD.barOptions = {
 						type = "toggle", order = 31, name = L["Use Spell Expire Time"],
 						desc = L["Use spell's expire time when set on the Spells tab."],
 						disabled = function(info) return not GetBarField(info, "colorExpiring") and not GetBarField(info, "shineExpiring") and
-							not GetBarField(info, "flashExpire") and not GetBarField(info, "glowExpiring") and not GetBarField(info, "pulseExpiring") and
-							not GetBarField(info, "desatExpiring") and not GetBarField(info, "expireMSBT") and not GetBarField(info, "soundSpellExpire") and
-							not (GetBarField(info, "soundAltExpire") and GetBarField(info, "soundAltExpire") ~= "None") end,
+								not GetBarField(info, "flashExpire") and not GetBarField(info, "glowExpiring") and not GetBarField(info, "pulseExpiring") and
+								not GetBarField(info, "desatExpiring") and not GetBarField(info, "expireMSBT") and not GetBarField(info, "soundSpellExpire") and
+								not (GetBarField(info, "soundAltExpire") and GetBarField(info, "soundAltExpire") ~= "None") end,
 						get = function(info) return not GetBarField(info, "spellExpireTimes") end,
 						set = function(info, value) SetBarField(info, "spellExpireTimes", not value) end,
 					},
@@ -14680,9 +14686,9 @@ MOD.barOptions = {
 						type = "toggle", order = 32, name = L["Use Spell Expire Color"],
 						desc = L["Use spell's expire color when set on the Spells tab."],
 						disabled = function(info) return not GetBarField(info, "colorExpiring") and not GetBarField(info, "shineExpiring") and
-							not GetBarField(info, "flashExpire") and not GetBarField(info, "glowExpiring") and not GetBarField(info, "pulseExpiring") and
-							not GetBarField(info, "desatExpiring") and not GetBarField(info, "expireMSBT") and not GetBarField(info, "soundSpellExpire") and
-							not (GetBarField(info, "soundAltExpire") and GetBarField(info, "soundAltExpire") ~= "None") end,
+								not GetBarField(info, "flashExpire") and not GetBarField(info, "glowExpiring") and not GetBarField(info, "pulseExpiring") and
+								not GetBarField(info, "desatExpiring") and not GetBarField(info, "expireMSBT") and not GetBarField(info, "soundSpellExpire") and
+								not (GetBarField(info, "soundAltExpire") and GetBarField(info, "soundAltExpire") ~= "None") end,
 						get = function(info) return GetBarField(info, "spellExpireColors") end,
 						set = function(info, value) SetBarField(info, "spellExpireColors", value) end,
 					},

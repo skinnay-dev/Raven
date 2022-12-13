@@ -93,7 +93,7 @@ MOD.BarGroupTemplate = { -- default bar group settings
 	detectCooldowns = false, detectBuffsMonitor = "player", detectBuffsCastBy = "player", detectDebuffsMonitor = "player",
 	detectDebuffsCastBy = "player", detectCooldownsBy = "player",
 	detectSpellCooldowns = true, detectTrinketCooldowns = true, detectInternalCooldowns = true, includeTotems = false,
-	detectSpellEffectCooldowns = true, detectSpellAlertCooldowns = false, detectPotionCooldowns = true, detectOtherCooldowns = true, detectRuneCooldowns = false,
+	detectSpellEffectCooldowns = true, detectSpellAlertCooldowns = false, detectPotionCooldowns = true, detectOtherCooldowns = true, detectRuneCooldowns = false, detectGlobalCooldown = false,
 	detectSharedGrimoires = true, detectSharedInfernals = true,
 	setDuration = false, setOnlyLongDuration = false, uniformDuration = 120, checkDuration = false, minimumDuration = true, filterDuration = 120,
 	checkTimeLeft = false, minimumTimeLeft = true, filterTimeLeft = 120, showNoDuration = false, showOnlyNoDuration = false,
@@ -1745,21 +1745,23 @@ local function DetectNewDebuffs(unit, n, aura, isBuff, bp, vbp, bg)
 end
 
 -- Check if a cooldown is of right type for the specified bar group
-local function CheckCooldownType(cd, bp)
-	local other, t, s = true, cd[5], cd[6]
-	if (t == "spell") or (t == "spell id") then
+local function CheckCooldownType(coolDown, bp)
+	local other, type, name = true, coolDown[5], coolDown[6]
+	if (type == "spell") or (type == "spell id") then
 		other = false; if bp.detectSpellCooldowns then return true end
-	elseif (t == "inventory") and ((s == 13) or (s == 14)) then
+	elseif (type == "inventory") and ((name == 13) or (name == 14)) then
 		other = false; if bp.detectTrinketCooldowns then return true end
-	elseif (t == "internal") then
+	elseif (type == "internal") then
 		other = false; if bp.detectInternalCooldowns then return true end
-	elseif t == "effect" then
+	elseif type == "effect" then
 		other = false; if bp.detectSpellEffectCooldowns then return true end
-	elseif t == "alert" then
+	elseif type == "alert" then
 		other = false; if bp.detectSpellAlertCooldowns then return true end
-	elseif t == "text" then -- might be a potion or elixir
-		if (s == "Shared Potion Cooldown") or (s == "Shared Elixir Cooldown") then
+	elseif type == "text" then -- might be a potion or elixir
+		if (name == "Shared Potion Cooldown") or (name == "Shared Elixir Cooldown") then
 			other = false; if bp.detectPotionCooldowns then return true end
+		elseif name == "Global Cooldown" then
+			other = false; if bp.detectGlobalCooldown then return true end
 		end
 	end
 	if other and bp.detectOtherCooldowns then return true end

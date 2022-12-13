@@ -1964,7 +1964,11 @@ end
 
 -- Iterate over current cooldowns, calling the function with cooldown name, cooldown table, and optional parameters
 function MOD:IterateCooldowns(func, p1, p2, p3)
-	for n, cd in pairs(activeCooldowns) do if ValidateCooldown(cd) then func(n, cd, p1, p2, p3) end end
+	for n, cd in pairs(activeCooldowns) do
+		if ValidateCooldown(cd) then
+			func(n, cd, p1, p2, p3)
+		end
+	end
 end
 
 -- Release all spell cooldowns from active cooldowns table by setting first field to nil to indicate not active
