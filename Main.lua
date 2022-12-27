@@ -40,7 +40,7 @@ function MOD.ExpansionIsOrAbove(exp)
 	return LE_EXPANSION_LEVEL_CURRENT >= exp
 end
 
-function MOD.MOD.ExpansionIsOrBelow(exp)
+function MOD.ExpansionIsOrBelow(exp)
 	if exp == nil then return true end --This is Vanilla
 	return LE_EXPANSION_LEVEL_CURRENT <= exp
 end
@@ -157,7 +157,7 @@ local alertColors = { -- default colors for spell alerts
 
 local UnitAura = UnitAura
 MOD.LCD = nil
-if MOD.MOD.ExpansionIsOrBelow(LE_EXPANSION_WRATH_OF_THE_LICH_KING) then
+if MOD.ExpansionIsOrBelow(LE_EXPANSION_WRATH_OF_THE_LICH_KING) then
 	MOD.LCD = LibStub("LibClassicDurations", true)
 	if MOD.LCD then
 		MOD.LCD:Register(Raven) -- tell library it's being used and should start working
@@ -882,7 +882,7 @@ function MOD:OnEnable()
 	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", CombatLogTracker)
 	self:RegisterEvent("UI_SCALE_CHANGED", UIScaleChanged)
 
-	if MOD.MOD.ExpansionIsOrBelow(LE_EXPANSION_WRATH_OF_THE_LICH_KING) then -- register events specific to classic
+	if MOD.ExpansionIsOrBelow(LE_EXPANSION_WRATH_OF_THE_LICH_KING) then -- register events specific to classic
 		if MOD.LCD then -- in classic, add library callback so target auras are handled correctly
 			MOD.LCD.RegisterCallback(Raven, "UNIT_BUFF", function(e, unit)
 				if unit ~= "target" then return end
@@ -1608,7 +1608,7 @@ local function GetBuffs(unit)
 	until not name
 
 	if unit ~= "player" then return end -- done for all but player, players also need to add vehicle buffs
-	if MOD.MOD.ExpansionIsOrBelow(LE_EXPANSION_WRATH_OF_THE_LICH_KING) or not UnitHasVehicleUI("player") then return end
+	if MOD.ExpansionIsOrBelow(LE_EXPANSION_WRATH_OF_THE_LICH_KING) or not UnitHasVehicleUI("player") then return end
 	i = 1
 	repeat
 		name, icon, count, btype, duration, expire, caster, isStealable, _, spellID, apply, boss = UnitAura("vehicle", i, "HELPFUL")
@@ -1636,7 +1636,7 @@ local function GetDebuffs(unit)
 	until not name
 
 	if unit ~= "player" then return end -- done for all but player, players also need to add vehicle debuffs
-	if MOD.MOD.ExpansionIsOrBelow(LE_EXPANSION_WRATH_OF_THE_LICH_KING) or not UnitHasVehicleUI("player") then return end
+	if MOD.ExpansionIsOrBelow(LE_EXPANSION_WRATH_OF_THE_LICH_KING) or not UnitHasVehicleUI("player") then return end
 	i = 1
 	repeat
 		name, icon, count, btype, duration, expire, caster, isStealable, _, spellID, apply, boss = UnitAura("vehicle", i, "HARMFUL")
