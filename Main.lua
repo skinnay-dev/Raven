@@ -27,9 +27,25 @@ local addonInitialized = false -- set when the addon is initialized
 local addonEnabled = false -- set when the addon is enabled
 local optionsLoaded = false -- set when the load-on-demand options panel module has been loaded
 local optionsFailed = false -- set if loading the option panel module failed
+local v, b, d, t = GetBuildInfo()
+MOD.isWrathPTR = v == "3.4.1"
+MOD.isModernAPI = true
 
+if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then
+	MOD.isModernAPI = MOD.isWrathPTR
+end
 
-MOD.isClassic = (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC) or (WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC) or (WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC)
+function MOD.RequiresMinExpansion(exp)
+	if exp == nil then return false end --This is Vanilla
+	return LE_EXPANSION_LEVEL_CURRENT >= exp
+end
+
+function MOD.RequiresMaxExpansion(exp)
+	if exp == nil then return true end --This is Vanilla
+	return LE_EXPANSION_LEVEL_CURRENT <= exp
+end
+
+--MOD.isClassic = (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC) or (WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC) or (WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC)
 MOD.updateOptions = false -- set this to cause the options panel to update (checked every half second)
 MOD.LocalSpellNames = {} -- must be defined in first module loaded
 local LSPELL = MOD.LocalSpellNames
@@ -141,7 +157,7 @@ local alertColors = { -- default colors for spell alerts
 
 local UnitAura = UnitAura
 MOD.LCD = nil
-if MOD.isClassic then
+if MOD.RequiresMaxExpansion(LE_EXPANSION_WRATH_OF_THE_LICH_KING) then
 	MOD.LCD = LibStub("LibClassicDurations", true)
 	if MOD.LCD then
 		MOD.LCD:Register(Raven) -- tell library it's being used and should start working
@@ -225,7 +241,7 @@ local function HideShow(key, frame, check, options)
 		if hide then
 			BuffFrame:Hide();
 
-			if not MOD.isClassic then
+			if MOD.isModernAPI and MOD.RequiresMinExpansion(LE_EXPANSION_DRAGONFLIGHT) then
 				DebuffFrame:Hide();
 			end
 
@@ -237,7 +253,7 @@ local function HideShow(key, frame, check, options)
 			hiding[key] = true;
 		elseif show then
 			BuffFrame:Show();
-			if not MOD.isClassic then
+			if MOD.isModernAPI and MOD.RequiresMinExpansion(LE_EXPANSION_DRAGONFLIGHT) then
 				DebuffFrame:Show();
 			end
 
@@ -253,7 +269,7 @@ end
 
 -- Show or hide the blizzard frames, called during update so synched with other changes
 local function CheckBlizzFrames()
-	if not MOD.isClassic and C_PetBattles.IsInBattle() then return end -- don't change visibility of any frame during pet battles
+	if MOD.RequiresMinExpansion(LE_EXPANSION_MISTS_OF_PANDARIA) and C_PetBattles.IsInBattle() then return end -- don't change visibility of any frame during pet battles
 
 	local p = MOD.db.profile
 	HideShow("buffs", _G.BuffFrame, p.hideBlizzBuffs, "buffs")
@@ -277,10 +293,10 @@ local function CheckBlizzFrames()
 
 	if MOD.myClass == "MONK" then
 		HideShow("chi", _G.MonkHarmonyBarFrame, p.hideBlizzChi)
-		if not MOD.isClassic and GetSpecializationInfoByID(268) then HideShow("stagger", _G.MonkStaggerBar, p.hideBlizzStagger) end
+		if MOD.RequiresMinExpansion(LE_EXPANSION_MISTS_OF_PANDARIA) and GetSpecializationInfoByID(268) then HideShow("stagger", _G.MonkStaggerBar, p.hideBlizzStagger) end
 	end
 
-	if (MOD.myClass == "PRIEST") and (not MOD.isClassic and GetSpecializationInfoByID(258)) then HideShow("insanity", _G.InsanityBarFrame, p.hideBlizzInsanity) end
+	if (MOD.myClass == "PRIEST") and (MOD.RequiresMinExpansion(LE_EXPANSION_MISTS_OF_PANDARIA) and GetSpecializationInfoByID(258)) then HideShow("insanity", _G.InsanityBarFrame, p.hideBlizzInsanity) end
 
 	if MOD.myClass == "WARLOCK" then HideShow("shards", _G.WarlockPowerFrame, p.hideBlizzShards) end
 
@@ -353,7 +369,7 @@ local function AddTracker(dstGUID, dstName, isBuff, name, icon, count, btype, du
 	local id = name .. tostring(spellID or "") -- append spellID if known to the tracker so can track multiple with same name (e.g., sacred shield)
 	local t = tracker[id] -- get or create a tracker entry for the spell
 	if not t then t = AllocateTable(); tracker[id] = t end -- create the tracker if necessary
-	local vehicle = not MOD.isClassic and UnitHasVehicleUI("player")
+	local vehicle = MOD.RequiresMinExpansion(LE_EXPANSION_CATACLYSM) and UnitHasVehicleUI("player")
 
 	local tag = isBuff and "T-Buff:" or "T-Debuff:" -- build a unique tag for this aura (this is a bit simpler than the AddAura version)
 	local guid = UnitGUID(caster)
@@ -866,7 +882,7 @@ function MOD:OnEnable()
 	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", CombatLogTracker)
 	self:RegisterEvent("UI_SCALE_CHANGED", UIScaleChanged)
 
-	if MOD.isClassic then -- register events specific to classic
+	if MOD.RequiresMaxExpansion(LE_EXPANSION_WRATH_OF_THE_LICH_KING) then -- register events specific to classic
 		if MOD.LCD then -- in classic, add library callback so target auras are handled correctly
 			MOD.LCD.RegisterCallback(Raven, "UNIT_BUFF", function(e, unit)
 				if unit ~= "target" then return end
@@ -1003,18 +1019,18 @@ function MOD:BAG_UPDATE(e)
 	table.wipe(bagCooldowns) -- update bag item cooldown table
 	for bag = 0, NUM_BAG_SLOTS do
 		local numSlots
-		if MOD.isClassic then
-			numSlots = GetContainerNumSlots(bag)
-		else
+		if MOD.isModernAPI then
 			numSlots = C_Container.GetContainerNumSlots(bag)
+		else
+			numSlots = GetContainerNumSlots(bag)
 		end
 
 		for slot = 1, numSlots do
 			local itemID
-			if MOD.isClassic then
-				itemID = GetContainerItemID(bag, slot)
-			else
+			if MOD.isModernAPI then
 				itemID = C_Container.GetContainerItemID(bag, slot)
+			else
+				itemID = GetContainerItemID(bag, slot)
 			end
 			if itemID then
 				local _, spellID = GetItemSpell(itemID)
@@ -1027,7 +1043,7 @@ end
 
 -- Create cache of talent info
 local function InitializeTalents()
-	if MOD.isClassic then talentsInitialized = true; return end -- not supported in classic
+	if not MOD.RequiresMinExpansion(LE_EXPANSION_MISTS_OF_PANDARIA) then talentsInitialized = true; return end -- not supported in classic
 
 	local tabs = GetNumSpecializations(false, false)
 	if tabs == 0 then return end
@@ -1187,7 +1203,7 @@ end
 
 -- Check for possess bar and vehicle updates which are not triggered by events
 local function CheckMiscellaneousUpdates()
-	if not MOD.isClassic then
+	if MOD.RequiresMinExpansion(LE_EXPANSION_CATACLYSM) then
 		if IsPossessBarVisible() or UnitHasVehicleUI("player") then updateCooldowns = true; unitUpdate.player = true; doUpdate = true end
 	end
 end
@@ -1304,7 +1320,7 @@ local function AddAura(unit, name, isBuff, spellID, count, btype, duration, cast
 		local b = AllocateTable() -- get an empty aura descriptor
 		local guid, cname, isNPC, vehicle = nil, nil, false, false
 		if caster then
-			guid = UnitGUID(caster); cname = UnitName(caster); vehicle = not MOD.isClassic and UnitHasVehicleUI(caster)
+			guid = UnitGUID(caster); cname = UnitName(caster); vehicle = MOD.RequiresMinExpansion(LE_EXPANSION_CATACLYSM) and UnitHasVehicleUI(caster)
 			if guid then
 				local unitType = string.match(guid, "(%a+)%-")
 				isNPC = (unitType == "Creature") or (unitType == "Vignette"); vehicle = vehicle or (unitType == "Vehicle")
@@ -1448,7 +1464,6 @@ end
 -- This routine scans the tooltip for the first line that is in this format and extracts the weapon buff name without rank or time
 local function GetWeaponBuffName(weaponSlot)
 	local ttInfo = C_TooltipInfo.GetInventoryItem("player", weaponSlot, false)
-
 	for i = 1, 30 do
 		if ttInfo.lines[i] then
 			if  ttInfo.lines[i].args[2] then
@@ -1471,7 +1486,7 @@ local function GetWeaponBuffName(weaponSlot)
 	return nil
 end
 
-local function GetWeaponBuffNameShadowlands(weaponSlot)
+local function GetWeaponBuffNameOld(weaponSlot)
 	local tt = MOD:GetBuffTooltip()
 	tt:SetInventoryItem("player", weaponSlot)
 
@@ -1523,10 +1538,10 @@ local function GetWeaponBuffs()
 	if mh then -- add the mainhand buff, if any, to the table
 		local islot = INVSLOT_MAINHAND
 		local mhbuff
-		if MOD.isClassic then
-			mhbuff = GetWeaponBuffNameShadowlands(islot)
-		else
+		if MOD.isModernAPI and not MOD.isWrathPTR then
 			mhbuff = GetWeaponBuffName(islot)
+		else
+			mhbuff = GetWeaponBuffNameOld(islot)
 		end
 		local name, rank, icon, castTime, minRange, maxRange
 		= GetSpellInfo(spellId or spellName or spellLink)
@@ -1552,10 +1567,10 @@ local function GetWeaponBuffs()
 	if oh then -- add the offhand buff, if any, to the table
 		local islot = INVSLOT_OFFHAND
 		local ohbuff
-		if MOD.isClassic then
-			ohbuff = GetWeaponBuffNameShadowlands(islot)
-		else
+		if MOD.isModernAPI and not MOD.isWrathPTR then
 			ohbuff = GetWeaponBuffName(islot)
+		else
+			ohbuff = GetWeaponBuffNameOld(islot)
 		end
 
 		if not ohbuff then -- if tooltip scan fails then use fallback of weapon name or slot name
@@ -1593,7 +1608,7 @@ local function GetBuffs(unit)
 	until not name
 
 	if unit ~= "player" then return end -- done for all but player, players also need to add vehicle buffs
-	if MOD.isClassic or not UnitHasVehicleUI("player") then return end
+	if MOD.RequiresMaxExpansion(LE_EXPANSION_WRATH_OF_THE_LICH_KING) or not UnitHasVehicleUI("player") then return end
 	i = 1
 	repeat
 		name, icon, count, btype, duration, expire, caster, isStealable, _, spellID, apply, boss = UnitAura("vehicle", i, "HELPFUL")
@@ -1621,7 +1636,7 @@ local function GetDebuffs(unit)
 	until not name
 
 	if unit ~= "player" then return end -- done for all but player, players also need to add vehicle debuffs
-	if MOD.isClassic or not UnitHasVehicleUI("player") then return end
+	if MOD.RequiresMaxExpansion(LE_EXPANSION_WRATH_OF_THE_LICH_KING) or not UnitHasVehicleUI("player") then return end
 	i = 1
 	repeat
 		name, icon, count, btype, duration, expire, caster, isStealable, _, spellID, apply, boss = UnitAura("vehicle", i, "HARMFUL")
@@ -1636,11 +1651,28 @@ end
 
 -- Add tracking auras (updated for Cataclysm which allows multiple active tracking types)
 local function GetTracking()
-	if MOD.isClassic then return end -- not supported in classic
-
 	local notTracking, notTrackingIcon, found = L["Not Tracking"], "Interface\\Minimap\\Tracking\\None", false
-	for i = 1, C_Minimap.GetNumTrackingTypes() do
-		local tracking, trackingIcon, active = C_Minimap.GetTrackingInfo(i)
+	local trackingTypes = nil
+	if MOD.isModernAPI then
+		trackingTypes = C_Minimap.GetNumTrackingTypes()
+	else
+		if MOD.RequiresMinExpansion(LE_EXPANSION_WRATH_OF_THE_LICH_KING) then
+			trackingTypes = GetNumTrackingTypes()
+		else
+			return
+		end
+	end
+
+	for i = 1, trackingTypes do
+		local tracking
+		local trackingIcon
+		local active
+		if MOD.isModernAPI then
+			tracking, trackingIcon, active = C_Minimap.GetTrackingInfo(i)
+		else
+			tracking, trackingIcon, active = GetTrackingInfo(i)
+		end
+
 		if active then
 			found = true
 			AddAura("player", tracking, true, nil, 1, "Tracking", 0, "player", nil, nil, nil, trackingIcon, 0, "tracking", tracking)
@@ -2017,7 +2049,17 @@ end
 
 -- Check if an item is on cooldown
 local function CheckItemCooldown(itemID)
-	local start, duration = GetItemCooldown(itemID)
+	local start = 0
+	local duration = 0
+	local ignore = 0
+	if MOD.isModernAPI then
+		start, duration, ignore = C_Container.GetItemCooldown(itemID)
+	else
+		start, duration = GetItemCooldown(itemID)
+	end
+	if start == nil or duration == nil then
+		return
+	end
 	if (start > 0) and (duration > 1.5) then -- don't include global cooldowns or really short cooldowns
 		local name, link, _, _, _, itemType, itemSubType, _, _, icon = GetItemInfo(itemID)
 		if name then
@@ -2157,7 +2199,7 @@ function MOD:UpdateCooldowns()
 		end
 
 		local offset = nil -- check for override/vehicle bar actions on cooldown
-		if not MOD.isClassic then
+		if MOD.RequiresMinExpansion(LE_EXPANSION_CATACLYSM) then
 			if HasVehicleActionBar() then offset = 132 elseif HasOverrideActionBar() then offset = 156 end
 		end
 		if offset then
@@ -2175,7 +2217,9 @@ function MOD:UpdateCooldowns()
 			end
 		end
 
-		for itemID in pairs(bagCooldowns) do CheckItemCooldown(itemID) end
+		if not MOD.isWrathPTR then
+			for itemID in pairs(bagCooldowns) do CheckItemCooldown(itemID) end
+		end
 		for itemID, slot in pairs(inventoryCooldowns) do CheckInventoryCooldown(itemID, slot) end
 
 		if startGCD and durationGCD then -- detect global cooldowns

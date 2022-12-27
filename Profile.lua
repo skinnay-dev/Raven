@@ -59,21 +59,21 @@ end
 
 -- Copy a table, including its metatable
 function MOD.CopyTable(object)
-    local lookup_table = {}
-    local function _copy(object)
-        if type(object) ~= "table" then
-            return object
-        elseif lookup_table[object] then
-            return lookup_table[object]
-        end
-        local new_table = {}
-        lookup_table[object] = new_table
-        for index, value in pairs(object) do
-            new_table[_copy(index)] = _copy(value)
-        end
-        return setmetatable(new_table, getmetatable(object))
-    end
-    return _copy(object)
+	local lookup_table = {}
+	local function _copy(object)
+		if type(object) ~= "table" then
+			return object
+		elseif lookup_table[object] then
+			return lookup_table[object]
+		end
+		local new_table = {}
+		lookup_table[object] = new_table
+		for index, value in pairs(object) do
+			new_table[_copy(index)] = _copy(value)
+		end
+		return setmetatable(new_table, getmetatable(object))
+	end
+	return _copy(object)
 end
 
 -- Global color palette containing the standard colors for this addon
@@ -187,7 +187,7 @@ function MOD:SetSpellDefaults()
 	end
 
 	MOD.mountSpells = {}
-	if not MOD.isClassic then
+	if MOD.RequiresMinExpansion(LE_EXPANSION_WARLORDS_OF_DRAENOR) then
 		local mountIDs = C_MountJournal.GetMountIDs()
 		for i, id in ipairs(mountIDs) do
 			local creatureName, spellID = C_MountJournal.GetMountInfoByID(id)
@@ -223,7 +223,9 @@ function MOD:SetCooldownDefaults()
 	end
 
 	local openTabs = 3 -- on live first two tabs are open to all specializations and the third is current spec
-	if MOD.isClassic then openTabs = GetNumSpellTabs() end -- on classic there are no specializations so all tabs are same
+	--if MOD.isClassic then openTabs = GetNumSpellTabs() end -- on classic there are no specializations so all tabs are same
+	openTabs = GetNumSpellTabs()
+
 
 	for tab = 1, openTabs do -- scan first two tabs of player spell book (general and current spec) for player spells on cooldown
 		local spellLine, spellIcon, offset, numSpells = GetSpellTabInfo(tab)
@@ -281,7 +283,7 @@ function MOD:SetCooldownDefaults()
 		end
 	end
 
-	if not MOD.isClassic then
+	if MOD.isModernAPI then
 		local tabs = GetNumSpellTabs()
 		if tabs and tabs > 3 then
 			for tab = 4, tabs do -- scan inactive tabs of player spell book for icons
@@ -312,20 +314,22 @@ function MOD:SetCooldownDefaults()
 			end
 		end
 
-		local p = professions -- scan professions for spells on cooldown
-		p[1], p[2], p[3], p[4], p[5], p[6] = GetProfessions()
-		for index = 1, 6 do
-			if p[index] then
-				local prof, _, _, _, numSpells, offset = GetProfessionInfo(p[index])
-				for i = 1, numSpells do
-					local stype = GetSpellBookItemInfo(i + offset, book)
-					if stype == "SPELL" then
-						local name, _, icon, _, _, _, spellID = getSpellInfo(i + offset, book)
-						if name and name ~= "" and icon and spellID then -- make sure valid spell
-							bst[name] = spellID
-							iconCache[name] = icon
-							local duration = GetSpellBaseCooldown(spellID) -- duration is in milliseconds
-							if duration and duration > 1500 then cds[spellID] = duration / 1000 end -- don't include spells with global cooldowns
+		if MOD.RequiresMinExpansion(LE_EXPANSION_CATACLYSM) then
+			local p = professions -- scan professions for spells on cooldown
+			p[1], p[2], p[3], p[4], p[5], p[6] = GetProfessions()
+			for index = 1, 6 do
+				if p[index] then
+					local prof, _, _, _, numSpells, offset = GetProfessionInfo(p[index])
+					for i = 1, numSpells do
+						local stype = GetSpellBookItemInfo(i + offset, book)
+						if stype == "SPELL" then
+							local name, _, icon, _, _, _, spellID = getSpellInfo(i + offset, book)
+							if name and name ~= "" and icon and spellID then -- make sure valid spell
+								bst[name] = spellID
+								iconCache[name] = icon
+								local duration = GetSpellBaseCooldown(spellID) -- duration is in milliseconds
+								if duration and duration > 1500 then cds[spellID] = duration / 1000 end -- don't include spells with global cooldowns
+							end
 						end
 					end
 				end

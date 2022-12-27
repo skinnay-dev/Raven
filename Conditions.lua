@@ -16,7 +16,7 @@ local timeEvents = {} -- table of times at which to trigger a simulated event du
 local classificationList = { normal = L["Normal"], worldboss = L["Boss"], elite = L["Elite"], rare = L["Rare"], rlite = L["Rare Elite"] }
 local classifications = { "normal", "worldboss", "elite", "rare", "rlite" }
 local unitList = { player = "Player", pet = "Pet", target = "Target", focus = "Focus",
-	mouseover = "Mouseover", pettarget = "Pet's Target", targettarget = "Target's Target", focustarget = "Focus's Target" }
+				   mouseover = "Mouseover", pettarget = "Pet's Target", targettarget = "Target's Target", focustarget = "Focus's Target" }
 
 -- Saved variables don't handle being set to nil properly so need to use alternate value to indicate an option has been turned off
 local Off = 0 -- value used to designate an option is turned off
@@ -26,24 +26,24 @@ local function IsOn(value) return value ~= nil and value ~= Off end -- return tr
 -- Initialization settings for each test type (note that nil values are placeholders for documentation purposes)
 MOD.conditionTests = {
 	["Player Status"] = { enable = false, inCombat = nil, isResting = nil, hasPet = nil, isStealthed = nil, isMounted = nil,
-		inGroup = nil, inParty = nil, inRaid = nil, isPvP = nil, inInstance = nil, inArena = nil, inBattleground = nil,
-		hasMainHand = nil, levelMainHand = 1, hasOffHand = nil, levelOffHand = 1, checkSpec = nil, spec = nil, checkSpell = nil, spell = nil,
-		checkTalent = nil, talent = nil, checkLevel = nil, level = 85, checkStance = nil, stance = nil,
-		checkHealth = nil, minHealth = 100, checkPower = nil, minPower = 100, checkHolyPower = nil, minHolyPower = 1,
-		checkShards = nil, minShards = 1, checkChi = nil, minChi = 1, checkLunarPower = nil, minLunarPower = 1,
-		checkInsanity = nil, minInsanity = 100, checkMaelstrom = nil, minMaelstrom = 150, checkArcane = nil, minArcane = 1,
-		checkComboPoints = nil, minComboPoints = 5, checkRunes = nil, minRunes = 1, checkTotems = nil, totem = nil,
-		checkEssence = nil, minEssence = 1,},
+						  inGroup = nil, inParty = nil, inRaid = nil, isPvP = nil, inInstance = nil, inArena = nil, inBattleground = nil,
+						  hasMainHand = nil, levelMainHand = 1, hasOffHand = nil, levelOffHand = 1, checkSpec = nil, spec = nil, checkSpell = nil, spell = nil,
+						  checkTalent = nil, talent = nil, checkLevel = nil, level = 85, checkStance = nil, stance = nil,
+						  checkHealth = nil, minHealth = 100, checkPower = nil, minPower = 100, checkHolyPower = nil, minHolyPower = 1,
+						  checkShards = nil, minShards = 1, checkChi = nil, minChi = 1, checkLunarPower = nil, minLunarPower = 1,
+						  checkInsanity = nil, minInsanity = 100, checkMaelstrom = nil, minMaelstrom = 150, checkArcane = nil, minArcane = 1,
+						  checkComboPoints = nil, minComboPoints = 5, checkRunes = nil, minRunes = 1, checkTotems = nil, totem = nil,
+						  checkEssence = nil, minEssence = 1,},
 	["Pet Status"] = { enable = false, exists = nil, inCombat = nil, checkTarget = nil,
-		checkHealth = nil, minHealth = 100, checkPower = nil, minPower = 100, checkFamily = nil, family = nil, checkSpec = nil, spec = nil },
+					   checkHealth = nil, minHealth = 100, checkPower = nil, minPower = 100, checkFamily = nil, family = nil, checkSpec = nil, spec = nil },
 	["Target Status"] = { enable = false, exists = nil, isPlayer = nil, isEnemy = nil, isFriend = nil, isNeutral = nil, inRange = nil, isSteal = nil, isDead = nil,
-		checkHealth = nil, minHealth = 100, checkMaxHealth = nil, maxHealth = nil, checkPower = nil, minPower = 100, classify = nil, classification = "normal" },
+						  checkHealth = nil, minHealth = 100, checkMaxHealth = nil, maxHealth = nil, checkPower = nil, minPower = 100, classify = nil, classification = "normal" },
 	["Target's Target Status"] = { enable = false, exists = nil, isPlayer = nil, isEnemy = nil, isFriend = nil, inRange = nil, isSteal = nil, isDead = nil,
-		checkHealth = nil, minHealth = 100, checkMaxHealth = nil, maxHealth = nil, checkPower = nil, minPower = 100, classify = nil, classification = "normal" },
+								   checkHealth = nil, minHealth = 100, checkMaxHealth = nil, maxHealth = nil, checkPower = nil, minPower = 100, classify = nil, classification = "normal" },
 	["Focus Status"] = { enable = false, exists = nil, isPlayer = nil, isEnemy = nil, isFriend = nil, inRange = nil, isSteal = nil, isDead = nil,
-		checkHealth = nil, minHealth = 100, checkPower = nil, minPower = 100, classify = nil, classification = "normal" },
+						 checkHealth = nil, minHealth = 100, checkPower = nil, minPower = 100, classify = nil, classification = "normal" },
 	["Focus's Target Status"] = { enable = false, exists = nil, isPlayer = nil, isEnemy = nil, isFriend = nil, inRange = nil, isSteal = nil, isDead = nil,
-		checkHealth = nil, minHealth = 100, checkPower = nil, minPower = 100, classify = nil, classification = "normal" },
+								  checkHealth = nil, minHealth = 100, checkPower = nil, minPower = 100, classify = nil, classification = "normal" },
 	["All Buffs"] = { enable = false, unit = "player", auras = nil, isMine = nil, toggle = false },
 	["Any Buffs"] = { enable = false, unit = "player", auras = nil, isMine = nil, toggle = false },
 	["Buff Time Left"] = { enable = false, unit = "player", aura = nil, timeLeft = 10, isMine = nil, toggle = false },
@@ -61,8 +61,8 @@ MOD.conditionTests = {
 }
 
 MOD.testOrder = { "Player Status", "Pet Status", "Target Status", "Target's Target Status", "Focus Status", "Focus's Target Status", "All Buffs", "Any Buffs", "Buff Time Left",
-	"Buff Count", "Buff Type", "All Debuffs", "Any Debuffs", "Debuff Time Left", "Debuff Count", "Debuff Type",
-	"All Cooldowns", "Spell Ready", "Spell Casting", "Item Ready"
+				  "Buff Count", "Buff Type", "All Debuffs", "Any Debuffs", "Debuff Time Left", "Debuff Count", "Debuff Type",
+				  "All Cooldowns", "Spell Ready", "Spell Casting", "Item Ready"
 }
 
 local testNames = {
@@ -365,7 +365,7 @@ local function GetStance()
 	local form, _ = "none", nil
 	local index = GetShapeshiftForm(nil)
 	if index > 0 then
-		 _, form = GetShapeshiftFormInfo(index)
+		_, form = GetShapeshiftFormInfo(index)
 	end
 	return form
 end
@@ -429,7 +429,7 @@ end
 function MOD.CheckSpec(spec, specList)
 	local stat = MOD.status
 	local currentSpec = stat.specialization
-	local currentName = currentSpec and (not MOD.isClassic and select(2, GetSpecializationInfo(currentSpec))) or "none"
+	local currentName = currentSpec and (RequiresMinExpansion(LE_EXPANSION_MISTS_OF_PANDARIA) and select(2, GetSpecializationInfo(currentSpec))) or "none"
 	if specList then
 		for _, name in pairs(specList) do
 			local id = tonumber(name)
@@ -524,7 +524,7 @@ local function CheckTestAND(ttype, t)
 		if IsOn(t.isDead) and (stat.noTarget or (t.isDead ~= stat.targetDead)) then return false end
 		if IsOn(t.isSteal) and (stat.noTarget or (t.isSteal ~= MOD:UnitHasBuff("target", "Steal"))) then return false end
 		if IsOn(t.classify) and (not t.classification or t.classification == "" or stat.noTarget or
-			not CheckClassification(stat.targetClassification, t.classification)) then return false end
+				not CheckClassification(stat.targetClassification, t.classification)) then return false end
 		if IsOn(t.checkMaxHealth) and (stat.noTarget or (tonumber(t.maxHealth or 0) or 0) > stat.targetMaxHealth) then return false end
 		if IsOn(t.checkHealth) and IsOn(t.minHealth) and (stat.noTarget or (t.checkHealth ~= (stat.targetHealth >= t.minHealth))) then return false end
 		if IsOn(t.checkPower) and IsOn(t.minPower) and (stat.noTarget or (t.checkPower ~= (stat.targetPower >= t.minPower))) then return false end
@@ -537,7 +537,7 @@ local function CheckTestAND(ttype, t)
 		if IsOn(t.isDead) and (stat.noTargetTarget or (t.isDead ~= stat.targetTargetDead)) then return false end
 		if IsOn(t.isSteal) and (stat.noTargetTarget or (t.isSteal ~= MOD:UnitHasBuff("targettarget", "Steal"))) then return false end
 		if IsOn(t.classify) and (not t.classification or t.classification == "" or stat.noTargetTarget or
-			not CheckClassification(stat.targetTargetClassification, t.classification)) then return false end
+				not CheckClassification(stat.targetTargetClassification, t.classification)) then return false end
 		if IsOn(t.checkMaxHealth) and (stat.noTargetTarget or (tonumber(t.maxHealth or 0) or 0) > stat.targetTargetMaxHealth) then return false end
 		if IsOn(t.checkHealth) and IsOn(t.minHealth) and (stat.noTargetTarget or (t.checkHealth ~= (stat.targetTargetHealth >= t.minHealth))) then return false end
 		if IsOn(t.checkPower) and IsOn(t.minPower) and (stat.noTargetTarget or (t.checkPower ~= (stat.targetTargetPower >= t.minPower))) then return false end
@@ -550,7 +550,7 @@ local function CheckTestAND(ttype, t)
 		if IsOn(t.isDead) and (stat.noFocus or (t.isDead ~= stat.focusDead)) then return false end
 		if IsOn(t.isSteal) and (stat.noFocus or (t.isSteal ~= MOD:UnitHasBuff("focus", "Steal"))) then return false end
 		if IsOn(t.classify) and (not t.classification or t.classification == "" or stat.noFocus or
-			not CheckClassification(stat.focusClassification, t.classification)) then return false end
+				not CheckClassification(stat.focusClassification, t.classification)) then return false end
 		if IsOn(t.checkHealth) and IsOn(t.minHealth) and (stat.noFocus or (t.checkHealth ~= (stat.focusHealth >= t.minHealth))) then return false end
 		if IsOn(t.checkPower) and IsOn(t.minPower) and (stat.noFocus or (t.checkPower ~= (stat.focusPower >= t.minPower))) then return false end
 		if IsOn(t.inRange) and (stat.noFocus or (t.inRange ~= stat.focusInRange)) then return false end
@@ -562,7 +562,7 @@ local function CheckTestAND(ttype, t)
 		if IsOn(t.isDead) and (stat.noFocusTarget or (t.isDead ~= stat.focusTargetDead)) then return false end
 		if IsOn(t.isSteal) and (stat.noFocusTarget or (t.isSteal ~= MOD:UnitHasBuff("focustarget", "Steal"))) then return false end
 		if IsOn(t.classify) and (not t.classification or t.classification == "" or stat.noFocusTarget or
-			not CheckClassification(stat.focusTargetClassification, t.classification)) then return false end
+				not CheckClassification(stat.focusTargetClassification, t.classification)) then return false end
 		if IsOn(t.checkHealth) and IsOn(t.minHealth) and (stat.noFocusTarget or (t.checkHealth ~= (stat.focusTargetHealth >= t.minHealth))) then return false end
 		if IsOn(t.checkPower) and IsOn(t.minPower) and (stat.noFocusTarget or (t.checkPower ~= (stat.focusTargetPower >= t.minPower))) then return false end
 		if IsOn(t.inRange) and (stat.noFocusTarget or (t.inRange ~= stat.focusTargetInRange)) then return false end
@@ -655,7 +655,7 @@ local function CheckTestOR(ttype, t)
 			if IsOn(t.isDead) and (t.isDead == stat.targetDead) then return true end
 			if IsOn(t.isSteal) and (t.isSteal == MOD:UnitHasBuff("target", "Steal")) then return true end
 			if IsOn(t.classify) and t.classification and (t.classification ~= "") and
-				CheckClassification(stat.targetClassification, t.classification) then return true end
+					CheckClassification(stat.targetClassification, t.classification) then return true end
 			if IsOn(t.checkMaxHealth) and ((tonumber(t.maxHealth or 0) or 0) <= stat.targetMaxHealth) then return true end
 			if IsOn(t.checkHealth) and IsOn(t.minHealth) and (t.checkHealth == (stat.targetHealth >= t.minHealth)) then return true end
 			if IsOn(t.checkPower) and IsOn(t.minPower) and (t.checkPower == (stat.targetPower >= t.minPower)) then return true end
@@ -670,7 +670,7 @@ local function CheckTestOR(ttype, t)
 			if IsOn(t.isDead) and (t.isDead == stat.targetTargetDead) then return true end
 			if IsOn(t.isSteal) and (t.isSteal == MOD:UnitHasBuff("targettarget", "Steal")) then return true end
 			if IsOn(t.classify) and t.classification and (t.classification ~= "") and
-				CheckClassification(stat.targetTargetClassification, t.classification) then return true end
+					CheckClassification(stat.targetTargetClassification, t.classification) then return true end
 			if IsOn(t.checkMaxHealth) and ((tonumber(t.maxHealth or 0) or 0) <= stat.targetTargetMaxHealth) then return true end
 			if IsOn(t.checkHealth) and IsOn(t.minHealth) and (t.checkHealth == (stat.targetTargetHealth >= t.minHealth)) then return true end
 			if IsOn(t.checkPower) and IsOn(t.minPower) and (t.checkPower == (stat.targetTargetPower >= t.minPower)) then return true end
@@ -685,7 +685,7 @@ local function CheckTestOR(ttype, t)
 			if IsOn(t.isDead) and (t.isDead == stat.focusDead) then return true end
 			if IsOn(t.isSteal) and (t.isSteal == MOD:UnitHasBuff("focus", "Steal")) then return true end
 			if IsOn(t.classify) and t.classification and (t.classification ~= "") and
-				CheckClassification(stat.focusClassification, t.classification) then return true end
+					CheckClassification(stat.focusClassification, t.classification) then return true end
 			if IsOn(t.checkHealth) and IsOn(t.minHealth) and (t.checkHealth == (stat.focusHealth >= t.minHealth)) then return true end
 			if IsOn(t.checkPower) and IsOn(t.minPower) and (t.checkPower == (stat.focusPower >= t.minPower)) then return true end
 			if IsOn(t.inRange) and (t.inRange == stat.focusInRange) then return true end
@@ -699,7 +699,7 @@ local function CheckTestOR(ttype, t)
 			if IsOn(t.isDead) and (t.isDead == stat.focusTargetDead) then return true end
 			if IsOn(t.isSteal) and (t.isSteal == MOD:UnitHasBuff("focustarget", "Steal")) then return true end
 			if IsOn(t.classify) and t.classification and (t.classification ~= "") and
-				CheckClassification(stat.focusTargetClassification, t.classification) then return true end
+					CheckClassification(stat.focusTargetClassification, t.classification) then return true end
 			if IsOn(t.checkHealth) and IsOn(t.minHealth) and (t.checkHealth == (stat.focusTargetHealth >= t.minHealth)) then return true end
 			if IsOn(t.checkPower) and IsOn(t.minPower) and (t.checkPower == (stat.focusTargetPower >= t.minPower)) then return true end
 			if IsOn(t.inRange) and (t.inRange == stat.focusTargetInRange) then return true end
@@ -764,7 +764,7 @@ function MOD:UpdateConditions()
 		stat.inInstance = false; stat.inArena = false; stat.inBattleground = false end
 	stat.isResting = IsResting()
 	stat.isMounted = CheckMounted()
-	if not MOD.isClassic then
+	if MOD.RequiresMinExpansion(LE_EXPANSION_CATACLYSM) then
 		stat.inVehicle = UnitHasVehicleUI("player")
 		stat.specialization = GetSpecialization()
 	end
@@ -856,7 +856,7 @@ function MOD:UpdateConditions()
 		for _, c in pairs(ct) do if IsOn(c) then c.testResult = false; c.result = false end end
 		-- don't check conditions if dead or in vehicle or on a taxi
 		if UnitIsDeadOrGhost("player") then return end
-		if not MOD.isClassic and UnitHasVehicleUI("player") then return end
+		if MOD.RequiresMinExpansion(LE_EXPANSION_CATACLYSM) and UnitHasVehicleUI("player") then return end
 		if UnitOnTaxi("player") then return end
 		-- run the tests in each condition to get intermediate testResult
 		for _, c in pairs(ct) do
@@ -1042,8 +1042,8 @@ function MOD:GetConditionText(name)
 					if IsOn(t.exists) then if t.exists then a = a .. d .. L["Exists"] else a = a .. d .. L["Not Exists"] end; d = ", " end
 					if IsOn(t.inCombat) then if t.inCombat then a = a .. d .. L["In Combat"] else a = a .. d .. L["Out Of Combat"] end; d = ", " end
 					if IsOn(t.checkTarget) then if t.checkTarget == "none" then a = a .. d .. L["No Target"]
-						elseif t.checkTarget == "player" then a = a .. d .. L["Player's Target"]
-						elseif t.checkTarget == "any" then a = a .. d .. L["Any Target"] end; d = ", " end
+					elseif t.checkTarget == "player" then a = a .. d .. L["Player's Target"]
+					elseif t.checkTarget == "any" then a = a .. d .. L["Any Target"] end; d = ", " end
 					if IsOn(t.checkHealth) and t.minHealth then local x = "<"; if t.checkHealth then x = ">=" end;
 						a = a .. d .. L["Health String"](x, t.minHealth); d = ", " end
 					if IsOn(t.checkPower) and t.minPower then local x = "<"; if t.checkPower then x = ">=" end;

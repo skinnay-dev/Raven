@@ -93,7 +93,7 @@ MOD.BarGroupTemplate = { -- default bar group settings
 	detectCooldowns = false, detectBuffsMonitor = "player", detectBuffsCastBy = "player", detectDebuffsMonitor = "player",
 	detectDebuffsCastBy = "player", detectCooldownsBy = "player",
 	detectSpellCooldowns = true, detectTrinketCooldowns = true, detectInternalCooldowns = true, includeTotems = false,
-	detectSpellEffectCooldowns = true, detectSpellAlertCooldowns = false, detectPotionCooldowns = true, detectOtherCooldowns = true, detectRuneCooldowns = false, detectGlobalCooldown = false,
+	detectSpellEffectCooldowns = true, detectSpellAlertCooldowns = false, detectPotionCooldowns = true, detectOtherCooldowns = true, detectRuneCooldowns = false, detectGlobalCooldown = true,
 	detectSharedGrimoires = true, detectSharedInfernals = true,
 	setDuration = false, setOnlyLongDuration = false, uniformDuration = 120, checkDuration = false, minimumDuration = true, filterDuration = 120,
 	checkTimeLeft = false, minimumTimeLeft = true, filterTimeLeft = 120, showNoDuration = false, showOnlyNoDuration = false,
@@ -1014,39 +1014,35 @@ function MOD:GetTooltipNumber(ttType, ttID, ttUnit, ttOffset)
 	if not ttOffset or ttOffset > #numberPatterns then ttOffset = 1 end -- determine offset into numberPatterns
 	local tt = nil
 	if ttType == "buff" then
-		if MOD.isClassic then
-			tt = MOD:GetBuffTooltip(); tt:SetUnitAura(ttUnit, ttID, "HELPFUL") -- fill in the tooltip for the buff
-		else
+		if MOD.isModernAPI then
 			tt = C_TooltipInfo.GetUnitAura(ttUnit, ttID, "HELPFUL")
+		else
+			tt = MOD:GetBuffTooltip(); tt:SetUnitAura(ttUnit, ttID, "HELPFUL") -- fill in the tooltip for the buff
 		end
 	elseif ttType == "debuff" then
-		if MOD.isClassic then
-			tt = MOD:GetBuffTooltip(); tt:SetUnitAura(ttUnit, ttID, "HARMFUL") -- fill in the tooltip for the debuff
-		else
+		if MOD.isModernAPI then
 			tt = C_TooltipInfo.GetUnitAura(ttUnit, ttID, "HARMFUL")
+		else
+			tt = MOD:GetBuffTooltip(); tt:SetUnitAura(ttUnit, ttID, "HARMFUL") -- fill in the tooltip for the debuff
 		end
 	elseif (ttType == "spell id") or (ttType == "internal") or (ttType == "alert") then
-		if MOD.isClassic then
-			tt = MOD:GetBuffTooltip(); tt:SetSpellByID(ttID)
-		else
+		if MOD.isModernAPI then
 			tt = C_TooltipInfo.GetSpellByID(ttID)
+		else
+			tt = MOD:GetBuffTooltip(); tt:SetSpellByID(ttID)
 		end
 	elseif (tt == "item id") then
-		if MOD.isClassic then
-			GameTooltip:SetItemByID(ttID)
-		else
+		if MOD.isModernAPI then
 			tt = C_TooltipInfo.GetItemByID(ttID)
+		else
+			GameTooltip:SetItemByID(ttID)
 		end
 	elseif (ttType == "inventory") or (ttType == "weapon") then
-		if MOD.isClassic then
+		if MOD.isModernAPI then
+			tt = C_TooltipInfo.GetInventoryItem("player", ttID)
+		else
 			tt = MOD:GetBuffTooltip()
-		end
-		if ttID then
-			if MOD.isClassic then
-				tt:SetInventoryItem("player", ttID)
-			else
-				tt = C_TooltipInfo.GetInventoryItem("player", ttID)
-			end
+			tt:SetInventoryItem("player", ttID)
 		end
 	end
 	if tt then
@@ -1128,7 +1124,7 @@ local function UpdateBar(bp, vbp, bg, b, icon, timeLeft, duration, count, btype,
 		end
 	end
 
-	local iconCount = nil
+	local iconCount =nil
 	if count then
 		if type(count) ~= "number" then
 			if not vbp.hideIcon and count ~= "" then iconCount = count end
@@ -1612,7 +1608,7 @@ local function DetectNewBuffs(unit, n, aura, isBuff, bp, vbp, bg)
 	local isTracking = (tt == "tracking")
 	local isResource = (ttype == "Power")
 	local isMinion = (ttype == "Minion")
-	local isMount = not MOD.isClassic and spellID and MOD.mountSpells[spellID] -- table contains all the mounts in the journal
+	local isMount = MOD.RequiresMinExpansion(LE_EXPANSION_WARLORDS_OF_DRAENOR) and spellID and MOD.mountSpells[spellID] -- table contains all the mounts in the journal
 	local isMine = (tc == "player")
 	local isTabard = isMine and icon and (icon == tabardIcon) -- test if on player, same icon as equipped tabard, not cancellable
 	local isCastable = aura[17] and not isWeapon
@@ -1881,7 +1877,7 @@ local function CheckShow(bp)
 	local stat, pst = MOD.status, "solo"
 	if GetNumGroupMembers() > 0 then if IsInRaid() then pst = "raid" else pst = "party" end end
 
-	if InCinematic() or (not MOD.isClassic and C_PetBattles.IsInBattle() and not bp.showPetBattle) or (UnitOnTaxi("player") and not bp.showOnTaxi) or
+	if InCinematic() or (MOD.RequiresMinExpansion(LE_EXPANSION_MISTS_OF_PANDARIA) and C_PetBattles.IsInBattle() and not bp.showPetBattle) or (UnitOnTaxi("player") and not bp.showOnTaxi) or
 			(pst == "solo" and not bp.showSolo) or (pst == "party" and not bp.showParty) or (pst == "raid" and not bp.showRaid) or
 			(stat.inCombat and not bp.showCombat) or (not stat.inCombat and not bp.showOOC) or
 			(not MOD.db.profile.hideBlizz and not bp.showBlizz) or (MOD.db.profile.hideBlizz and not bp.showNotBlizz) or

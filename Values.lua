@@ -535,12 +535,13 @@ end
 local function ValueCastBar(unit, fmt, spell, options)
 	local checkUnit = unit
 	local castingInfo, channelInfo = UnitCastingInfo, UnitChannelInfo
-	if MOD.isClassic then
-		castingInfo = CastingInfo; channelInfo = ChannelInfo
-	else
+	if MOD.isModernAPI then
 		if UnitHasVehicleUI("player") then
 			if unit == "player" then checkUnit = "pet" elseif unit == "pet" then checkUnit = "player" end
 		end
+	else
+
+		castingInfo = CastingInfo; channelInfo = ChannelInfo
 	end
 	if not unit or not UnitGUID(unit) then return false end
 	if unit == "player" or unit == "vehicle" then
@@ -728,7 +729,7 @@ local functionTable = {
 -- Initialize functions and data used by this module
 function MOD:InitializeValues()
 	valueFunctions = MOD.CopyTable(functionTable)
-	if MOD.isClassic then -- remove unsupported value types
+	if MOD.RequiresMaxExpansion(LE_EXPANSION_WRATH_OF_THE_LICH_KING) then -- remove unsupported value types
 		valueFunctions[L["Absorb"]] = nil
 		valueFunctions[L["Azerite"]] = nil
 		valueFunctions[L["Chi"]] = nil

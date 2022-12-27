@@ -245,10 +245,10 @@ L["Minimap Icon"] = true
 L["If checked, Raven will add an icon to the minimap."] = true
 L["Standard Bar Groups"] = true
 L["Anchor description"] = "Raven lets you display bars and icons for buffs, debuffs and cooldowns. " ..
-	'You can use the many options under the "Bar Groups" tab to set up a personalized user interface. ' ..
-	"To get started, however, it may be easier to begin with the standard bar groups listed here. " ..
-	'Select the ones you want and then click either "Create As Bars" or "Create As Icons". ' ..
-	'You can do this multiple times to configure a mix of bars and icons.\n'
+		'You can use the many options under the "Bar Groups" tab to set up a personalized user interface. ' ..
+		"To get started, however, it may be easier to begin with the standard bar groups listed here. " ..
+		'Select the ones you want and then click either "Create As Bars" or "Create As Icons". ' ..
+		'You can do this multiple times to configure a mix of bars and icons.\n'
 L["All buffs on the player."] = true
 L["Short Buffs"] = true
 L["Buffs on the player lasting less than 2 minutes."] = true
@@ -283,10 +283,10 @@ L["Link standard group string"] = "Toggle linking selected bar groups to bar gro
 L["Delete the selected bar groups."] = true
 L["Delete standard string"] = "DELETE BAR GROUPS\nAre you sure you want to delete the selected bar groups?"
 L["Bar group anchor string"] = "Bar groups have anchors that show where bars will be displayed. " ..
-	"Anchor tooltips list helpful shortcuts (e.g., change direction bars grow from the anchor, cycle through configuration choices, show test bars). " ..
-	"You can left-click and drag anchors. " ..
-	"You can right-click an anchor to lock it when you are satisfied with its position. " ..
-	'Locked anchors are hidden--use the "Unlock All Anchors" button to show them again.\n'
+		"Anchor tooltips list helpful shortcuts (e.g., change direction bars grow from the anchor, cycle through configuration choices, show test bars). " ..
+		"You can left-click and drag anchors. " ..
+		"You can right-click an anchor to lock it when you are satisfied with its position. " ..
+		'Locked anchors are hidden--use the "Unlock All Anchors" button to show them again.\n'
 L["Lock All Anchors"] = true
 L["Lock and hide the anchors for all bar groups."] = true
 L["Unlock All Anchors"] = true
@@ -297,8 +297,8 @@ L["Toggle test mode for all bar groups."] = true
 -- Defaults tab
 L["Defaults"] = DEFAULTS
 L["Defaults string"] = "Bars in a bar group share appearance options such as dimensions and fonts/textures. " ..
-	"You can adjust defaults for these options with settings in this section. " ..
-	"These settings are shared across all profiles to simplify use with multiple characters.\n"
+		"You can adjust defaults for these options with settings in this section. " ..
+		"These settings are shared across all profiles to simplify use with multiple characters.\n"
 L["Hide Blizzard"] = true
 L["Hide message"] = "When Hide Blizzard is enabled on the Setup tab, Raven will hide selected parts of the default user interface. " ..
 		"Raven will only try to unhide a part when the options panel is open and selection is toggled for a part hidden by Raven (this may take several seconds). " ..
@@ -497,16 +497,16 @@ L["Color Border Texture"] = true
 L["If checked, icon border color is applied to the border texture."] = true
 L["UI Scale Options"] = true
 L["UI Scale warning"] = "UI Scale is a setting on the System menu's Advanced tab that adjusts the size of user interface elements. " ..
-	"It must be set correctly to display pixel perfect elements like thin borders around bars and icons. " ..
-	"This affects the entire UI and is commonly adjusted by addons like ElvUI. " ..
-	"Raven provides options to adjust UI Scale in case it is not already set correctly."
+		"It must be set correctly to display pixel perfect elements like thin borders around bars and icons. " ..
+		"This affects the entire UI and is commonly adjusted by addons like ElvUI. " ..
+		"Raven provides options to adjust UI Scale in case it is not already set correctly."
 L["Adjust UI Scale"] = true
 L["UIScale description"] = "If checked, Raven will adjust the UI Scale to optimize for pixel perfect alignment (requires /reload)."
 L["Report UI Scale"] = true
 L["UIScale message"] = "If checked, Raven will report UI Scale changes in the chat window. " ..
-	"Please verify that display resolution is detected correctly and adjust system settings if necessary " ..
-	"(e.g., sometimes switching between windowed and full screen modes and adjusting display resolution can resolve issues). " ..
-	"If this option is enabled then Raven will report during initialization and also after detecting UI Scale changes."
+		"Please verify that display resolution is detected correctly and adjust system settings if necessary " ..
+		"(e.g., sometimes switching between windowed and full screen modes and adjusting display resolution can resolve issues). " ..
+		"If this option is enabled then Raven will report during initialization and also after detecting UI Scale changes."
 L["Override"] = true
 L["UIScale override"] = "If checked then, during initialization, Raven will set the UI Scale to a specified value between 0.1 and 1 (requires /reload)."
 L["UI Scale"] = true
@@ -524,8 +524,8 @@ L["If checked, sound is played in Ambience channel."] = true
 -- Spells tab
 L["Spells"] = SPELLS
 L["Spells string"] = "Spells have associated colors and labels which can be customized. " ..
-	"Custom colors and labels are shared across all profiles to simplify use with multiple characters. " ..
-	"You can also create spell lists and spell alerts and specify internal cooldowns and effect timers in this section.\n"
+		"Custom colors and labels are shared across all profiles to simplify use with multiple characters. " ..
+		"You can also create spell lists and spell alerts and specify internal cooldowns and effect timers in this section.\n"
 L["Colors and Labels"] = true
 L["Spell Name"] = true
 L["Enter a spell name (or numeric identifier, optionally preceded by # for a specific spell id)."] = true
@@ -722,11 +722,11 @@ L["Settings"] = SETTINGS
 L["General Settings"] = true
 L["Enable Bar Group"] = true
 L["Enable bar group string"] = "If checked, the bar group is enabled and its anchor and bars will be displayed, " ..
-	"otherwise the bar group is disabled and neither anchor nor bars will be displayed."
+		"otherwise the bar group is disabled and neither anchor nor bars will be displayed."
 L["Merge Bar Group"] = true
 L["Merge bar group string"] = "If checked, merge bars from this bar group into another bar group. " ..
-	"Bars are generated based on this bar group's custom or auto settings, including \"Show When\" and timer options, " ..
-	"but are sorted and displayed using the other bar group's layout and appearance settings."
+		"Bars are generated based on this bar group's custom or auto settings, including \"Show When\" and timer options, " ..
+		"but are sorted and displayed using the other bar group's layout and appearance settings."
 L["Rename Bar Group"] = true
 L["New Name"] = true
 L["Enter new name for the bar group."] = true
@@ -735,10 +735,10 @@ L["Link Settings"] = true
 L["Load Settings"] = true
 L["Save Settings"] = true
 L["Link settings string"] = "If checked, the bar group's position, layout, appearance, and timer options are linked " ..
-	"to bar groups in other profiles with the same name. Shared settings are loaded when a character " ..
-	"enters the world and are saved at logout. Be careful enabling this feature since it will overwrite " ..
-	"current settings if there is a linked bar group with same name in another profile. If you want to share your current settings, " ..
-	"overwriting any previously shared settings, then click the Save Settings button before enabling this option."
+		"to bar groups in other profiles with the same name. Shared settings are loaded when a character " ..
+		"enters the world and are saved at logout. Be careful enabling this feature since it will overwrite " ..
+		"current settings if there is a linked bar group with same name in another profile. If you want to share your current settings, " ..
+		"overwriting any previously shared settings, then click the Save Settings button before enabling this option."
 L["Confirm link string"] = "LINK BAR GROUP\nAre you sure you want to overwrite current settings?"
 L["Confirm unlink string"] = "LINK BAR GROUP\nAre you sure you no longer want to link settings for this bar group?"
 L["Click to save to the shared settings used by bar groups with same name in other profiles."] = true
@@ -750,10 +750,10 @@ L["Link Custom Bars"] = true
 L["Load Custom Bars"] = true
 L["Save Custom Bars"] = true
 L["Link bars string"] = "If checked, the bar group's custom bars are linked " ..
-	"to bar groups in other profiles with the same name. Shared custom bars are loaded when a character " ..
-	"enters the world and are saved at logout. Be careful enabling this feature since it will overwrite " ..
-	"current custom bars if there is a linked bar group with same name in another profile. If you want to share your current custom bars, " ..
-	"overwriting any previously shared custom bars, then click the Save Custom Bars button before enabling this option."
+		"to bar groups in other profiles with the same name. Shared custom bars are loaded when a character " ..
+		"enters the world and are saved at logout. Be careful enabling this feature since it will overwrite " ..
+		"current custom bars if there is a linked bar group with same name in another profile. If you want to share your current custom bars, " ..
+		"overwriting any previously shared custom bars, then click the Save Custom Bars button before enabling this option."
 L["Confirm link bars string"] = "LINK BARS\nAre you sure you want to overwrite current custom bars?"
 L["Confirm unlink bars string"] = "LINK BARS\nAre you sure you no longer want to link the custom bars for this bar group?"
 L["Click to load the shared custom bars used by bar groups with same name in other profiles."] = true
@@ -1216,6 +1216,7 @@ L["Include effect timers triggered by a spell cast."] = true
 L["Include spell alerts."] = true
 L["Potions/Elixirs"] = true
 L["Include shared potion/elixir cooldowns (an item subject to the shared cooldown must be in your bags in order for the cooldown to be detected)."] = true
+L["If checked, display Global Cooldown in BarGroup."] = true
 L["Include cooldowns not selected by other types."] = true
 L["Shared Cooldowns"] = true
 L["Grimoire of Service"] = true
@@ -1417,7 +1418,7 @@ L["If checked then bars are shown in segments (additional options are displayed 
 L["Fill"] = true
 L["If checked then timer bars fill up, otherwise they empty."] = true
 L["horizontal bars string"] = "If checked, display bars side-by-side in a row on a horizontal backdrop. This layout supports " ..
-	"custom bars for brokers with variable width and special alignment options. It does not support wrapping the bars across multiple rows."
+		"custom bars for brokers with variable width and special alignment options. It does not support wrapping the bars across multiple rows."
 L["Test Mode"] = true
 L["Unlimited Duration"] = true
 L["Set the number of unlimited duration bars/icons to generate in test mode."] = true
@@ -1527,8 +1528,8 @@ L["Enter minutes for time left check."] = true
 L["Enter seconds for time left check."] = true
 L["Time Format"] = true
 L["Time format string"] = "Select time format for bars and icons. There are separate settings for five ranges: " ..
-	"more then an hour, 2 minutes to an hour, 1 minute to 2 minutes, 10 seconds to 1 minute, less than 10 seconds. " ..
-	"These are illustrated by samples in the drop-down menu for each format option."
+		"more then an hour, 2 minutes to an hour, 1 minute to 2 minutes, 10 seconds to 1 minute, less than 10 seconds. " ..
+		"These are illustrated by samples in the drop-down menu for each format option."
 L["If checked, time format options are set to default values."] = true
 L["Reset time format for this bar group back to the current defaults."] = true
 L["Spaces"] = true
@@ -1960,9 +1961,9 @@ L["Enter value to compare with the number of charges."] = true
 -- Conditions > Tests > Result
 L["Dependencies"] = true
 L["Dependencies string"] = "Dependencies are other conditions that must evaluate to specific results for this condition's result to be true. " ..
-	"Dependencies are grouped either with a logical \"And\" (all \"And\" dependencies must evaluate to their specified results) " ..
-	"or logical \"Or\" (at least one \"Or\" dependency must evaluate to its specified result). " ..
-	"Note that all other tests are evaluated for all conditions before checking dependencies.\n"
+		"Dependencies are grouped either with a logical \"And\" (all \"And\" dependencies must evaluate to their specified results) " ..
+		"or logical \"Or\" (at least one \"Or\" dependency must evaluate to its specified result). " ..
+		"Note that all other tests are evaluated for all conditions before checking dependencies.\n"
 L["True"] = true
 L["Condition is true only if the selected condition evaluates to true."] = true
 L["False"] = true
@@ -2306,4 +2307,4 @@ L["Spell Tooltip"] = true
 L["Tooltip comment"] = "Show tooltip for the associated spell. Select a tooltip number's position with optional text in order to set the value."
 L["Reputation comment"] = "Show reputation for the watched faction."
 L["Cast bar comment"] = "Show cast bar for the unit. If optional text includes the string 'latency' and unit is player then latency is displayed with a red tick mark. " ..
-	"If optional text includes the string 'interrupt' and cast is not interruptible then a red X is added to the spell name."
+		"If optional text includes the string 'interrupt' and cast is not interruptible then a red X is added to the spell name."

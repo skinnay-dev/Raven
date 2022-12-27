@@ -831,9 +831,9 @@ end
 
 -- Set layout options for a bar group
 function MOD.Nest_SetBarGroupBarLayout(bg, barWidth, barHeight, iconSize, scale, spacingX, spacingY, iconOffsetX, iconOffsetY,
-			labelOffset, labelInset, labelWrap, labelAlign, labelCenter, labelAdjust, labelAuto, labelWidth,
-			timeOffset, timeInset, timeAlign, timeIcon, iconOffset, iconInset, iconHide, iconAlign,
-			configuration, growDirection, wrap, wrapDirection, snapCenter, fillBars, maxBars, strata)
+									   labelOffset, labelInset, labelWrap, labelAlign, labelCenter, labelAdjust, labelAuto, labelWidth,
+									   timeOffset, timeInset, timeAlign, timeIcon, iconOffset, iconInset, iconHide, iconAlign,
+									   configuration, growDirection, wrap, wrapDirection, snapCenter, fillBars, maxBars, strata)
 	bg.barWidth = PS(barWidth); bg.barHeight = PS(barHeight); bg.iconSize = PS(iconSize); bg.scale = scale or 1
 	bg.fillBars = fillBars; bg.maxBars = maxBars; bg.strata = strata
 	bg.spacingX = PS(spacingX or 0); bg.spacingY = PS(spacingY or 0); bg.iconOffsetX = (iconOffsetX or 0); bg.iconOffsetY = PS(iconOffsetY or 0)
@@ -846,7 +846,7 @@ function MOD.Nest_SetBarGroupBarLayout(bg, barWidth, barHeight, iconSize, scale,
 end
 
 function MOD.Nest_SetBarGroupSegments(bg, count, override, spacing, hideEmpty, fadeAll, shrinkW, shrinkH, gradient, gradientAll, startColor, endColor,
-			borderColor, advanced, curve, rotate, texture)
+									  borderColor, advanced, curve, rotate, texture)
 	bg.segmentCount = count; bg.segmentOverride = override; bg.segmentSpacing = spacing; bg.segmentAdvanced = advanced
 	bg.segmentHideEmpty = hideEmpty; bg.segmentFadePartial = fadeAll; bg.segmentShrinkWidth = shrinkW; bg.segmentShrinkHeight = shrinkH
 	bg.segmentGradient = gradient; bg.segmentGradientAll = gradientAll; bg.segmentGradientStartColor = startColor; bg.segmentGradientEndColor = endColor
@@ -1890,21 +1890,21 @@ function MOD.Nest_FormatTime(t, timeFormat, timeSpaces, timeCase)
 			ts = math.floor(t * 10) / 10 -- truncated to a tenth second
 			if t >= 3600 then
 				if o1 == 1 then f = string.format("%.0f:%02.0f:%02.0f", h, m, s) elseif o1 == 2 then f = string.format("%.0fh %.0fm", h, m)
-					elseif o1 == 3 then f = string.format("%.0fh", hplus) elseif o1 == 4 then f = string.format("%.0fh %.0f", h, m)
-					else f = string.format("%.0f:%02.0f", h, m) end
+				elseif o1 == 3 then f = string.format("%.0fh", hplus) elseif o1 == 4 then f = string.format("%.0fh %.0f", h, m)
+				else f = string.format("%.0f:%02.0f", h, m) end
 			elseif t >= 120 then
 				if o2 == 1 then f = string.format("%.0f:%02.0f", m, s) elseif o2 == 2 then f = string.format("%.0fm %.0fs", m, s)
-					else f = string.format("%.0fm", mplus) end
+				else f = string.format("%.0fm", mplus) end
 			elseif t >= 60 then
 				if o3 == 1 then f = string.format("%.0f:%02.0f", m, s) elseif o3 == 2 then f = string.format("%.0fm %.0fs", m, s)
-					else f = string.format("%.0fm", mplus) end
+				else f = string.format("%.0fm", mplus) end
 			elseif t >= 10 then
 				if o4 == 1 then f = string.format(":%02.0f", s) elseif o4 == 2 then f = string.format("%.0fs", s)
-					else f = string.format("%.0f", s) end
+				else f = string.format("%.0f", s) end
 			else
 				if o5 == 1 then f = string.format(":%02.0f", s) elseif o5 == 2 then f = string.format("%.1fs", ts)
-					elseif o5 == 3 then f = string.format("%.0fs", s) elseif o5 == 4 then f = string.format("%.1f", ts)
-					else f = string.format("%.0f", s) end
+				elseif o5 == 3 then f = string.format("%.0fs", s) elseif o5 == 4 then f = string.format("%.1f", ts)
+				else f = string.format("%.0f", s) end
 			end
 		end
 	end
@@ -1957,25 +1957,25 @@ end
 -- Return string containing an example of a custom time format function
 function MOD.Nest_SampleCustomTimeFormatFunction()
 	return
-[[-- sample function that converts the value t in seconds to a custom formatted string and returns the string
-local h = math.floor(t / 3600) -- hours to use if also showing minutes
-local hplus = math.floor((t + 3599.99) / 3600) -- hours to use without minutes, compatible with tooltips
-local m = math.floor((t - (h * 3600)) / 60) -- minutes to use if also showing seconds
-local mplus = math.floor((t - (h * 3600) + 59.99) / 60) -- minutes to use without seconds, compatible with tooltips
-local s = math.floor(t - (h * 3600) - (m * 60)) -- seconds to use if only showing whole number of seconds
-local ts = math.floor(t * 10) / 10 -- seconds to use if including tenths
-if t >= 7200 then -- more than 2 hours
-    return string.format('%.0fh', hplus)
-elseif t >= 3600 then -- more than 1 hour
-    return string.format('%.0fh %.0fm', h, mplus)
-elseif t >= 120 then -- more than 2 minutes
-    return string.format('%.0fm', mplus)
-elseif t >= 60 then -- more than 1 minute
-    return string.format('%.0f:%02.0f', m, s)
-elseif t >= 10 then -- more than 10 seconds
-    return string.format('%.0f', s)
-end
-return string.format('%.1f', ts) -- last 10 seconds include tenths]]
+	[[-- sample function that converts the value t in seconds to a custom formatted string and returns the string
+    local h = math.floor(t / 3600) -- hours to use if also showing minutes
+    local hplus = math.floor((t + 3599.99) / 3600) -- hours to use without minutes, compatible with tooltips
+    local m = math.floor((t - (h * 3600)) / 60) -- minutes to use if also showing seconds
+    local mplus = math.floor((t - (h * 3600) + 59.99) / 60) -- minutes to use without seconds, compatible with tooltips
+    local s = math.floor(t - (h * 3600) - (m * 60)) -- seconds to use if only showing whole number of seconds
+    local ts = math.floor(t * 10) / 10 -- seconds to use if including tenths
+    if t >= 7200 then -- more than 2 hours
+        return string.format('%.0fh', hplus)
+    elseif t >= 3600 then -- more than 1 hour
+        return string.format('%.0fh %.0fm', h, mplus)
+    elseif t >= 120 then -- more than 2 minutes
+        return string.format('%.0fm', mplus)
+    elseif t >= 60 then -- more than 1 minute
+        return string.format('%.0f:%02.0f', m, s)
+    elseif t >= 10 then -- more than 10 seconds
+        return string.format('%.0f', s)
+    end
+    return string.format('%.1f', ts) -- last 10 seconds include tenths]]
 end
 
 -- Add a formatting function to the table of time format options.
@@ -2656,7 +2656,7 @@ function MOD.Nest_UpdatePixelScale(displayReport)
 		end
 		if not MOD.db.global.SilentUIScale and displayReport then
 			print("Raven: detected display resolution " .. tostring(pixelWidth) .. "x" .. tostring(pixelHeight) ..
-				", adjusted UI scale from " .. tostring(oscale) .. " to " .. tostring(pscale))
+					", adjusted UI scale from " .. tostring(oscale) .. " to " .. tostring(pscale))
 		end
 	end
 end
@@ -2666,7 +2666,7 @@ function MOD.Nest_Initialize()
 	if Raven.MSQ then
 		MSQ = Raven.MSQ
 		MSQ_ButtonData = { AutoCast = false, AutoCastable = false, Border = false, Checked = false, Cooldown = false, Count = false, Duration = false,
-			Disabled = false, Flash = false, Highlight = false, HotKey = false, Icon = false, Name = false, Normal = false, Pushed = false }
+						   Disabled = false, Flash = false, Highlight = false, HotKey = false, Icon = false, Name = false, Normal = false, Pushed = false }
 	end
 
 	MOD.Nest_UpdatePixelScale(true)
@@ -2693,7 +2693,7 @@ end
 
 -- Update routine does all the actual work of setting up and displaying bar groups.
 function MOD.Nest_Update()
-	if not MOD.isClassic then
+	if MOD.RequiresMinExpansion(LE_EXPANSION_MISTS_OF_PANDARIA) then
 		if C_PetBattles.IsInBattle() then -- force update when entering or leaving pet battles to hide anchors and timeline
 			if not inPetBattle then inPetBattle = true; update = true end
 		else
