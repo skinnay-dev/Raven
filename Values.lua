@@ -729,7 +729,7 @@ local functionTable = {
 -- Initialize functions and data used by this module
 function MOD:InitializeValues()
 	valueFunctions = MOD.CopyTable(functionTable)
-	if MOD.RequiresMaxExpansion(LE_EXPANSION_WRATH_OF_THE_LICH_KING) then -- remove unsupported value types
+	if MOD.MOD.ExpansionIsOrBelow(LE_EXPANSION_WRATH_OF_THE_LICH_KING) then -- remove unsupported value types
 		valueFunctions[L["Absorb"]] = nil
 		valueFunctions[L["Azerite"]] = nil
 		valueFunctions[L["Chi"]] = nil

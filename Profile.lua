@@ -187,7 +187,7 @@ function MOD:SetSpellDefaults()
 	end
 
 	MOD.mountSpells = {}
-	if MOD.RequiresMinExpansion(LE_EXPANSION_WARLORDS_OF_DRAENOR) then
+	if MOD.ExpansionIsOrAbove(LE_EXPANSION_WARLORDS_OF_DRAENOR) then
 		local mountIDs = C_MountJournal.GetMountIDs()
 		for i, id in ipairs(mountIDs) do
 			local creatureName, spellID = C_MountJournal.GetMountInfoByID(id)
@@ -314,7 +314,7 @@ function MOD:SetCooldownDefaults()
 			end
 		end
 
-		if MOD.RequiresMinExpansion(LE_EXPANSION_CATACLYSM) then
+		if MOD.ExpansionIsOrAbove(LE_EXPANSION_CATACLYSM) then
 			local p = professions -- scan professions for spells on cooldown
 			p[1], p[2], p[3], p[4], p[5], p[6] = GetProfessions()
 			for index = 1, 6 do

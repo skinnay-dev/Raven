@@ -35,12 +35,12 @@ if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then
 	MOD.isModernAPI = MOD.isWrathPTR
 end
 
-function MOD.RequiresMinExpansion(exp)
+function MOD.ExpansionIsOrAbove(exp)
 	if exp == nil then return false end --This is Vanilla
 	return LE_EXPANSION_LEVEL_CURRENT >= exp
 end
 
-function MOD.RequiresMaxExpansion(exp)
+function MOD.MOD.ExpansionIsOrBelow(exp)
 	if exp == nil then return true end --This is Vanilla
 	return LE_EXPANSION_LEVEL_CURRENT <= exp
 end
@@ -157,7 +157,7 @@ local alertColors = { -- default colors for spell alerts
 
 local UnitAura = UnitAura
 MOD.LCD = nil
-if MOD.RequiresMaxExpansion(LE_EXPANSION_WRATH_OF_THE_LICH_KING) then
+if MOD.MOD.ExpansionIsOrBelow(LE_EXPANSION_WRATH_OF_THE_LICH_KING) then
 	MOD.LCD = LibStub("LibClassicDurations", true)
 	if MOD.LCD then
 		MOD.LCD:Register(Raven) -- tell library it's being used and should start working
@@ -241,7 +241,7 @@ local function HideShow(key, frame, check, options)
 		if hide then
 			BuffFrame:Hide();
 
-			if MOD.isModernAPI and MOD.RequiresMinExpansion(LE_EXPANSION_DRAGONFLIGHT) then
+			if MOD.isModernAPI and MOD.ExpansionIsOrAbove(LE_EXPANSION_DRAGONFLIGHT) then
 				DebuffFrame:Hide();
 			end
 
@@ -253,7 +253,7 @@ local function HideShow(key, frame, check, options)
 			hiding[key] = true;
 		elseif show then
 			BuffFrame:Show();
-			if MOD.isModernAPI and MOD.RequiresMinExpansion(LE_EXPANSION_DRAGONFLIGHT) then
+			if MOD.isModernAPI and MOD.ExpansionIsOrAbove(LE_EXPANSION_DRAGONFLIGHT) then
 				DebuffFrame:Show();
 			end
 
@@ -269,7 +269,7 @@ end
 
 -- Show or hide the blizzard frames, called during update so synched with other changes
 local function CheckBlizzFrames()
-	if MOD.RequiresMinExpansion(LE_EXPANSION_MISTS_OF_PANDARIA) and C_PetBattles.IsInBattle() then return end -- don't change visibility of any frame during pet battles
+	if MOD.ExpansionIsOrAbove(LE_EXPANSION_MISTS_OF_PANDARIA) and C_PetBattles.IsInBattle() then return end -- don't change visibility of any frame during pet battles
 
 	local p = MOD.db.profile
 	HideShow("buffs", _G.BuffFrame, p.hideBlizzBuffs, "buffs")
@@ -293,10 +293,10 @@ local function CheckBlizzFrames()
 
 	if MOD.myClass == "MONK" then
 		HideShow("chi", _G.MonkHarmonyBarFrame, p.hideBlizzChi)
-		if MOD.RequiresMinExpansion(LE_EXPANSION_MISTS_OF_PANDARIA) and GetSpecializationInfoByID(268) then HideShow("stagger", _G.MonkStaggerBar, p.hideBlizzStagger) end
+		if MOD.ExpansionIsOrAbove(LE_EXPANSION_MISTS_OF_PANDARIA) and GetSpecializationInfoByID(268) then HideShow("stagger", _G.MonkStaggerBar, p.hideBlizzStagger) end
 	end
 
-	if (MOD.myClass == "PRIEST") and (MOD.RequiresMinExpansion(LE_EXPANSION_MISTS_OF_PANDARIA) and GetSpecializationInfoByID(258)) then HideShow("insanity", _G.InsanityBarFrame, p.hideBlizzInsanity) end
+	if (MOD.myClass == "PRIEST") and (MOD.ExpansionIsOrAbove(LE_EXPANSION_MISTS_OF_PANDARIA) and GetSpecializationInfoByID(258)) then HideShow("insanity", _G.InsanityBarFrame, p.hideBlizzInsanity) end
 
 	if MOD.myClass == "WARLOCK" then HideShow("shards", _G.WarlockPowerFrame, p.hideBlizzShards) end
 
@@ -369,7 +369,7 @@ local function AddTracker(dstGUID, dstName, isBuff, name, icon, count, btype, du
 	local id = name .. tostring(spellID or "") -- append spellID if known to the tracker so can track multiple with same name (e.g., sacred shield)
 	local t = tracker[id] -- get or create a tracker entry for the spell
 	if not t then t = AllocateTable(); tracker[id] = t end -- create the tracker if necessary
-	local vehicle = MOD.RequiresMinExpansion(LE_EXPANSION_CATACLYSM) and UnitHasVehicleUI("player")
+	local vehicle = MOD.ExpansionIsOrAbove(LE_EXPANSION_CATACLYSM) and UnitHasVehicleUI("player")
 
 	local tag = isBuff and "T-Buff:" or "T-Debuff:" -- build a unique tag for this aura (this is a bit simpler than the AddAura version)
 	local guid = UnitGUID(caster)
@@ -882,7 +882,7 @@ function MOD:OnEnable()
 	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", CombatLogTracker)
 	self:RegisterEvent("UI_SCALE_CHANGED", UIScaleChanged)
 
-	if MOD.RequiresMaxExpansion(LE_EXPANSION_WRATH_OF_THE_LICH_KING) then -- register events specific to classic
+	if MOD.MOD.ExpansionIsOrBelow(LE_EXPANSION_WRATH_OF_THE_LICH_KING) then -- register events specific to classic
 		if MOD.LCD then -- in classic, add library callback so target auras are handled correctly
 			MOD.LCD.RegisterCallback(Raven, "UNIT_BUFF", function(e, unit)
 				if unit ~= "target" then return end
@@ -1043,7 +1043,7 @@ end
 
 -- Create cache of talent info
 local function InitializeTalents()
-	if not MOD.RequiresMinExpansion(LE_EXPANSION_MISTS_OF_PANDARIA) then talentsInitialized = true; return end -- not supported in classic
+	if not MOD.ExpansionIsOrAbove(LE_EXPANSION_MISTS_OF_PANDARIA) then talentsInitialized = true; return end -- not supported in classic
 
 	local tabs = GetNumSpecializations(false, false)
 	if tabs == 0 then return end
@@ -1203,7 +1203,7 @@ end
 
 -- Check for possess bar and vehicle updates which are not triggered by events
 local function CheckMiscellaneousUpdates()
-	if MOD.RequiresMinExpansion(LE_EXPANSION_CATACLYSM) then
+	if MOD.ExpansionIsOrAbove(LE_EXPANSION_CATACLYSM) then
 		if IsPossessBarVisible() or UnitHasVehicleUI("player") then updateCooldowns = true; unitUpdate.player = true; doUpdate = true end
 	end
 end
@@ -1320,7 +1320,7 @@ local function AddAura(unit, name, isBuff, spellID, count, btype, duration, cast
 		local b = AllocateTable() -- get an empty aura descriptor
 		local guid, cname, isNPC, vehicle = nil, nil, false, false
 		if caster then
-			guid = UnitGUID(caster); cname = UnitName(caster); vehicle = MOD.RequiresMinExpansion(LE_EXPANSION_CATACLYSM) and UnitHasVehicleUI(caster)
+			guid = UnitGUID(caster); cname = UnitName(caster); vehicle = MOD.ExpansionIsOrAbove(LE_EXPANSION_CATACLYSM) and UnitHasVehicleUI(caster)
 			if guid then
 				local unitType = string.match(guid, "(%a+)%-")
 				isNPC = (unitType == "Creature") or (unitType == "Vignette"); vehicle = vehicle or (unitType == "Vehicle")
@@ -1608,7 +1608,7 @@ local function GetBuffs(unit)
 	until not name
 
 	if unit ~= "player" then return end -- done for all but player, players also need to add vehicle buffs
-	if MOD.RequiresMaxExpansion(LE_EXPANSION_WRATH_OF_THE_LICH_KING) or not UnitHasVehicleUI("player") then return end
+	if MOD.MOD.ExpansionIsOrBelow(LE_EXPANSION_WRATH_OF_THE_LICH_KING) or not UnitHasVehicleUI("player") then return end
 	i = 1
 	repeat
 		name, icon, count, btype, duration, expire, caster, isStealable, _, spellID, apply, boss = UnitAura("vehicle", i, "HELPFUL")
@@ -1636,7 +1636,7 @@ local function GetDebuffs(unit)
 	until not name
 
 	if unit ~= "player" then return end -- done for all but player, players also need to add vehicle debuffs
-	if MOD.RequiresMaxExpansion(LE_EXPANSION_WRATH_OF_THE_LICH_KING) or not UnitHasVehicleUI("player") then return end
+	if MOD.MOD.ExpansionIsOrBelow(LE_EXPANSION_WRATH_OF_THE_LICH_KING) or not UnitHasVehicleUI("player") then return end
 	i = 1
 	repeat
 		name, icon, count, btype, duration, expire, caster, isStealable, _, spellID, apply, boss = UnitAura("vehicle", i, "HARMFUL")
@@ -1656,7 +1656,7 @@ local function GetTracking()
 	if MOD.isModernAPI then
 		trackingTypes = C_Minimap.GetNumTrackingTypes()
 	else
-		if MOD.RequiresMinExpansion(LE_EXPANSION_WRATH_OF_THE_LICH_KING) then
+		if MOD.ExpansionIsOrAbove(LE_EXPANSION_WRATH_OF_THE_LICH_KING) then
 			trackingTypes = GetNumTrackingTypes()
 		else
 			return
@@ -2199,7 +2199,7 @@ function MOD:UpdateCooldowns()
 		end
 
 		local offset = nil -- check for override/vehicle bar actions on cooldown
-		if MOD.RequiresMinExpansion(LE_EXPANSION_CATACLYSM) then
+		if MOD.ExpansionIsOrAbove(LE_EXPANSION_CATACLYSM) then
 			if HasVehicleActionBar() then offset = 132 elseif HasOverrideActionBar() then offset = 156 end
 		end
 		if offset then

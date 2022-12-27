@@ -2693,7 +2693,7 @@ end
 
 -- Update routine does all the actual work of setting up and displaying bar groups.
 function MOD.Nest_Update()
-	if MOD.RequiresMinExpansion(LE_EXPANSION_MISTS_OF_PANDARIA) then
+	if MOD.ExpansionIsOrAbove(LE_EXPANSION_MISTS_OF_PANDARIA) then
 		if C_PetBattles.IsInBattle() then -- force update when entering or leaving pet battles to hide anchors and timeline
 			if not inPetBattle then inPetBattle = true; update = true end
 		else

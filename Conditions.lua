@@ -764,7 +764,7 @@ function MOD:UpdateConditions()
 		stat.inInstance = false; stat.inArena = false; stat.inBattleground = false end
 	stat.isResting = IsResting()
 	stat.isMounted = CheckMounted()
-	if MOD.RequiresMinExpansion(LE_EXPANSION_CATACLYSM) then
+	if MOD.ExpansionIsOrAbove(LE_EXPANSION_CATACLYSM) then
 		stat.inVehicle = UnitHasVehicleUI("player")
 		stat.specialization = GetSpecialization()
 	end
@@ -856,7 +856,7 @@ function MOD:UpdateConditions()
 		for _, c in pairs(ct) do if IsOn(c) then c.testResult = false; c.result = false end end
 		-- don't check conditions if dead or in vehicle or on a taxi
 		if UnitIsDeadOrGhost("player") then return end
-		if MOD.RequiresMinExpansion(LE_EXPANSION_CATACLYSM) and UnitHasVehicleUI("player") then return end
+		if MOD.ExpansionIsOrAbove(LE_EXPANSION_CATACLYSM) and UnitHasVehicleUI("player") then return end
 		if UnitOnTaxi("player") then return end
 		-- run the tests in each condition to get intermediate testResult
 		for _, c in pairs(ct) do

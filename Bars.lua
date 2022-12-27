@@ -1608,7 +1608,7 @@ local function DetectNewBuffs(unit, n, aura, isBuff, bp, vbp, bg)
 	local isTracking = (tt == "tracking")
 	local isResource = (ttype == "Power")
 	local isMinion = (ttype == "Minion")
-	local isMount = MOD.RequiresMinExpansion(LE_EXPANSION_WARLORDS_OF_DRAENOR) and spellID and MOD.mountSpells[spellID] -- table contains all the mounts in the journal
+	local isMount = MOD.ExpansionIsOrAbove(LE_EXPANSION_WARLORDS_OF_DRAENOR) and spellID and MOD.mountSpells[spellID] -- table contains all the mounts in the journal
 	local isMine = (tc == "player")
 	local isTabard = isMine and icon and (icon == tabardIcon) -- test if on player, same icon as equipped tabard, not cancellable
 	local isCastable = aura[17] and not isWeapon
@@ -1877,7 +1877,7 @@ local function CheckShow(bp)
 	local stat, pst = MOD.status, "solo"
 	if GetNumGroupMembers() > 0 then if IsInRaid() then pst = "raid" else pst = "party" end end
 
-	if InCinematic() or (MOD.RequiresMinExpansion(LE_EXPANSION_MISTS_OF_PANDARIA) and C_PetBattles.IsInBattle() and not bp.showPetBattle) or (UnitOnTaxi("player") and not bp.showOnTaxi) or
+	if InCinematic() or (MOD.ExpansionIsOrAbove(LE_EXPANSION_MISTS_OF_PANDARIA) and C_PetBattles.IsInBattle() and not bp.showPetBattle) or (UnitOnTaxi("player") and not bp.showOnTaxi) or
 			(pst == "solo" and not bp.showSolo) or (pst == "party" and not bp.showParty) or (pst == "raid" and not bp.showRaid) or
 			(stat.inCombat and not bp.showCombat) or (not stat.inCombat and not bp.showOOC) or
 			(not MOD.db.profile.hideBlizz and not bp.showBlizz) or (MOD.db.profile.hideBlizz and not bp.showNotBlizz) or
