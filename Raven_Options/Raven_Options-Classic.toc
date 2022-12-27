@@ -1,7 +1,7 @@
 ## Interface: 11307
 ## Title: Raven Options
 ## Notes: Load on demand options panel for Raven
-## Author: Tomber
+## Author: Tomber, Dicebar, Dorana
 ## Version: @project-version@
 ## Dependencies: Raven
 ## LoadOnDemand: 1
