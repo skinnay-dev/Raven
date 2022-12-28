@@ -1772,7 +1772,10 @@ end
 
 -- Check if font changes are currently ineffective because Tukui/ElvUI fonts are enabled
 local function ValidateFontChange()
-	if Raven.db.global.TukuiFont and ChatFrame1 then print("Raven: Tukui/ElvUI font currently enabled, change on Defaults tab to use custom fonts") end
+	if Raven.db.global.TukuiFont and Raven.frame.SetTemplate and ChatFrame1 then
+		print("Raven: Tukui/ElvUI font currently enabled, change on Defaults tab to use custom fonts")
+	end
+
 	return true
 end
 

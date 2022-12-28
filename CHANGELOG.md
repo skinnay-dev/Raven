@@ -2,6 +2,7 @@
 
 - Fixed spelling for global cooldown in options menu, causing errors for some users
 - Fixed bug with game version variation detection
+- Improved check for TukUI/ElvUI fonts
 
 # 27 December 2022
 
