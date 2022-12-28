@@ -1,3 +1,7 @@
+# 28 December 2022
+
+- Fixed spelling for global cooldown in options menu, causing errors for some users
+
 # 27 December 2022
 
 - Rewrite of basecode to better handle variations in game versions

@@ -7654,7 +7654,7 @@ MOD.OptionsTable = {
 								},
 								GlobalCooldown = {
 									type = "toggle", order = 35, name = L["Global Cooldown"],
-									desc = L["Include Cobal Cooldown"],
+									desc = L["Include Global Cooldown."],
 									get = function(info) return GetBarGroupField("detectGlobalCooldown") end,
 									set = function(info, value) SetBarGroupField("detectGlobalCooldown", value) end,
 								},
