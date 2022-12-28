@@ -1,6 +1,7 @@
 # 28 December 2022
 
 - Fixed spelling for global cooldown in options menu, causing errors for some users
+- Fixed bug with game version variation detection
 
 # 27 December 2022
 
