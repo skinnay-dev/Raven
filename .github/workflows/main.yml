@@ -15,6 +15,10 @@ on:
   push:
     tags:
       - '**'
+      - '!**-alpha'
+      - '!**-beta'
+    paths-ignore:
+      - '.github/**'
 
 # a workflow is built up as jobs, and within these jobs are steps
 jobs:
