@@ -277,7 +277,17 @@ local function CheckItemReady(item, ready, checkCount, count, checkCharges, char
 	if IsOn(ready) then
 		local isReady = true
 		if id then -- in 4.0.2 GetItemCooldown was changed to only work with item IDs
-			local start, duration = GetItemCooldown(id); if (start > 0) and (duration > 0) then isReady = false end
+			local start, duration
+
+			if MOD.isModernAPI then
+				start, duration = C_Container.GetItemCooldown(id)
+			else
+				start, duration = GetItemCooldown(id)
+			end
+
+			if (start > 0) and (duration > 0) then
+				isReady = false
+			end
 		else -- so have to fallback to looking in internal cooldown tables
 			local cd = MOD:CheckCooldown(item); if cd and (cd[1] ~= nil) then isReady = false end
 		end

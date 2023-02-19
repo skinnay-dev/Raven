@@ -1,5 +1,6 @@
 # 19 February 2023
 - Fixed a cooldown bug for Arms Warriors, where Whirlwind would not properly trigger a cooldown.
+- Fixed bug with item cooldowns no longer working in Dragonflight.
 
 # 26 January 2023
 - Optimized Weapon tooltip Scan for Temporary Weapon Enchants
