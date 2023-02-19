@@ -7,6 +7,8 @@
 ## OptionalDependencies: Masque
 ## SavedVariables: RavenDB
 
+## X-WoWI-ID: 18242
+
 #@no-lib-strip@
 embeds.xml
 #@end-no-lib-strip@
