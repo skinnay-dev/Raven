@@ -251,6 +251,9 @@ function MOD:SetCooldownDefaults()
 							elseif spellID == 1464 then
 								-- Exception for https://github.com/Dicebar/Raven/issues/29, needs an automated solution
 								cds[spellID] = 12
+							elseif spellID == 1680 then
+								-- Exception for https://github.com/Dicebar/Raven/issues/36. See above.
+								cds[spellID] = 14
 							end -- don't include spells with global cooldowns
 						end
 						local ls = cls[name] -- doesn't account for "FLYOUT" spellbook entries, but not an issue currently

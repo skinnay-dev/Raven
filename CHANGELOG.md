@@ -1,3 +1,6 @@
+# 19 February 2023
+- Fixed a cooldown bug for Arms Warriors, where Whirlwind would not properly trigger a cooldown.
+
 # 26 January 2023
 - Optimized Weapon tooltip Scan for Temporary Weapon Enchants
 
@@ -17,5 +20,4 @@
 - Fixed issues with Wrath PTR
 
 # 7 December 2022
-
 - Added toc-file for Wrath of the Lich King.
