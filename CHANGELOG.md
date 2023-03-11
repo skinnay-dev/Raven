@@ -1,3 +1,7 @@
+# 11 March 2023
+- Fixed a bug causing cooldowns to be incorrectly cached.
+- Fixed a bug causing Ignore Pain to not be testable as ready for non-Protection Warriors.
+
 # 19 February 2023
 - Fixed a cooldown bug for Arms Warriors, where Whirlwind would not properly trigger a cooldown.
 - Fixed bug with item cooldowns no longer working in Dragonflight.

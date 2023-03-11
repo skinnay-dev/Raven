@@ -358,9 +358,23 @@ local function CheckAllCooldowns(spells, ready, timeLeft, toggle)
 	if not timeLeft then timeLeft = 10 end
 	for _, spell in pairs(spells) do -- look for each spell and check if on cooldown
 		local cdt = 0
-		if ready and not MOD:CheckSpellStatus(spell, true, true) then if not MOD:CheckSpellStatus(spell) then return false end cdt = 3600 end
+		if ready and not MOD:CheckSpellStatus(spell, true, true) then
+			if not MOD:CheckSpellStatus(spell) then
+				return false
+			end
+
+			cdt = 3600
+		end
+
 		local cd = MOD:CheckCooldown(spell) -- look up in the active cooldowns table
-		if cd and (cd[1] ~= nil) and ((cd[4] ~= nil) and (not cd[9] or cd[9] == 0)) then cdt = cd[1]; if timeLeft < cdt then AddTimeEvent(spell, cdt - timeLeft) end end
+		if cd and (cd[1] ~= nil) and ((cd[4] ~= nil) and (not cd[9] or cd[9] == 0)) then
+			cdt = cd[1]
+
+			if timeLeft < cdt then
+				AddTimeEvent(spell, cdt - timeLeft)
+			end
+		end
+
 		if toggle == true then
 			if cdt >= timeLeft then return false end
 		else

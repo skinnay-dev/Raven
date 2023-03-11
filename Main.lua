@@ -1985,6 +1985,7 @@ function MOD:CheckSpellStatus(name, usable, ready)
 		if id then name = GetSpellInfo(id) end -- may need to convert from spell id to name
 		if name and name ~= "" then
 			local spellID = MOD.bookSpells[name]
+
 			if spellID then -- spell is known by the player
 				if usable then
 					result = not IsPassiveSpell(spellID) and IsUsableSpell(name) -- check non-passive and has resources
@@ -2184,7 +2185,7 @@ function MOD:UpdateCooldowns()
 			if name and name ~= "" and icon then -- make sure we have a valid spell name
 				local count, charges, start, duration = GetSpellCharges(spellID)
 				if count and charges and count < charges then
-					if start and (start > 0) and (duration > 1.5) then -- don't include global cooldowns
+					if start and start > 0 and duration and duration > 1.5 then -- don't include global cooldowns
 						if (MOD.myClass ~= "DEATHKNIGHT") or CheckRuneCooldown(name, duration) then -- if death knight check rune cooldown
 							AddCooldown(name, spellID, icon, start, duration, "spell id", spellID, "player", count)
 						end

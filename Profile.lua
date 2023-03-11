@@ -226,21 +226,27 @@ function MOD:SetCooldownDefaults()
 	--if MOD.isClassic then openTabs = GetNumSpellTabs() end -- on classic there are no specializations so all tabs are same
 	openTabs = GetNumSpellTabs()
 
-
 	for tab = 1, openTabs do -- scan first two tabs of player spell book (general and current spec) for player spells on cooldown
 		local spellLine, spellIcon, offset, numSpells = GetSpellTabInfo(tab)
 		for i = 1, numSpells do
 			local index = i + offset
 			local spellName = GetSpellBookItemName(index, book)
-			if not spellName then break end
+			if not spellName then
+				break
+			end
 			local stype, id = GetSpellBookItemInfo(index, book)
 			if id then -- make sure valid spell book item
+				if IsPassiveSpell(id) then -- Don't index passive spells, they have no cooldown
+					break
+				end
+
 				if stype == "SPELL" then -- in this case, id is not the spell id despite what online docs say
 					local name, _, icon, _, _, _, spellID = getSpellInfo(index, book)
 					if name and name ~= "" and icon and spellID then
 						bst[name] = spellID
 						iconCache[name] = icon
 						local _, charges = GetSpellCharges(index, book)
+
 						if charges and charges > 0 then
 							chs[spellID] = charges
 						else
@@ -248,12 +254,15 @@ function MOD:SetCooldownDefaults()
 
 							if duration and duration > 1500 then
 								cds[spellID] = duration / 1000
-							elseif spellID == 1464 then
+							elseif spellID == 1464 then -- Slam
 								-- Exception for https://github.com/Dicebar/Raven/issues/29, needs an automated solution
 								cds[spellID] = 12
-							elseif spellID == 1680 then
+							elseif spellID == 1680 then -- Whirlwind
 								-- Exception for https://github.com/Dicebar/Raven/issues/36. See above.
 								cds[spellID] = 14
+							elseif spellID == 190456 then -- Ignore Pain
+								-- Exception for https://github.com/Dicebar/Raven/issues/39. See above.
+								cds[spellID] = 11
 							end -- don't include spells with global cooldowns
 						end
 						local ls = cls[name] -- doesn't account for "FLYOUT" spellbook entries, but not an issue currently
