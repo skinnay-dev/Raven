@@ -1,3 +1,6 @@
+# 16 March 2023
+- Fixed a bug leading to cooldowns to not be cached properly in WotLK.
+
 # 11 March 2023
 - Fixed a bug causing cooldowns to be incorrectly cached.
 - Fixed a bug causing Ignore Pain to not be testable as ready for non-Protection Warriors.
