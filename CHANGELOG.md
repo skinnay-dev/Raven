@@ -1,3 +1,6 @@
+# 21 April 2023
+- Fixed bug to active talent conditions not differentiating between choice talents.
+
 # 16 March 2023
 - Fixed a bug leading to cooldowns to not be cached properly in WotLK.
 

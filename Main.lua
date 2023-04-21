@@ -1073,10 +1073,18 @@ local function InitializeTalents()
 					name, rank, icon = GetSpellInfo(definitionInfo.spellID)
 
 					if name then
+						local talentActive;
+
+						if bit.band(nodeInfo.flags, 1) == 1 and nodeInfo.entryIDsWithCommittedRanks[1] ~= nil then
+							talentActive = entryID == nodeInfo.entryIDsWithCommittedRanks[1]
+						else
+							talentActive = nodeInfo.currentRank > 0
+						end
+
 						MOD.talents[name] = {
 							tab = currentSpec,
 							icon = icon,
-							active = nodeInfo.currentRank > 0
+							active = talentActive
 						}
 						MOD.talentList[select] = name
 						select = select + 1
