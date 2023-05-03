@@ -1480,8 +1480,8 @@ end
 local function GetWeaponBuffName(weaponSlot)
 	local ttInfo = C_TooltipInfo.GetInventoryItem("player", weaponSlot, false)
 	for i = 1, 30 do
-		if ttInfo.lines[i] and ttInfo.lines[i].args and ttInfo.lines[i].args[2] then
-			local text = ttInfo.lines[i].args[2].stringVal
+		if ttInfo.lines[i] and ttInfo.lines[i].leftText then
+			local text = ttInfo.lines[i].leftText
 			if text then
 				local name = text:match("^(.+) %(%d+ [^$)]+%)$") -- extract up to left paren if match weapon buff format
 				if name then
