@@ -1,3 +1,6 @@
+# 3 May 2023
+- Fixed bug caused by weapon buffs API having changed.
+
 # 21 April 2023
 - Fixed bug to active talent conditions not differentiating between choice talents.
 
