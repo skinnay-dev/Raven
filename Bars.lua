@@ -1048,18 +1048,21 @@ function MOD:GetTooltipNumber(ttType, ttID, ttUnit, ttOffset)
 	if tt then
 		local pattern = numberPatterns[ttOffset]
 		local t = ""
+
 		for i = 1, 30 do
-			if (tt.lines[i]) then
-				local s = tt.lines[i].args[2].stringVal
+			if tt.lines[i] and tt.lines[i].leftText then
+				local s = tt.lines[i].leftText
 				if s then t = t .. s else break end
 			else
 				break
 			end
-
 		end
+
 		t = string.gsub(uncolor(t), ",", "") -- remove escape sequences and commas since they impact conversion of numbers
+
 		return string.match(t, pattern) -- extract number from the tooltip, if one exists for the specified offset
 	end
+
 	return nil
 end
 

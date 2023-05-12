@@ -1,3 +1,6 @@
+# 12 May 2023
+- Fixed bug caused by tooltip API change.
+
 # 3 May 2023
 - Fixed bug caused by weapon buffs API having changed.
 
