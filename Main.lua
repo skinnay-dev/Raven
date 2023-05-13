@@ -28,7 +28,13 @@ local addonEnabled = false -- set when the addon is enabled
 local optionsLoaded = false -- set when the load-on-demand options panel module has been loaded
 local optionsFailed = false -- set if loading the option panel module failed
 local v, b, d, t = GetBuildInfo()
-MOD.isWrathPTR = v == "3.4.1"
+-- check if v is 3.4.1 or higher
+local v1, v2, v3 = strsplit(".", v)
+local release = tonumber(v1);
+local major = tonumber(v2);
+local minor = tonumber(v3)
+
+MOD.isWrathPTR = (release == 3) and (major >= 4) and (minor >= 1)
 MOD.isModernAPI = true
 
 if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then
