@@ -1,3 +1,6 @@
+# 18 May 2023
+- Fixed bug causing Fire Elemental and Storm Elemental to not have their cooldowns tracked properly.
+
 # 12 May 2023
 - Fixed bug caused by tooltip API change.
 

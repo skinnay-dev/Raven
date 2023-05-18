@@ -362,39 +362,34 @@ function MOD:SetCooldownDefaults()
 
 	-- Add special spells which either share spellbook entries or show up dynamically
 	if MOD.myClass == "HUNTER" then
-		local name = getSpellInfo(136) -- get localized name for mend pet
-		cds[136] = 10; bst[name] = 136 -- shares spellbook entry with Revive Pet
+		-- Mend Pet
+		MOD:RegisterCooldownDefault(136, 10)
 	end
 	if MOD.myClass == "PRIEST" then
-		local name = getSpellInfo(17) -- get localized name for power word: shield
-		cds[17] = 10; bst[name] = 17 -- has a cooldown in shadow spec
+		-- Power Word: Shield
+		MOD:RegisterCooldownDefault(17, 10)
 	end
 	if MOD.myClass == "WARRIOR" then
 		-- Some warrior cooldowns miss a base cooldown but can gain one through talents or specializations.
 
 		-- Slam gains a cooldown through a talent.
 		-- Also see: https://github.com/Dicebar/Raven/issues/29
-		cds[1464] = 12
-		bst[getSpellInfo(1464)] = 1464
+		MOD:RegisterCooldownDefault(1464, 12)
 
 		-- Whirlwind gains a cooldown through a talent.
 		-- Also see: https://github.com/Dicebar/Raven/issues/36
-		cds[1680] = 14
-		bst[getSpellInfo(1680)] = 1680
+		MOD:RegisterCooldownDefault(1680, 14)
 
-		-- Ignore pain gains a cooldown when not playing as protectoon.
+		-- Ignore pain gains a cooldown when not playing as protection.
 		-- Also see: https://github.com/Dicebar/Raven/issues/39
-		cds[190456] = 11
-		bst[getSpellInfo(190456)] = 190456
+		MOD:RegisterCooldownDefault(190456, 11)
 	end
 	if MOD.myClass == "SHAMAN" then
 		-- Fire Elemental is listed as a passive spell when indexed from the spell book.
-		cds[198067] = GetSpellBaseCooldown(198067) / 1000
-		bst[getSpellInfo(198067)] = 198067
+		MOD:RegisterCooldownDefaultBySpellID(198067)
 
 		-- Storm Elemental is listed as a passive spell when indexed from the spell book.
-		cds[192249] = GetSpellBaseCooldown(192249) / 1000
-		bst[getSpellInfo(192249)] = 192249
+		MOD:RegisterCooldownDefaultBySpellID(192249)
 	end
 
 	iconCache[L["GCD"]] = GetSpellTexture(61304) -- cache special spell with GCD cooldown, must be valid
@@ -407,6 +402,27 @@ function MOD:SetCooldownDefaults()
 	-- for k, v in pairs(cpet) do local name = getSpellInfo(k); MOD.Debug("pet", name, k, v) end
 	-- for k, v in pairs(cls) do if v.index then MOD.Debug("lock", k, v.index, v.label) end end
 	-- for k, v in pairs(iconCache) do MOD.Debug("icons", k, v) end
+end
+
+function MOD:RegisterCooldownDefaultBySpellID(spellID)
+	local cooldown = GetSpellBaseCooldown(spellID)
+
+	if not cooldown then
+		return
+	end
+
+	MOD:RegisterCooldownDefault(spellID, cooldown / 1000)
+end
+
+function MOD:RegisterCooldownDefault(spellID, cooldown)
+	local name = getSpellInfo(spellID)
+
+	if not name then
+		return
+	end
+
+	MOD.cooldownSpells[spellID] = cooldown
+	MOD.bookSpells[name] = spellID
 end
 
 -- Initialize internal cooldown info from presets, table fields include id, duration, cancel, item
