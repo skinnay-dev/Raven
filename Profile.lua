@@ -234,6 +234,7 @@ function MOD:SetCooldownDefaults()
 			if not spellName then
 				break
 			end
+
 			local stype, id = GetSpellBookItemInfo(index, book)
 			if id and not IsPassiveSpell(id) then -- Only index valid spells, and don't index passive spells as they have no cooldown
 				if stype == "SPELL" then -- in this case, id is not the spell id despite what online docs say
@@ -250,15 +251,6 @@ function MOD:SetCooldownDefaults()
 
 							if duration and duration > 1500 then
 								cds[spellID] = duration / 1000
-							elseif spellID == 1464 then -- Slam
-								-- Exception for https://github.com/Dicebar/Raven/issues/29, needs an automated solution
-								cds[spellID] = 12
-							elseif spellID == 1680 then -- Whirlwind
-								-- Exception for https://github.com/Dicebar/Raven/issues/36. See above.
-								cds[spellID] = 14
-							elseif spellID == 190456 then -- Ignore Pain
-								-- Exception for https://github.com/Dicebar/Raven/issues/39. See above.
-								cds[spellID] = 11
 							end -- don't include spells with global cooldowns
 						end
 						local ls = cls[name] -- doesn't account for "FLYOUT" spellbook entries, but not an issue currently
@@ -376,6 +368,33 @@ function MOD:SetCooldownDefaults()
 	if MOD.myClass == "PRIEST" then
 		local name = getSpellInfo(17) -- get localized name for power word: shield
 		cds[17] = 10; bst[name] = 17 -- has a cooldown in shadow spec
+	end
+	if MOD.myClass == "WARRIOR" then
+		-- Some warrior cooldowns miss a base cooldown but can gain one through talents or specializations.
+
+		-- Slam gains a cooldown through a talent.
+		-- Also see: https://github.com/Dicebar/Raven/issues/29
+		cds[1464] = 12
+		bst[getSpellInfo(1464)] = 1464
+
+		-- Whirlwind gains a cooldown through a talent.
+		-- Also see: https://github.com/Dicebar/Raven/issues/36
+		cds[1680] = 14
+		bst[getSpellInfo(1680)] = 1680
+
+		-- Ignore pain gains a cooldown when not playing as protectoon.
+		-- Also see: https://github.com/Dicebar/Raven/issues/39
+		cds[190456] = 11
+		bst[getSpellInfo(190456)] = 190456
+	end
+	if MOD.myClass == "SHAMAN" then
+		-- Fire Elemental is listed as a passive spell when indexed from the spell book.
+		cds[198067] = GetSpellBaseCooldown(198067) / 1000
+		bst[getSpellInfo(198067)] = 198067
+
+		-- Storm Elemental is listed as a passive spell when indexed from the spell book.
+		cds[192249] = GetSpellBaseCooldown(192249) / 1000
+		bst[getSpellInfo(192249)] = 192249
 	end
 
 	iconCache[L["GCD"]] = GetSpellTexture(61304) -- cache special spell with GCD cooldown, must be valid
