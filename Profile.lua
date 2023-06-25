@@ -236,10 +236,10 @@ function MOD:SetCooldownDefaults()
 			end
 
 			local stype, id = GetSpellBookItemInfo(index, book)
-			if id and not IsPassiveSpell(id) then -- Only index valid spells, and don't index passive spells as they have no cooldown
+			if id then -- Only index valid spells
 				if stype == "SPELL" then -- in this case, id is not the spell id despite what online docs say
 					local name, _, icon, _, _, _, spellID = getSpellInfo(index, book)
-					if name and name ~= "" and icon and spellID then
+					if name and name ~= "" and icon and spellID and not IsPassiveSpell(spellID) then -- don't index passive spells as they have no cooldown
 						bst[name] = spellID
 						iconCache[name] = icon
 						local _, charges = GetSpellCharges(index, book)
@@ -383,13 +383,6 @@ function MOD:SetCooldownDefaults()
 		-- Ignore pain gains a cooldown when not playing as protection.
 		-- Also see: https://github.com/Dicebar/Raven/issues/39
 		MOD:RegisterCooldownDefault(190456, 11)
-	end
-	if MOD.myClass == "SHAMAN" then
-		-- Fire Elemental is listed as a passive spell when indexed from the spell book.
-		MOD:RegisterCooldownDefaultBySpellID(198067)
-
-		-- Storm Elemental is listed as a passive spell when indexed from the spell book.
-		MOD:RegisterCooldownDefaultBySpellID(192249)
 	end
 
 	iconCache[L["GCD"]] = GetSpellTexture(61304) -- cache special spell with GCD cooldown, must be valid

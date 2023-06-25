@@ -1,3 +1,6 @@
+# 25 June 2023
+- Fixed bug causing Apotheosis and Power Word: Salvation cooldowns to not be tracked properly.
+
 # 18 May 2023
 - Fixed bug causing Fire Elemental and Storm Elemental to not have their cooldowns tracked properly.
 
