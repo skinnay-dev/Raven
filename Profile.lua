@@ -237,7 +237,7 @@ function MOD:SetCooldownDefaults()
 
 			local stype, id = GetSpellBookItemInfo(index, book)
 			if id then -- Only index valid spells
-				if stype == "SPELL" then -- in this case, id is not the spell id despite what online docs say
+				if stype == "SPELL" then -- in this case, id is not always the spell id despite what online docs say
 					local name, _, icon, _, _, _, spellID = getSpellInfo(index, book)
 					if name and name ~= "" and icon and spellID and not IsPassiveSpell(spellID) then -- don't index passive spells as they have no cooldown
 						bst[name] = spellID

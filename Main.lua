@@ -34,11 +34,13 @@ local release = tonumber(v1);
 local major = tonumber(v2);
 local minor = tonumber(v3)
 
-MOD.isWrathPTR = (release == 3) and (major >= 4) and (minor >= 1)
+MOD.isVanilla = (release == 1) and (major >= 4) and (minor >= 1)
+MOD.isWrath = (release == 3) and (major >= 4) and (minor >= 1)
+MOD.isClassic = MOD.isWrath || MOD.isVanilla
 MOD.isModernAPI = true
 
 if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then
-	MOD.isModernAPI = MOD.isWrathPTR
+	MOD.isModernAPI = MOD.isClassic
 end
 
 function MOD.ExpansionIsOrAbove(exp)
@@ -1555,7 +1557,7 @@ local function GetWeaponBuffs()
 	if mh then -- add the mainhand buff, if any, to the table
 		local islot = INVSLOT_MAINHAND
 		local mhbuff
-		if MOD.isModernAPI and not MOD.isWrathPTR then
+		if MOD.isModernAPI and not MOD.isClassic then
 			mhbuff = GetWeaponBuffName(islot)
 		else
 			mhbuff = GetWeaponBuffNameOld(islot)
@@ -1584,7 +1586,7 @@ local function GetWeaponBuffs()
 	if oh then -- add the offhand buff, if any, to the table
 		local islot = INVSLOT_OFFHAND
 		local ohbuff
-		if MOD.isModernAPI and not MOD.isWrathPTR then
+		if MOD.isModernAPI and not MOD.isClassic then
 			ohbuff = GetWeaponBuffName(islot)
 		else
 			ohbuff = GetWeaponBuffNameOld(islot)
@@ -2235,7 +2237,7 @@ function MOD:UpdateCooldowns()
 			end
 		end
 
-		if not MOD.isWrathPTR then
+		if not MOD.isWrath then
 			for itemID in pairs(bagCooldowns) do CheckItemCooldown(itemID) end
 		end
 		for itemID, slot in pairs(inventoryCooldowns) do CheckInventoryCooldown(itemID, slot) end

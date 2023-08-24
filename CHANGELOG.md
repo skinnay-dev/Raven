@@ -1,3 +1,6 @@
+# 24 August 2023
+- Fixed bug caused by Classic Era now using part of the Dragonflight API for addons.
+
 # 25 June 2023
 - Fixed bug causing Apotheosis and Power Word: Salvation cooldowns to not be tracked properly.
 
