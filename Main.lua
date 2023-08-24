@@ -36,7 +36,7 @@ local minor = tonumber(v3)
 
 MOD.isVanilla = (release == 1) and (major >= 4) and (minor >= 1)
 MOD.isWrath = (release == 3) and (major >= 4) and (minor >= 1)
-MOD.isClassic = MOD.isWrath || MOD.isVanilla
+MOD.isClassic = MOD.isWrath or MOD.isVanilla
 MOD.isModernAPI = true
 
 if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then
