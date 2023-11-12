@@ -202,9 +202,9 @@ function MOD:OnInitialize()
 
 	MOD.localClass, MOD.myClass = UnitClass("player") -- cache the player's class
 	MOD.localRace, MOD.myRace = UnitRace("player") -- cache the player's race
-	LoadAddOn("LibDataBroker-1.1")
-	LoadAddOn("LibDBIcon-1.0")
-	LoadAddOn("LibBossIDs-1.0", true)
+	C_AddOns.LoadAddOn("LibDataBroker-1.1")
+	C_AddOns.LoadAddOn("LibDBIcon-1.0")
+	C_AddOns.LoadAddOn("LibBossIDs-1.0", true)
 	MOD.MSQ = LibStub("Masque", true)
 	now = GetTime() -- start tracking time
 	suppressTime = now -- start suppression period for certain special effects
@@ -1113,7 +1113,7 @@ end
 function MOD:OptionsPanel()
 	if not optionsLoaded then
 		optionsLoaded = true
-		local loaded, reason = LoadAddOn(MOD_Options)
+		local loaded, reason = C_AddOns.LoadAddOn(MOD_Options)
 
 		if not loaded then
 			print(L["Failed to load "] .. tostring(MOD_Options) .. ": " .. tostring(reason))
