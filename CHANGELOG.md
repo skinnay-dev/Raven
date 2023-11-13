@@ -1,3 +1,6 @@
+# 10 November 2023
+- Fixed bug caused by Retail changing the addon management API.
+
 # 24 August 2023
 - Fixed bug caused by Classic Era now using part of the Dragonflight API for addons.
 
