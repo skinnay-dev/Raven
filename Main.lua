@@ -166,7 +166,9 @@ local alertColors = { -- default colors for spell alerts
 local UnitAura = UnitAura
 MOD.LCD = nil
 if MOD.ExpansionIsOrBelow(LE_EXPANSION_WRATH_OF_THE_LICH_KING) then
-	local C_AddOns = setmetatable(_G.C_AddOns or {},{__index = _G})
+	if C_AddOns.LoadAddOn == nil then
+		C_AddOns.LoadAddOn = LoadAddOn
+	end
 
 	MOD.LCD = LibStub("LibClassicDurations", true)
 	if MOD.LCD then
