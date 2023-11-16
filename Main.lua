@@ -1031,7 +1031,7 @@ function MOD:BAG_UPDATE(e)
 	table.wipe(bagCooldowns) -- update bag item cooldown table
 	for bag = 0, NUM_BAG_SLOTS do
 		local numSlots
-		if MOD.isModernAPI then
+		if _G.GetContainerNumSlots == nil then
 			numSlots = C_Container.GetContainerNumSlots(bag)
 		else
 			numSlots = GetContainerNumSlots(bag)
@@ -1039,11 +1039,13 @@ function MOD:BAG_UPDATE(e)
 
 		for slot = 1, numSlots do
 			local itemID
-			if MOD.isModernAPI then
+
+			if _G.GetContainerItemID == nil then
 				itemID = C_Container.GetContainerItemID(bag, slot)
 			else
 				itemID = GetContainerItemID(bag, slot)
 			end
+
 			if itemID then
 				local _, spellID = GetItemSpell(itemID)
 				if spellID then bagCooldowns[itemID] = spellID end
@@ -2076,7 +2078,7 @@ local function CheckItemCooldown(itemID)
 	local start = 0
 	local duration = 0
 	local ignore = 0
-	if MOD.isModernAPI then
+	if _G.GetItemCooldown == nil then
 		start, duration, ignore = C_Container.GetItemCooldown(itemID)
 	else
 		start, duration = GetItemCooldown(itemID)

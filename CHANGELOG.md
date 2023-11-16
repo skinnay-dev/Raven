@@ -1,3 +1,6 @@
+# 16 November 2023
+- Fixed bug caused by namespace changes in Classic WoW.
+
 # 10 November 2023
 - Fixed bug caused by Retail changing the addon management API.
 
