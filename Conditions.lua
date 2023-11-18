@@ -11,7 +11,6 @@
 local MOD = Raven
 local L = LibStub("AceLocale-3.0"):GetLocale("Raven")
 local LSPELL = MOD.LocalSpellNames
-local range_initialized = false
 local timeEvents = {} -- table of times at which to trigger a simulated event during update processing
 local classificationList = { normal = L["Normal"], worldboss = L["Boss"], elite = L["Elite"], rare = L["Rare"], rlite = L["Rare Elite"] }
 local classifications = { "normal", "worldboss", "elite", "rare", "rlite" }
@@ -162,83 +161,11 @@ local function ClassificationList(cl)
 	return s
 end
 
--- Range checking spell tables and functions
-local range_spells = {}
-local range_tables = {
-	enemy = {
-		DEATHKNIGHT = { 49576, 127344 },
-		DRUID = { 8921, 339, 6795 },
-		EVOKER = { 361469 },
-		HUNTER = { 193455, 19434, 193265 },
-		MAGE = { 133 },
-		PALADIN = { 62124, 20271 },
-		PRIEST = { 589 },
-		ROGUE = { 1725 },
-		SHAMAN = { 403, 188196, 187837 },
-		WARLOCK = { 215279, 196657 },
-		WARRIOR = { 355 },
-		DEMONHUNTER = { 185123 }
-	},
-	friend = {
-		DRUID = { 5185 },
-		EVOKER = { 361469 },
-		MAGE = { 130 },
-		PALADIN = { 633, 1044 },
-		HUNTER = { 34477 },
-		PRIEST = { 2061 },
-		ROGUE = { 57934 },
-		SHAMAN = { 546, 8004 },
-		WARLOCK = { 20707, 5697 },
-		WARRIOR = { 198304 }
-	},
-	pet = {
-		HUNTER = { 136 },
-		WARLOCK = { 755 }
-	},
-	dead = {
-		DEATHKNIGHT = { 61999 },
-		DRUID = { 50769, 20484 },
-		EVOKER = { 361227 },
-		PALADIN = { 7328 },
-		PRIEST = { 2006 },
-		SHAMAN = { 2008 }
-	},
-}
-
--- Initialize the range spell tables with spell names
-local function InitializeRangeSpells()
-	local _, class = UnitClass("player")
-	for k, v in pairs(range_tables) do
-		if v[class] then
-			local t = {}
-			for _, sid in pairs(v[class]) do local name = GetSpellInfo(sid); if name and name ~= "" then table.insert(t, name) end end
-			range_spells[k] = t
-		end
-	end
-end
-
--- Check a table to see if a unit is in range of any of the spells it contains
-local function InRangeSpells(unit, t) if t then for _, s in pairs(t) do if (IsSpellInRange(s, unit) == 1) then return true end end end return false end
-
--- Return true or false if the unit is in range based on whether it is enemy, friend or pet
-local function UnitRangeCheck(unit)
-	if not range_initialized then InitializeRangeSpells(); range_initialized = true end
-	if CheckInteractDistance(unit, 1) then return true end
-	if UnitCanAttack("player", unit) then -- enemy unit
-		if InRangeSpells(unit, range_spells.enemy) then return true end
-	else -- friendly unit
-		if UnitIsDeadOrGhost(unit) then return InRangeSpells(unit, range_spells.dead) end
-		if InRangeSpells(unit, range_spells.friend) then return true end
-		if UnitIsUnit(unit, "pet") and InRangeSpells(unit, range_spells.pet) then return true end
-	end
-	return false
-end
-
 -- Check if a classification list contains a classification, return true if it does
 local function CheckClassification(v, cl) if v == "rareelite" then v = "rlite" end; return string.find(cl or "", v) ~= nil end
 
 -- Check if a spell is ready to be cast by the player, if rangeCheck then make sure in range of unit too
-local function CheckSpellReady(spell, unit, rangeCheck, usable, checkCharges, charges)
+local function CheckSpellReady(spell, unit, usable, checkCharges, charges)
 	if not spell or (spell == "") then return true end
 	if string.find(spell, "^#%d+") then -- check if name is in special format for specific spell id (i.e., #12345)
 		local id = tonumber(string.sub(spell, 2)) -- extract the spell id and get the name
@@ -255,7 +182,7 @@ local function CheckSpellReady(spell, unit, rangeCheck, usable, checkCharges, ch
 		local cd = MOD:CheckCooldown(spell) -- checks if spell is on cooldown (note this should correctly ignore DK rune cooldowns)
 		if cd and ((cd[4] ~= nil) and (not cd[9] or cd[9] == 0)) then return false end -- verify is on cooldown and has a valid duration and no charges remaining
 	end
-	if IsOn(rangeCheck) and IsOn(unit) and ((IsSpellInRange(spell, unit) == 1) ~= rangeCheck) then return false end
+
 	return true
 end
 
@@ -552,7 +479,6 @@ local function CheckTestAND(ttype, t)
 		if IsOn(t.checkMaxHealth) and (stat.noTarget or (tonumber(t.maxHealth or 0) or 0) > stat.targetMaxHealth) then return false end
 		if IsOn(t.checkHealth) and IsOn(t.minHealth) and (stat.noTarget or (t.checkHealth ~= (stat.targetHealth >= t.minHealth))) then return false end
 		if IsOn(t.checkPower) and IsOn(t.minPower) and (stat.noTarget or (t.checkPower ~= (stat.targetPower >= t.minPower))) then return false end
-		if IsOn(t.inRange) and (stat.noTarget or (t.inRange ~= stat.targetInRange)) then return false end
 	elseif ttype == "Target's Target Status" then -- target's target must exist for these tests to be true
 		if IsOn(t.exists) and (t.exists == stat.noTargetTarget) then return false end
 		if IsOn(t.isPlayer) and (stat.noTargetTarget or (t.isPlayer ~= stat.targetTargetPlayer)) then return false end
@@ -565,7 +491,6 @@ local function CheckTestAND(ttype, t)
 		if IsOn(t.checkMaxHealth) and (stat.noTargetTarget or (tonumber(t.maxHealth or 0) or 0) > stat.targetTargetMaxHealth) then return false end
 		if IsOn(t.checkHealth) and IsOn(t.minHealth) and (stat.noTargetTarget or (t.checkHealth ~= (stat.targetTargetHealth >= t.minHealth))) then return false end
 		if IsOn(t.checkPower) and IsOn(t.minPower) and (stat.noTargetTarget or (t.checkPower ~= (stat.targetTargetPower >= t.minPower))) then return false end
-		if IsOn(t.inRange) and (stat.noTargetTarget or (t.inRange ~= stat.targetTargetInRange)) then return false end
 	elseif ttype == "Focus Status" then -- focus must exist for these tests to be true
 		if IsOn(t.exists) and (t.exists == stat.noFocus) then return false end
 		if IsOn(t.isPlayer) and (stat.noFocus or (t.isPlayer ~= stat.focusPlayer)) then return false end
@@ -577,7 +502,6 @@ local function CheckTestAND(ttype, t)
 				not CheckClassification(stat.focusClassification, t.classification)) then return false end
 		if IsOn(t.checkHealth) and IsOn(t.minHealth) and (stat.noFocus or (t.checkHealth ~= (stat.focusHealth >= t.minHealth))) then return false end
 		if IsOn(t.checkPower) and IsOn(t.minPower) and (stat.noFocus or (t.checkPower ~= (stat.focusPower >= t.minPower))) then return false end
-		if IsOn(t.inRange) and (stat.noFocus or (t.inRange ~= stat.focusInRange)) then return false end
 	elseif ttype == "Focus's Target Status" then -- focus target must exist for these tests to be true
 		if IsOn(t.exists) and (t.exists == stat.noFocusTarget) then return false end
 		if IsOn(t.isPlayer) and (stat.noFocusTarget or (t.isPlayer ~= stat.focusTargetPlayer)) then return false end
@@ -589,7 +513,6 @@ local function CheckTestAND(ttype, t)
 				not CheckClassification(stat.focusTargetClassification, t.classification)) then return false end
 		if IsOn(t.checkHealth) and IsOn(t.minHealth) and (stat.noFocusTarget or (t.checkHealth ~= (stat.focusTargetHealth >= t.minHealth))) then return false end
 		if IsOn(t.checkPower) and IsOn(t.minPower) and (stat.noFocusTarget or (t.checkPower ~= (stat.focusTargetPower >= t.minPower))) then return false end
-		if IsOn(t.inRange) and (stat.noFocusTarget or (t.inRange ~= stat.focusTargetInRange)) then return false end
 	elseif ttype == "All Buffs" then
 		if HasTable(t.auras) and not CheckAuras(t.unit, t.auras, true, t.isMine, true, toggle) then return false end
 	elseif ttype == "Any Buffs" then
@@ -613,7 +536,7 @@ local function CheckTestAND(ttype, t)
 	elseif ttype == "All Cooldowns" then
 		if HasTable(t.spells) and not CheckAllCooldowns(t.spells, not t.notUsable, t.timeLeft, toggle) then return false end
 	elseif ttype == "Spell Ready" then
-		if not CheckSpellReady(t.spell, "target", t.inRange, not t.notUsable, t.checkCharges, t.charges) then return false end
+		if not CheckSpellReady(t.spell, "target", not t.notUsable, t.checkCharges, t.charges) then return false end
 	elseif ttype == "Spell Casting" then
 		if not CheckSpellCast(t.spell, t.unit) then return false end
 	elseif ttype == "Item Ready" then
@@ -683,7 +606,6 @@ local function CheckTestOR(ttype, t)
 			if IsOn(t.checkMaxHealth) and ((tonumber(t.maxHealth or 0) or 0) <= stat.targetMaxHealth) then return true end
 			if IsOn(t.checkHealth) and IsOn(t.minHealth) and (t.checkHealth == (stat.targetHealth >= t.minHealth)) then return true end
 			if IsOn(t.checkPower) and IsOn(t.minPower) and (t.checkPower == (stat.targetPower >= t.minPower)) then return true end
-			if IsOn(t.inRange) and (t.inRange == stat.targetInRange) then return true end
 		end
 	elseif ttype == "Target's Target Status" then -- target's target must exist for these tests to be true
 		if IsOn(t.exists) and (t.exists ~= stat.noTargetTarget) then return true end
@@ -698,7 +620,6 @@ local function CheckTestOR(ttype, t)
 			if IsOn(t.checkMaxHealth) and ((tonumber(t.maxHealth or 0) or 0) <= stat.targetTargetMaxHealth) then return true end
 			if IsOn(t.checkHealth) and IsOn(t.minHealth) and (t.checkHealth == (stat.targetTargetHealth >= t.minHealth)) then return true end
 			if IsOn(t.checkPower) and IsOn(t.minPower) and (t.checkPower == (stat.targetTargetPower >= t.minPower)) then return true end
-			if IsOn(t.inRange) and (t.inRange == stat.targetTargetInRange) then return true end
 		end
 	elseif ttype == "Focus Status" then -- focus must exist for these tests to be true
 		if IsOn(t.exists) and (t.exists ~= stat.noFocus) then return true end
@@ -712,7 +633,6 @@ local function CheckTestOR(ttype, t)
 					CheckClassification(stat.focusClassification, t.classification) then return true end
 			if IsOn(t.checkHealth) and IsOn(t.minHealth) and (t.checkHealth == (stat.focusHealth >= t.minHealth)) then return true end
 			if IsOn(t.checkPower) and IsOn(t.minPower) and (t.checkPower == (stat.focusPower >= t.minPower)) then return true end
-			if IsOn(t.inRange) and (t.inRange == stat.focusInRange) then return true end
 		end
 	elseif ttype == "Focus's Target Status" then -- focus's target must exist for these tests to be true
 		if IsOn(t.exists) and (t.exists ~= stat.noFocusTarget) then return true end
@@ -726,7 +646,6 @@ local function CheckTestOR(ttype, t)
 					CheckClassification(stat.focusTargetClassification, t.classification) then return true end
 			if IsOn(t.checkHealth) and IsOn(t.minHealth) and (t.checkHealth == (stat.focusTargetHealth >= t.minHealth)) then return true end
 			if IsOn(t.checkPower) and IsOn(t.minPower) and (t.checkPower == (stat.focusTargetPower >= t.minPower)) then return true end
-			if IsOn(t.inRange) and (t.inRange == stat.focusTargetInRange) then return true end
 		end
 	elseif ttype == "All Buffs" then
 		if HasTable(t.auras) and CheckAuras(t.unit, t.auras, true, t.isMine, true, toggle) then return true end
@@ -751,7 +670,7 @@ local function CheckTestOR(ttype, t)
 	elseif ttype == "All Cooldowns" then
 		if HasTable(t.spells) and CheckAllCooldowns(t.spells, not t.notUsable, t.timeLeft, toggle) then return true end
 	elseif ttype == "Spell Ready" then
-		if CheckSpellReady(t.spell, "target", t.inRange, not t.notUsable, t.checkCharges, t.charges) then return true end
+		if CheckSpellReady(t.spell, "target", not t.notUsable, t.checkCharges, t.charges) then return true end
 	elseif ttype == "Spell Casting" then
 		if CheckSpellCast(t.spell, t.unit) then return true end
 	elseif ttype == "Item Ready" then
@@ -830,7 +749,6 @@ function MOD:UpdateConditions()
 		m = UnitHealthMax("target")
 		if m > 0 then stat.targetMaxHealth = m; stat.targetHealth = (100 * UnitHealth("target") / m) else stat.targetMaxHealth = 0; stat.targetHealth = 0 end
 		m = UnitPowerMax("target"); if m > 0 then stat.targetPower = (100 * UnitPower("target") / m) else stat.targetPower = 0 end
-		stat.targetInRange = UnitRangeCheck("target")
 	end
 	stat.noTargetTarget = not UnitExists("targettarget")
 	if not stat.noTargetTarget then
@@ -844,7 +762,6 @@ function MOD:UpdateConditions()
 		m = UnitHealthMax("targettarget")
 		if m > 0 then stat.targetTargetMaxHealth = m; stat.targetTargetHealth = (100 * UnitHealth("targettarget") / m) else stat.targetTargetMaxHealth = 0; stat.targetTargetHealth = 0 end
 		m = UnitPowerMax("targettarget"); if m > 0 then stat.targetTargetPower = (100 * UnitPower("targettarget") / m) else stat.targetTargetPower = 0 end
-		stat.targetTargetInRange = UnitRangeCheck("targettarget")
 	end
 	stat.noFocus = not UnitExists("focus")
 	if not stat.noFocus then
@@ -857,7 +774,6 @@ function MOD:UpdateConditions()
 		stat.focusClassification = classification
 		m = UnitHealthMax("focus"); if m > 0 then stat.focusHealth = (100 * UnitHealth("focus") / m) else stat.focusHealth = 0 end
 		m = UnitPowerMax("focus"); if m > 0 then stat.focusPower = (100 * UnitPower("focus") / m) else stat.focusPower = 0 end
-		stat.focusInRange = UnitRangeCheck("focus")
 	end
 	stat.noFocusTarget = not UnitExists("focustarget")
 	if not stat.noFocusTarget then
@@ -870,7 +786,6 @@ function MOD:UpdateConditions()
 		stat.focusTargetClassification = classification
 		m = UnitHealthMax("focustarget"); if m > 0 then stat.focusTargetHealth = (100 * UnitHealth("focustarget") / m) else stat.focusTargetHealth = 0 end
 		m = UnitPowerMax("focustarget"); if m > 0 then stat.focusTargetPower = (100 * UnitPower("focustarget") / m) else stat.focusTargetPower = 0 end
-		stat.focusTargetInRange = UnitRangeCheck("focustarget")
 	end
 
 	-- only check conditions for the player's class
@@ -1086,7 +1001,6 @@ function MOD:GetConditionText(name)
 						if t.classify then a = a .. d .. L["Is "] .. lc else a = a .. d .. L["Not "] .. lc end
 						d = ", "
 					end
-					if IsOn(t.inRange) then if t.inRange then a = a .. d .. L["In Range"] else a = a .. d .. L["Out Of Range"] end; d = ", " end
 					if IsOn(t.isSteal) then if t.isSteal then a = a .. d .. L["Spellsteal"] else a = a .. d .. L["Not Spellsteal"] end; d = ", " end
 					if IsOn(t.checkMaxHealth) then a = a .. d .. L["Max Health String"](t.maxHealth or 0); d = ", " end
 					if IsOn(t.checkHealth) and t.minHealth then local x = "<"; if t.checkHealth then x = ">=" end;
@@ -1155,9 +1069,6 @@ function MOD:GetConditionText(name)
 					if t.spell and t.spell ~= "" then
 						a = a .. string.format(" \"%s\"", t.spell); d = ", "
 						if t.notUsable == true then a = a .. d .. L["Ignore Spell Usable"] else a = a .. d .. L["Test Spell Usable"] end
-						if IsOn(t.inRange) then
-							if t.inRange == true then a = a .. d .. L["Target In Range"] else a = a .. d .. L["Target Out Of Range"] end
-						end
 						local dcount = t.charges
 						if IsOff(dcount) then dcount = 1 end -- default value is 1
 						if t.checkCharges == true then a = a .. d .. L["Less Than"] .. " " .. dcount .. " " .. L["Charges"] elseif t.checkCharges == false then a = a .. d .. dcount .. " " .. L["Or More"] .. " " .. L["Charges"] end

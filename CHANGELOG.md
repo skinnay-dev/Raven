@@ -1,3 +1,6 @@
+# 18 November 2023
+- Removed support for range checks in conditions. An unfortunate casualty of Blizzard preventing mods from telling players where to (not) stand during encounters.
+
 # 16 November 2023
 - Fixed bug caused by namespace changes in Classic WoW.
 

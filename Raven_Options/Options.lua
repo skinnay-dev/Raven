@@ -11160,31 +11160,6 @@ MOD.OptionsTable = {
 										},
 									},
 								},
-								RangeGroup = {
-									type = "group", order = 30, name = L["Range"], inline = true,
-									args = {
-										CheckRange = {
-											type = "toggle", order = 1, name = L["Enable"],
-											desc = L["If checked, test if the target is in range."],
-											get = function(info) return IsTestFieldOn("Target Status", "inRange") end,
-											set = function(info, value) local v = Off if value then v = true end SetTestField("Target Status", "inRange", v) end,
-										},
-										DoTrue = {
-											type = "toggle", order = 2, name = L["In Range"],
-											desc = L["If checked, target must be in range."],
-											disabled = function(info) return IsTestFieldOff("Target Status", "inRange") end,
-											get = function(info) return GetTestField("Target Status", "inRange") == true end,
-											set = function(info, value) SetTestField("Target Status", "inRange", true) end,
-										},
-										DoFalse = {
-											type = "toggle", order = 3, name = L["Out Of Range"],
-											desc = L["If checked, target must not be in range."],
-											disabled = function(info) return IsTestFieldOff("Target Status", "inRange") end,
-											get = function(info) return GetTestField("Target Status", "inRange") == false end,
-											set = function(info, value) SetTestField("Target Status", "inRange", false) end,
-										},
-									},
-								},
 								StealableGroup = {
 									type = "group", order = 35, name = L["Spellsteal"], inline = true,
 									args = {
@@ -11460,31 +11435,6 @@ MOD.OptionsTable = {
 											disabled = function(info) return not GetTestField("Target's Target Status", "classify") end,
 											get = function(info) return IsClassification("Target's Target Status", "rlite") end,
 											set = function(info, value) SetClassification("Target's Target Status", "rlite", value) end,
-										},
-									},
-								},
-								RangeGroup = {
-									type = "group", order = 30, name = L["Range"], inline = true,
-									args = {
-										CheckRange = {
-											type = "toggle", order = 1, name = L["Enable"],
-											desc = L["If checked, test if the target's target is in range."],
-											get = function(info) return IsTestFieldOn("Target's Target Status", "inRange") end,
-											set = function(info, value) local v = Off if value then v = true end SetTestField("Target's Target Status", "inRange", v) end,
-										},
-										DoTrue = {
-											type = "toggle", order = 2, name = L["In Range"],
-											desc = L["If checked, target's target must be in range."],
-											disabled = function(info) return IsTestFieldOff("Target's Target Status", "inRange") end,
-											get = function(info) return GetTestField("Target's Target Status", "inRange") == true end,
-											set = function(info, value) SetTestField("Target's Target Status", "inRange", true) end,
-										},
-										DoFalse = {
-											type = "toggle", order = 3, name = L["Out Of Range"],
-											desc = L["If checked, target's target must not be in range."],
-											disabled = function(info) return IsTestFieldOff("Target's Target Status", "inRange") end,
-											get = function(info) return GetTestField("Target's Target Status", "inRange") == false end,
-											set = function(info, value) SetTestField("Target's Target Status", "inRange", false) end,
 										},
 									},
 								},
@@ -11766,31 +11716,6 @@ MOD.OptionsTable = {
 										},
 									},
 								},
-								RangeGroup = {
-									type = "group", order = 30, name = L["Range"], inline = true,
-									args = {
-										CheckRange = {
-											type = "toggle", order = 1, name = L["Enable"],
-											desc = L["If checked, test if the focus is in range."],
-											get = function(info) return IsTestFieldOn("Focus Status", "inRange") end,
-											set = function(info, value) local v = Off if value then v = true end SetTestField("Focus Status", "inRange", v) end,
-										},
-										DoTrue = {
-											type = "toggle", order = 2, name = L["In Range"],
-											desc = L["If checked, focus must be in range."],
-											disabled = function(info) return IsTestFieldOff("Focus Status", "inRange") end,
-											get = function(info) return GetTestField("Focus Status", "inRange") == true end,
-											set = function(info, value) SetTestField("Focus Status", "inRange", true) end,
-										},
-										DoFalse = {
-											type = "toggle", order = 3, name = L["Out Of Range"],
-											desc = L["If checked, focus must not be in range."],
-											disabled = function(info) return IsTestFieldOff("Focus Status", "inRange") end,
-											get = function(info) return GetTestField("Focus Status", "inRange") == false end,
-											set = function(info, value) SetTestField("Focus Status", "inRange", false) end,
-										},
-									},
-								},
 								StealableGroup = {
 									type = "group", order = 35, name = L["Spellsteal"], inline = true,
 									args = {
@@ -12049,31 +11974,6 @@ MOD.OptionsTable = {
 											disabled = function(info) return not GetTestField("Focus's Target Status", "classify") end,
 											get = function(info) return IsClassification("Focus's Target Status", "rlite") end,
 											set = function(info, value) SetClassification("Focus's Target Status", "rlite", value) end,
-										},
-									},
-								},
-								RangeGroup = {
-									type = "group", order = 30, name = L["Range"], inline = true,
-									args = {
-										CheckRange = {
-											type = "toggle", order = 1, name = L["Enable"],
-											desc = L["If checked, test if the focus target is in range."],
-											get = function(info) return IsTestFieldOn("Focus's Target Status", "inRange") end,
-											set = function(info, value) local v = Off if value then v = true end SetTestField("Focus's Target Status", "inRange", v) end,
-										},
-										DoTrue = {
-											type = "toggle", order = 2, name = L["In Range"],
-											desc = L["If checked, focus target must be in range."],
-											disabled = function(info) return IsTestFieldOff("Focus's Target Status", "inRange") end,
-											get = function(info) return GetTestField("Focus's Target Status", "inRange") == true end,
-											set = function(info, value) SetTestField("Focus's Target Status", "inRange", true) end,
-										},
-										DoFalse = {
-											type = "toggle", order = 3, name = L["Out Of Range"],
-											desc = L["If checked, focus target must not be in range."],
-											disabled = function(info) return IsTestFieldOff("Focus's Target Status", "inRange") end,
-											get = function(info) return GetTestField("Focus's Target Status", "inRange") == false end,
-											set = function(info, value) SetTestField("Focus's Target Status", "inRange", false) end,
 										},
 									},
 								},
@@ -13155,31 +13055,6 @@ MOD.OptionsTable = {
 											desc = L["Enter spell name (or numeric identifier, optionally preceded by # for a specific spell id) to test if ready to be cast."],
 											get = function(info) return GetTestField("Spell Ready", "spell") end,
 											set = function(info, value) SetTestFieldString("Spell Ready", "spell", value) end,
-										},
-									},
-								},
-								RangeGroup = {
-									type = "group", order = 10, name = L["Range"], inline = true,
-									args = {
-										CheckRange = {
-											type = "toggle", order = 1, name = L["Enable"],
-											desc = L["If checked, also test if the target is in range of the spell."],
-											get = function(info) return IsTestFieldOn("Spell Ready", "inRange") end,
-											set = function(info, value) local v = Off if value then v = true end SetTestField("Spell Ready", "inRange", v) end,
-										},
-										DoTrue = {
-											type = "toggle", order = 2, name = L["Target In Range"],
-											desc = L["If checked, target must be in range."],
-											disabled = function(info) return IsTestFieldOff("Spell Ready", "inRange") end,
-											get = function(info) return GetTestField("Spell Ready", "inRange") == true end,
-											set = function(info, value) SetTestField("Spell Ready", "inRange", true) end,
-										},
-										DoFalse = {
-											type = "toggle", order = 3, name = L["Target Out Of Range"],
-											desc = L["If checked, target must be out of range."],
-											disabled = function(info) return IsTestFieldOff("Spell Ready", "inRange") end,
-											get = function(info) return GetTestField("Spell Ready", "inRange") == false end,
-											set = function(info, value) SetTestField("Spell Ready", "inRange", false) end,
 										},
 									},
 								},
