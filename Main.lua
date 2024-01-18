@@ -34,6 +34,9 @@ local release = tonumber(v1);
 local major = tonumber(v2);
 local minor = tonumber(v3)
 
+local GetAuraDataByIndex = C_UnitAuras and C_UnitAuras.GetAuraDataByIndex
+local UnpackAuraData = AuraUtil and AuraUtil.UnpackAuraData
+
 MOD.isVanilla = (release == 1) and (major >= 4) and (minor >= 1)
 MOD.isWrath = (release == 3) and (major >= 4) and (minor >= 1)
 MOD.isClassic = MOD.isWrath or MOD.isVanilla
@@ -163,7 +166,6 @@ local alertColors = { -- default colors for spell alerts
 	FriendDebuffAlerts = { r = 1, g = 0, b = 1, a = 1 },
 }
 
-local UnitAura = UnitAura
 MOD.LCD = nil
 if MOD.ExpansionIsOrBelow(LE_EXPANSION_WRATH_OF_THE_LICH_KING) then
 	if C_AddOns.LoadAddOn == nil then
@@ -180,6 +182,16 @@ end
 
 local band = bit.band -- shortcut for common bit logic operator
 
+-- Functions for reading Auras
+local function GetAuraData(unitToken, index, filter)
+	if MOD.isModernAPI then
+		return UnpackAuraData(GetAuraDataByIndex(unitToken, index, filter))
+	else
+		return UnitAura(unitToken, index, filter)
+	end
+end
+
+
 -- UnitAura no longer works with spell names in xxBfAxx so this function searches for them by scanning
 -- While not the most efficient way to do this, it is generally used with a filter that should limit the depth of the search
 -- This is only called for combat log events related to spell auras
@@ -187,7 +199,7 @@ function MOD.UnitAuraSpellName(unit, spellName, filter)
 	local name, icon, count, btype, duration, expire, caster, isStealable, nameplateShowSelf, spellID, apply, boss
 	if type(spellName) == "string" then -- sanity check only being called with a spell name
 		for i = 1, 100 do
-			name, icon, count, btype, duration, expire, caster, isStealable, nameplateShowSelf, spellID, apply, boss = UnitAura(unit, i, nil, filter)
+			name, icon, count, btype, duration, expire, caster, isStealable, nameplateShowSelf, spellID, apply, boss = GetAuraData(unit, i, filter)
 			if name == spellName then break end
 		end
 	end
@@ -453,7 +465,7 @@ function MOD:AddTrackers(unit)
 		trackerMarker = trackerMarker + 1 -- unique tag for this pass
 		local i = 1
 		repeat
-			name, icon, count, btype, duration, expire, caster, isStealable, _, spellID, apply = UnitAura(unit, i, "HELPFUL|PLAYER")
+			name, icon, count, btype, duration, expire, caster, isStealable, _, spellID, apply = GetAuraData(unit, i, "HELPFUL|PLAYER")
 			if name and caster == "player" then
 				AddTracker(dstGUID, dstName, true, name, icon, count, btype, duration, expire, caster, isStealable, spellID, nil, apply, trackerMarker)
 				MOD.SetDuration(name, spellID, duration)
@@ -463,7 +475,7 @@ function MOD:AddTrackers(unit)
 		until not name
 		i = 1
 		repeat
-			name, icon, count, btype, duration, expire, caster, isStealable, _, spellID, apply, boss = UnitAura(unit, i, "HARMFUL|PLAYER")
+			name, icon, count, btype, duration, expire, caster, isStealable, _, spellID, apply, boss = GetAuraData(unit, i, "HARMFUL|PLAYER")
 			if name and caster == "player" then
 				if spellID ~= 146739 or duration ~= 0 or InCombatLockdown() then -- don't add Corruption if out-of-combat
 					AddTracker(dstGUID, dstName, false, name, icon, count, btype, duration, expire, caster, isStealable, spellID, boss, apply, trackerMarker)
@@ -1622,7 +1634,7 @@ local function GetBuffs(unit)
 	local name, icon, count, btype, duration, expire, caster, isStealable, nameplatePersonal, spellID, apply, boss, castByPlayer, showOnNameplate
 	local i = 1
 	repeat
-		name, icon, count, btype, duration, expire, caster, isStealable, nameplatePersonal, spellID, apply, boss, castByPlayer, showOnNameplate = UnitAura(unit, i, "HELPFUL")
+		name, icon, count, btype, duration, expire, caster, isStealable, nameplatePersonal, spellID, apply, boss, castByPlayer, showOnNameplate = GetAuraData(unit, i, "HELPFUL")
 		if name then
 			if not caster then if spellID and fixEnchants[spellID] then caster = "player" else caster = "unknown" end -- fix Jade Spirit, Dancing Steel, River's Song
 			elseif caster == "vehicle" then caster = "player" end -- vehicle buffs treated like player buffs
@@ -1636,7 +1648,7 @@ local function GetBuffs(unit)
 	if MOD.ExpansionIsOrBelow(LE_EXPANSION_WRATH_OF_THE_LICH_KING) or not UnitHasVehicleUI("player") then return end
 	i = 1
 	repeat
-		name, icon, count, btype, duration, expire, caster, isStealable, _, spellID, apply, boss = UnitAura("vehicle", i, "HELPFUL")
+		name, icon, count, btype, duration, expire, caster, isStealable, _, spellID, apply, boss = GetAuraData("vehicle", i, "HELPFUL")
 		if name then
 			if not caster then caster = "unknown" elseif caster == "vehicle" then caster = "player" end -- vehicle buffs treated like player buffs
 			if caster == "player" then MOD.SetDuration(name, spellID, duration); MOD.SetSpellType(spellID, btype) end
@@ -1651,7 +1663,7 @@ local function GetDebuffs(unit)
 	local name, icon, count, btype, duration, expire, caster, isStealable, nameplatePersonal, spellID, apply, boss, castByPlayer, showOnNameplate
 	local i = 1
 	repeat
-		name, icon, count, btype, duration, expire, caster, isStealable, nameplatePersonal, spellID, apply, boss, castByPlayer, showOnNameplate = UnitAura(unit, i, "HARMFUL")
+		name, icon, count, btype, duration, expire, caster, isStealable, nameplatePersonal, spellID, apply, boss, castByPlayer, showOnNameplate = GetAuraData(unit, i, "HARMFUL")
 		if name then
 			if not caster then caster = "unknown" elseif caster == "vehicle" then caster = "player" end -- vehicle debuffs treated like player debuffs
 			if caster == "player" then MOD.SetDuration(name, spellID, duration); MOD.SetSpellType(spellID, btype) end
@@ -1664,7 +1676,7 @@ local function GetDebuffs(unit)
 	if MOD.ExpansionIsOrBelow(LE_EXPANSION_WRATH_OF_THE_LICH_KING) or not UnitHasVehicleUI("player") then return end
 	i = 1
 	repeat
-		name, icon, count, btype, duration, expire, caster, isStealable, _, spellID, apply, boss = UnitAura("vehicle", i, "HARMFUL")
+		name, icon, count, btype, duration, expire, caster, isStealable, _, spellID, apply, boss = GetAuraData("vehicle", i, "HARMFUL")
 		if name then
 			if not caster then caster = "unknown" elseif caster == "vehicle" then caster = "player" end -- vehicle debuffs treated like player debuffs
 			if caster == "player" then MOD.SetDuration(name, spellID, duration); MOD.SetSpellType(spellID, btype) end
