@@ -1,3 +1,10 @@
+# 19 December 2023
+- Added new time format that replicates the Blizzard's time format.
+- Fixed bugs introduced with previous release.
+
+# 18 December 2023
+- Fixes for 10.2.5 API changes
+
 # 18 November 2023
 - Removed support for range checks in conditions. An unfortunate casualty of Blizzard preventing mods from telling players where to (not) stand during encounters.
 

@@ -1867,7 +1867,7 @@ MOD.Nest_TimeFormatOptions = {
 	{ 2, 3, 3, 3, 4 }, { 2, 3, 3, 3, 5 }, { 3, 3, 3, 2, 3 }, { 3, 3, 3, 3, 5 }, -- 24
 	{ 4, 3, 1, 2, 3 }, { 4, 3, 1, 2, 2 }, { 4, 3, 1, 3, 4 }, { 4, 3, 1, 3, 5 }, -- 28
 	{ 5, 1, 1, 2, 3 }, { 5, 1, 1, 2, 2 }, { 5, 1, 1, 3, 4 }, { 5, 1, 1, 3, 5 }, -- 32
-	{ 3, 3, 3, 2, 2 }, { 3, 3, 3, 3, 4 }, -- 34
+	{ 3, 3, 3, 2, 2 }, { 3, 3, 3, 3, 4 }, { 6, 4, 4, 4, 6 }, -- 35
 }
 
 function MOD.Nest_FormatTime(t, timeFormat, timeSpaces, timeCase)
@@ -1889,26 +1889,68 @@ function MOD.Nest_FormatTime(t, timeFormat, timeSpaces, timeCase)
 			hplus = math.floor((t + 3599.99) / 3600); mplus = math.floor((t - (h * 3600) + 59.99) / 60) -- provides compatibility with tooltips
 			ts = math.floor(t * 10) / 10 -- truncated to a tenth second
 			if t >= 3600 then
-				if o1 == 1 then f = string.format("%.0f:%02.0f:%02.0f", h, m, s) elseif o1 == 2 then f = string.format("%.0fh %.0fm", h, m)
-				elseif o1 == 3 then f = string.format("%.0fh", hplus) elseif o1 == 4 then f = string.format("%.0fh %.0f", h, m)
-				else f = string.format("%.0f:%02.0f", h, m) end
+				if o1 == 1 then
+					f = string.format("%.0f:%02.0f:%02.0f", h, m, s)
+				elseif o1 == 2 then
+					f = string.format("%.0fh %.0fm", h, m)
+				elseif o1 == 3 then
+					f = string.format("%.0fh", hplus)
+				elseif o1 == 6 then
+					f = string.format("%.0f_h", hplus)
+				elseif o1 == 4 then
+					f = string.format("%.0fh %.0f", h, m)
+				else
+					f = string.format("%.0f:%02.0f", h, m)
+				end
 			elseif t >= 120 then
-				if o2 == 1 then f = string.format("%.0f:%02.0f", m, s) elseif o2 == 2 then f = string.format("%.0fm %.0fs", m, s)
-				else f = string.format("%.0fm", mplus) end
+				if o2 == 1 then
+					f = string.format("%.0f:%02.0f", m, s)
+				elseif o2 == 2 then
+					f = string.format("%.0fm %.0fs", m, s)
+				elseif o2 == 4 then
+					f = string.format("%.0f_m", mplus)
+				else
+					f = string.format("%.0fm", mplus)
+				end
 			elseif t >= 60 then
-				if o3 == 1 then f = string.format("%.0f:%02.0f", m, s) elseif o3 == 2 then f = string.format("%.0fm %.0fs", m, s)
-				else f = string.format("%.0fm", mplus) end
+				if o3 == 1 then
+					f = string.format("%.0f:%02.0f", m, s)
+				elseif o3 == 2 then
+					f = string.format("%.0fm %.0fs", m, s)
+				elseif o3 == 4 then
+					f = string.format("%.0f_m", mplus)
+				else
+					f = string.format("%.0fm", mplus)
+				end
 			elseif t >= 10 then
-				if o4 == 1 then f = string.format(":%02.0f", s) elseif o4 == 2 then f = string.format("%.0fs", s)
-				else f = string.format("%.0f", s) end
+				if o4 == 1 then
+					f = string.format(":%02.0f", s)
+				elseif o4 == 2 then
+					f = string.format("%.0fs", s)
+				elseif o4 == 4 then
+					f = string.format("%.0f_s", s)
+				else
+					f = string.format("%.0f", s)
+				end
 			else
-				if o5 == 1 then f = string.format(":%02.0f", s) elseif o5 == 2 then f = string.format("%.1fs", ts)
-				elseif o5 == 3 then f = string.format("%.0fs", s) elseif o5 == 4 then f = string.format("%.1f", ts)
-				else f = string.format("%.0f", s) end
+				if o5 == 1 then
+					f = string.format(":%02.0f", s)
+				elseif o5 == 2 then
+					f = string.format("%.1fs", ts)
+				elseif o5 == 3 then
+					f = string.format("%.0fs", s)
+				elseif o5 == 4 then
+					f = string.format("%.1f", ts)
+				elseif o5 == 6 then
+					f = string.format("%.0f_s", s)
+				else
+					f = string.format("%.0f", s)
+				end
 			end
 		end
 	end
 	if not timeSpaces then f = string.gsub(f, " ", "") end
+	f = string.gsub(f, "_", " ")
 	if timeCase then f = string.upper(f) end
 	return f
 end

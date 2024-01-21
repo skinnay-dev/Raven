@@ -117,7 +117,7 @@ local function Overlay_OnEnter(b)
 				if (slotid == 16) or (slotid == 17) then GameTooltip:SetInventoryItem("player", slotid) end
 			end
 		elseif b.aura_tt == "buff" then
-			if not UnitAura("player", b.aura_id, "HELPFUL") then return end
+			if not MOD:GetAuraData("player", b.aura_id, "HELPFUL") then return end
 			GameTooltip:SetUnitAura("player", b.aura_id, "HELPFUL")
 		elseif b.aura_tt == "spell name" then
 			local auraList = MOD:CheckAuras("player", b.aura_id, true)
