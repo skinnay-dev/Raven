@@ -163,6 +163,8 @@ local alertColors = { -- default colors for spell alerts
 	FriendDebuffAlerts = { r = 1, g = 0, b = 1, a = 1 },
 }
 
+local UnitAura = UnitAura
+
 MOD.LCD = nil
 if MOD.ExpansionIsOrBelow(LE_EXPANSION_WRATH_OF_THE_LICH_KING) then
 	if C_AddOns.LoadAddOn == nil then
