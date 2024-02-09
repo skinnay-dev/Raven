@@ -1,3 +1,6 @@
+# 9 February 2024
+- Disabled the tracking type for auto buffs bars in Classic.
+
 # 31 January 2024
 - Fixed classic-only bug with target-of-target frames.
 

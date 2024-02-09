@@ -223,7 +223,6 @@ function MOD:SetCooldownDefaults()
 	end
 
 	local openTabs = 3 -- on live first two tabs are open to all specializations and the third is current spec
-	--if MOD.isClassic then openTabs = GetNumSpellTabs() end -- on classic there are no specializations so all tabs are same
 	openTabs = GetNumSpellTabs()
 
 	for tab = 1, openTabs do -- scan first two tabs of player spell book (general and current spec) for player spells on cooldown
@@ -289,29 +288,27 @@ function MOD:SetCooldownDefaults()
 		end
 	end
 
-	if MOD.isModernAPI then
-		local tabs = GetNumSpellTabs()
-		if tabs and tabs > 3 then
-			for tab = 4, tabs do -- scan inactive tabs of player spell book for icons
-				local spellLine, spellIcon, offset, numSpells = GetSpellTabInfo(tab)
-				for i = 1, numSpells do
-					local index = i + offset
-					local spellName = GetSpellBookItemName(index, book)
-					if not spellName then break end
-					local stype, id = GetSpellBookItemInfo(index, book)
-					if id then -- make sure valid spell book item
-						if stype == "SPELL" then -- in this case, id is not the spell id despite what online docs say
-							local name, _, icon = getSpellInfo(index, book)
-							if name and name ~= "" and icon then iconCache[name] = icon end
-						elseif stype == "FLYOUT" then -- in this case, id is flyout id
-							local _, _, numSlots, known = GetFlyoutInfo(id)
-							if known then
-								for slot = 1, numSlots do
-									local spellID, _, _, name = GetFlyoutSlotInfo(id, slot)
-									if spellID then
-										local name, _, icon = getSpellInfo(spellID)
-										if name and name ~= "" and icon then iconCache[name] = icon end
-									end
+	local tabs = GetNumSpellTabs()
+	if tabs and tabs > 3 then
+		for tab = 4, tabs do -- scan inactive tabs of player spell book for icons
+			local spellLine, spellIcon, offset, numSpells = GetSpellTabInfo(tab)
+			for i = 1, numSpells do
+				local index = i + offset
+				local spellName = GetSpellBookItemName(index, book)
+				if not spellName then break end
+				local stype, id = GetSpellBookItemInfo(index, book)
+				if id then -- make sure valid spell book item
+					if stype == "SPELL" then -- in this case, id is not the spell id despite what online docs say
+						local name, _, icon = getSpellInfo(index, book)
+						if name and name ~= "" and icon then iconCache[name] = icon end
+					elseif stype == "FLYOUT" then -- in this case, id is flyout id
+						local _, _, numSlots, known = GetFlyoutInfo(id)
+						if known then
+							for slot = 1, numSlots do
+								local spellID, _, _, name = GetFlyoutSlotInfo(id, slot)
+								if spellID then
+									local name, _, icon = getSpellInfo(spellID)
+									if name and name ~= "" and icon then iconCache[name] = icon end
 								end
 							end
 						end
@@ -319,23 +316,23 @@ function MOD:SetCooldownDefaults()
 				end
 			end
 		end
+	end
 
-		if MOD.ExpansionIsOrAbove(LE_EXPANSION_CATACLYSM) then
-			local p = professions -- scan professions for spells on cooldown
-			p[1], p[2], p[3], p[4], p[5], p[6] = GetProfessions()
-			for index = 1, 6 do
-				if p[index] then
-					local prof, _, _, _, numSpells, offset = GetProfessionInfo(p[index])
-					for i = 1, numSpells do
-						local stype = GetSpellBookItemInfo(i + offset, book)
-						if stype == "SPELL" then
-							local name, _, icon, _, _, _, spellID = getSpellInfo(i + offset, book)
-							if name and name ~= "" and icon and spellID then -- make sure valid spell
-								bst[name] = spellID
-								iconCache[name] = icon
-								local duration = GetSpellBaseCooldown(spellID) -- duration is in milliseconds
-								if duration and duration > 1500 then cds[spellID] = duration / 1000 end -- don't include spells with global cooldowns
-							end
+	if MOD.ExpansionIsOrAbove(LE_EXPANSION_CATACLYSM) then
+		local p = professions -- scan professions for spells on cooldown
+		p[1], p[2], p[3], p[4], p[5], p[6] = GetProfessions()
+		for index = 1, 6 do
+			if p[index] then
+				local prof, _, _, _, numSpells, offset = GetProfessionInfo(p[index])
+				for i = 1, numSpells do
+					local stype = GetSpellBookItemInfo(i + offset, book)
+					if stype == "SPELL" then
+						local name, _, icon, _, _, _, spellID = getSpellInfo(i + offset, book)
+						if name and name ~= "" and icon and spellID then -- make sure valid spell
+							bst[name] = spellID
+							iconCache[name] = icon
+							local duration = GetSpellBaseCooldown(spellID) -- duration is in milliseconds
+							if duration and duration > 1500 then cds[spellID] = duration / 1000 end -- don't include spells with global cooldowns
 						end
 					end
 				end

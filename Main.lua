@@ -34,14 +34,9 @@ local release = tonumber(v1);
 local major = tonumber(v2);
 local minor = tonumber(v3)
 
-MOD.isVanilla = (release == 1) and (major >= 4) and (minor >= 1)
-MOD.isWrath = (release == 3) and (major >= 4) and (minor >= 1)
+MOD.isVanilla = LE_EXPANSION_LEVEL_CURRENT == 0;
+MOD.isWrath = LE_EXPANSION_LEVEL_CURRENT == LE_EXPANSION_WRATH_OF_THE_LICH_KING
 MOD.isClassic = MOD.isWrath or MOD.isVanilla
-MOD.isModernAPI = true
-
-if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then
-	MOD.isModernAPI = MOD.isClassic
-end
 
 function MOD.ExpansionIsOrAbove(exp)
 	if exp == nil then return false end --This is Vanilla
@@ -53,7 +48,6 @@ function MOD.ExpansionIsOrBelow(exp)
 	return LE_EXPANSION_LEVEL_CURRENT <= exp
 end
 
---MOD.isClassic = (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC) or (WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC) or (WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC)
 MOD.updateOptions = false -- set this to cause the options panel to update (checked every half second)
 MOD.LocalSpellNames = {} -- must be defined in first module loaded
 local LSPELL = MOD.LocalSpellNames
@@ -264,7 +258,7 @@ local function HideShow(key, frame, check, options)
 		if hide then
 			BuffFrame:Hide();
 
-			if MOD.isModernAPI and MOD.ExpansionIsOrAbove(LE_EXPANSION_DRAGONFLIGHT) then
+			if MOD.ExpansionIsOrAbove(LE_EXPANSION_DRAGONFLIGHT) then
 				DebuffFrame:Hide();
 			end
 
@@ -276,7 +270,7 @@ local function HideShow(key, frame, check, options)
 			hiding[key] = true;
 		elseif show then
 			BuffFrame:Show();
-			if MOD.isModernAPI and MOD.ExpansionIsOrAbove(LE_EXPANSION_DRAGONFLIGHT) then
+			if MOD.ExpansionIsOrAbove(LE_EXPANSION_DRAGONFLIGHT) then
 				DebuffFrame:Show();
 			end
 
@@ -1574,7 +1568,8 @@ local function GetWeaponBuffs()
 	if mh then -- add the mainhand buff, if any, to the table
 		local islot = INVSLOT_MAINHAND
 		local mhbuff
-		if MOD.isModernAPI and not MOD.isClassic then
+
+		if not MOD.isClassic then
 			mhbuff = GetWeaponBuffName(islot)
 		else
 			mhbuff = GetWeaponBuffNameOld(islot)
@@ -1603,7 +1598,8 @@ local function GetWeaponBuffs()
 	if oh then -- add the offhand buff, if any, to the table
 		local islot = INVSLOT_OFFHAND
 		local ohbuff
-		if MOD.isModernAPI and not MOD.isClassic then
+
+		if not MOD.isClassic then
 			ohbuff = GetWeaponBuffName(islot)
 		else
 			ohbuff = GetWeaponBuffNameOld(islot)
@@ -1687,35 +1683,28 @@ end
 
 -- Add tracking auras (updated for Cataclysm which allows multiple active tracking types)
 local function GetTracking()
-	local notTracking, notTrackingIcon, found = L["Not Tracking"], "Interface\\Minimap\\Tracking\\None", false
+	local found = false
 	local trackingTypes = nil
-	if MOD.isModernAPI then
-		trackingTypes = C_Minimap.GetNumTrackingTypes()
+
+	if MOD.ExpansionIsOrAbove(LE_EXPANSION_WRATH_OF_THE_LICH_KING) then
+		trackingTypes = GetNumTrackingTypes()
 	else
-		if MOD.ExpansionIsOrAbove(LE_EXPANSION_WRATH_OF_THE_LICH_KING) then
-			trackingTypes = GetNumTrackingTypes()
-		else
-			return
-		end
+		return
 	end
 
 	for i = 1, trackingTypes do
-		local tracking
-		local trackingIcon
-		local active
-		if MOD.isModernAPI then
-			tracking, trackingIcon, active = C_Minimap.GetTrackingInfo(i)
-		else
-			tracking, trackingIcon, active = GetTrackingInfo(i)
-		end
+		local tracking, trackingIcon, active = C_Minimap.GetTrackingInfo(i)
 
 		if active then
 			found = true
 			AddAura("player", tracking, true, nil, 1, "Tracking", 0, "player", nil, nil, nil, trackingIcon, 0, "tracking", tracking)
 		end
 	end
+
 	if not found then
-		AddAura("player", notTracking, true, nil, 1, "Tracking", 0, "player", nil, nil, nil, notTrackingIcon, 0, "tracking", notTracking)
+		local notTracking = L["Not Tracking"]
+
+		AddAura("player", notTracking, true, nil, 1, "Tracking", 0, "player", nil, nil, nil, "Interface\\Minimap\\Tracking\\None", 0, "tracking", notTracking)
 	end
 end
 

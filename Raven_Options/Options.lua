@@ -6591,6 +6591,7 @@ MOD.OptionsTable = {
 								Tracking = {
 									type = "toggle", order = 55, name = L["Tracking"],
 									disabled = function(info) return not GetBarGroupField("detectBuffTypes") or not GetBarGroupField("detectBuffs") end,
+									hidden = MOD.isClassic,
 									desc = L["Include tracking buffs."],
 									get = function(info) return GetBarGroupField("detectTracking") end,
 									set = function(info, value) SetBarGroupField("detectTracking", value) end,
@@ -6715,6 +6716,7 @@ MOD.OptionsTable = {
 								Tracking = {
 									type = "toggle", order = 55, name = L["Tracking"],
 									disabled = function(info) return not GetBarGroupField("excludeBuffTypes") or not GetBarGroupField("detectBuffs") end,
+									hidden = MOD.isClassic,
 									desc = L["Exclude tracking buffs."],
 									get = function(info) return GetBarGroupField("excludeTracking") end,
 									set = function(info, value) SetBarGroupField("excludeTracking", value) end,

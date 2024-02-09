@@ -535,11 +535,10 @@ end
 local function ValueCastBar(unit, fmt, spell, options)
 	local checkUnit = unit
 	local castingInfo, channelInfo = UnitCastingInfo, UnitChannelInfo
-	if MOD.isModernAPI then
-		if UnitHasVehicleUI("player") then
-			if unit == "player" then checkUnit = "pet" elseif unit == "pet" then checkUnit = "player" end
-		end
-	else
+
+	if UnitHasVehicleUI("player") then
+		if unit == "player" then checkUnit = "pet" elseif unit == "pet" then checkUnit = "player" end
+	end
 
 		castingInfo = CastingInfo; channelInfo = ChannelInfo
 	end
