@@ -1686,11 +1686,16 @@ local function GetTracking()
 	local found = false
 	local trackingTypes = nil
 
-	if MOD.ExpansionIsOrAbove(LE_EXPANSION_WRATH_OF_THE_LICH_KING) then
-		trackingTypes = GetNumTrackingTypes()
+	if C_Minimap.GetNumTrackingTypes == nil then
+		if MOD.ExpansionIsOrAbove(LE_EXPANSION_WRATH_OF_THE_LICH_KING) then
+			trackingTypes = GetNumTrackingTypes()
+		else
+			return
+		end
 	else
-		return
+		trackingTypes = C_Minimap.GetNumTrackingTypes()
 	end
+
 
 	for i = 1, trackingTypes do
 		local tracking, trackingIcon, active = C_Minimap.GetTrackingInfo(i)
