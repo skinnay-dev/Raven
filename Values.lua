@@ -540,8 +540,8 @@ local function ValueCastBar(unit, fmt, spell, options)
 		if unit == "player" then checkUnit = "pet" elseif unit == "pet" then checkUnit = "player" end
 	end
 
-		castingInfo = CastingInfo; channelInfo = ChannelInfo
-	end
+	castingInfo = CastingInfo; channelInfo = ChannelInfo
+
 	if not unit or not UnitGUID(unit) then return false end
 	if unit == "player" or unit == "vehicle" then
 		if not latency.frame then -- check if need to start event tracking
