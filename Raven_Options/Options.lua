@@ -2055,10 +2055,30 @@ MOD.OptionsTable = {
 									set = function(info, value) MOD.db.profile.hideBlizzPlayer = value; MOD:UpdateAllBarGroups() end,
 								},
 								HideBuffs = {
-									type = "toggle", order = 20, name = L["Buffs and Debuffs"],
-									desc = L["Hide default user interface for buffs and debuffs."],
+									type = "toggle", order = 20,
+									name = function(info)
+										if MOD.isModernUI then
+											return L["Buffs"]
+										else
+											return L["Buffs and Debuffs"]
+										end
+									end,
+									desc = function(info)
+										if MOD.isModernUI then
+											return L["Hide default user interface for buffs."]
+										else
+											return L["Hide default user interface for buffs and debuffs."]
+										end
+									end,
 									get = function(info) return MOD.db.profile.hideBlizzBuffs end,
 									set = function(info, value) MOD.db.profile.hideBlizzBuffs = value; MOD:UpdateAllBarGroups() end,
+								},
+								HideDebuffs = {
+									type = "toggle", order = 21, name = L["Debuffs"],
+									desc = L["Hide default user interface for debuffs."],
+									get = function(info) return MOD.db.profile.hideBlizzDebuffs end,
+									set = function(info, value) MOD.db.profile.hideBlizzDebuffs = value; MOD:UpdateAllBarGroups() end,
+									hidden = function(info) return MOD.isModernUI == false end,
 								},
 								HideCastBar = {
 									type = "toggle", order = 30, name = L["Cast Bar"],
@@ -2140,95 +2160,6 @@ MOD.OptionsTable = {
 								},
 							},
 						},
-						--[[
-						HideTarget = {
-							type = "group", order = 30, name = L["Target"], inline = true,
-							args = {
-								HideUnitFrame = {
-									type = "toggle", order = 10, name = L["Unit Frame"],
-									desc = L["Hide default target unit frame."],
-									get = function(info) return MOD.db.profile.hideBlizzPlayer end,
-									set = function(info, value) MOD.db.profile.hideBlizzPlayer = value; MOD:UpdateAllBarGroups() end,
-								},
-								HideBuffs = {
-									type = "toggle", order = 5, name = L["Buffs and Debuffs"],
-									desc = L["Hide default user interface for target buffs and debuffs."],
-									get = function(info) return MOD.db.profile.hideBlizzBuffs end,
-									set = function(info, value) MOD.db.profile.hideBlizzBuffs = value; MOD:UpdateAllBarGroups() end,
-								},
-								HideCastBar = {
-									type = "toggle", order = 20, name = L["Cast Bar"],
-									desc = L["Hide default target cast bar."],
-									get = function(info) return MOD.db.profile.hideBlizzXP end,
-									set = function(info, value) MOD.db.profile.hideBlizzXP = value; MOD:UpdateAllBarGroups() end,
-								},
-							},
-						},
-						HideOther = {
-							type = "group", order = 40, name = L["Miscellaneous"], inline = true,
-							args = {
-								HideBuffs = {
-									type = "toggle", order = 5, name = L["Player Buffs and Debuffs"],
-									desc = L["Hide default user interface for buffs and debuffs."],
-									get = function(info) return MOD.db.profile.hideBlizzBuffs end,
-									set = function(info, value) MOD.db.profile.hideBlizzBuffs = value; MOD:UpdateAllBarGroups() end,
-								},
-								HidePlayer = {
-									type = "toggle", order = 10, name = L["Player Unit Frame"],
-									desc = L["Hide default player unit frame."],
-									get = function(info) return MOD.db.profile.hideBlizzPlayer end,
-									set = function(info, value) MOD.db.profile.hideBlizzPlayer = value; MOD:UpdateAllBarGroups() end,
-								},
-								HideXP = {
-									type = "toggle", order = 10, name = L["XP and Reputation"],
-									desc = L["Hide XP and reputation bars in the default user interface."],
-									get = function(info) return MOD.db.profile.hideBlizzXP end,
-									set = function(info, value) MOD.db.profile.hideBlizzXP = value; MOD:UpdateAllBarGroups() end,
-								},
-								HideAzerite = {
-									type = "toggle", order = 15, name = L["Azerite"],
-									desc = L["Hide) return MOD.db.profile.hideBlizzAzerite end,
-									set = function(info, value) MOD.db.profile.hideBlizzAzerite = value; MOD:UpdateAllBarGroups() end,
-								},
-							},
-						},
-						HideUnits = {
-							type = "group", order = 50, name = L["Unit Frames"], inline = true,
-							args = {
-								Pet = {
-									type = "toggle", order = 15, name = L["Pet"],
-									desc = L["Hide default pet unit frame."],
-									get = function(info) return MOD.db.profile.hideBlizzPet end,
-									set = function(info, value) MOD.db.profile.hideBlizzPet = value; MOD:UpdateAllBarGroups() end,
-								},
-								Target = {
-									type = "toggle", order = 20, name = L["Target"],
-									desc = L["Hide default target unit frame."],
-									get = function(info) return MOD.db.profile.hideBlizzTarget end,
-									set = function(info, value) MOD.db.profile.hideBlizzTarget = value; MOD:UpdateAllBarGroups() end,
-								},
-								Focus = {
-									type = "toggle", order = 25, name = L["Focus"],
-									desc = L["Hide default focus unit frame."],
-									get = function(info) return MOD.db.profile.hideBlizzFocus end,
-									set = function(info, value) MOD.db.profile.hideBlizzFocus = value; MOD:UpdateAllBarGroups() end,
-								},
-								Space1 = { type = "description", name = "", order = 30 },
-								TargetTarget = {
-									type = "toggle", order = 35, name = L["Target's Target"],
-									desc = L["Hide default target's target unit frame."],
-									get = function(info) return MOD.db.profile.hideBlizzTargetTarget end,
-									set = function(info, value) MOD.db.profile.hideBlizzTargetTarget = value; MOD:UpdateAllBarGroups() end,
-								},
-								FocusTarget = {
-									type = "toggle", order = 40, name = L["Focus's Target"],
-									desc = L["Hide default focus's target unit frame."],
-									get = function(info) return MOD.db.profile.hideBlizzFocusTarget end,
-									set = function(info, value) MOD.db.profile.hideBlizzFocusTarget = value; MOD:UpdateAllBarGroups() end,
-								},
-							},
-						},
-						]]--
 					},
 				},
 				DimensionGroup = {

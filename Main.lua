@@ -37,6 +37,7 @@ local minor = tonumber(v3)
 MOD.isVanilla = LE_EXPANSION_LEVEL_CURRENT == 0;
 MOD.isWrath = LE_EXPANSION_LEVEL_CURRENT == LE_EXPANSION_WRATH_OF_THE_LICH_KING
 MOD.isClassic = MOD.isWrath or MOD.isVanilla
+MOD.isModernUI = LE_EXPANSION_LEVEL_CURRENT >= LE_EXPANSION_DRAGONFLIGHT
 
 function MOD.ExpansionIsOrAbove(exp)
 	if exp == nil then return false end --This is Vanilla
@@ -258,10 +259,6 @@ local function HideShow(key, frame, check, options)
 		if hide then
 			BuffFrame:Hide();
 
-			if MOD.ExpansionIsOrAbove(LE_EXPANSION_DRAGONFLIGHT) then
-				DebuffFrame:Hide();
-			end
-
 			if TemporaryEnchantFrame then
 				TemporaryEnchantFrame:Hide();
 			end
@@ -270,15 +267,22 @@ local function HideShow(key, frame, check, options)
 			hiding[key] = true;
 		elseif show then
 			BuffFrame:Show();
-			if MOD.ExpansionIsOrAbove(LE_EXPANSION_DRAGONFLIGHT) then
-				DebuffFrame:Show();
-			end
 
 			if TemporaryEnchantFrame then
 				TemporaryEnchantFrame:Show();
 			end
 
 			BuffFrame:RegisterEvent("UNIT_AURA");
+			hiding[key] = false;
+		end
+	elseif options == "debuffs" then
+		if hide then
+			DebuffFrame:Hide();
+
+			hiding[key] = true;
+		elseif show then
+			DebuffFrame:Show();
+
 			hiding[key] = false;
 		end
 	end
@@ -290,6 +294,10 @@ local function CheckBlizzFrames()
 
 	local p = MOD.db.profile
 	HideShow("buffs", _G.BuffFrame, p.hideBlizzBuffs, "buffs")
+
+	if MOD.ExpansionIsOrAbove(LE_EXPANSION_DRAGONFLIGHT) then
+		HideShow("debuffs", _G.DebuffFrame, p.hideBlizzDebuffs, "debuffs")
+	end
 
 	if _G.TemporaryEnchantFrame then
 		HideShow("enchants", _G.TemporaryEnchantFrame, p.hideBlizzBuffs, "enchants")
