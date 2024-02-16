@@ -1,3 +1,9 @@
+# 9 February 2024
+- Disabled the tracking type for auto buffs bars in Classic.
+
+# 31 January 2024
+- Fixed classic-only bug with target-of-target frames.
+
 # 19 December 2023
 - Added new time format that replicates the Blizzard's time format.
 - Fixed bugs introduced with previous release.

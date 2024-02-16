@@ -535,14 +535,13 @@ end
 local function ValueCastBar(unit, fmt, spell, options)
 	local checkUnit = unit
 	local castingInfo, channelInfo = UnitCastingInfo, UnitChannelInfo
-	if MOD.isModernAPI then
-		if UnitHasVehicleUI("player") then
-			if unit == "player" then checkUnit = "pet" elseif unit == "pet" then checkUnit = "player" end
-		end
-	else
 
-		castingInfo = CastingInfo; channelInfo = ChannelInfo
+	if UnitHasVehicleUI("player") then
+		if unit == "player" then checkUnit = "pet" elseif unit == "pet" then checkUnit = "player" end
 	end
+
+	castingInfo = CastingInfo; channelInfo = ChannelInfo
+
 	if not unit or not UnitGUID(unit) then return false end
 	if unit == "player" or unit == "vehicle" then
 		if not latency.frame then -- check if need to start event tracking

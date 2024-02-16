@@ -132,9 +132,17 @@ function MOD:InitializeProfile()
 	-- Get profile from database, providing default profile for initialization
 	MOD.db = LibStub("AceDB-3.0"):New("RavenDB", MOD.DefaultProfile)
 	MOD.db.RegisterCallback(MOD, "OnDatabaseShutdown", OnProfileShutDown)
+	MOD:MigrateDB()
 
 	MOD:InitializeSpellIDs() -- restore cached spell ids
 	MOD:InitializeSettings() -- initialize bar group settings with default values
+end
+
+function MOD:MigrateDB()
+	if (MOD.db.profile.version == 0) then
+		MOD.db.profile.hideBlizzDebuffs = MOD.db.profile.hideBlizzBuffs
+		MOD.db.profile.version = 1
+	end
 end
 
 -- Initialize spell id info and restore saved cache from the profile
@@ -223,7 +231,6 @@ function MOD:SetCooldownDefaults()
 	end
 
 	local openTabs = 3 -- on live first two tabs are open to all specializations and the third is current spec
-	--if MOD.isClassic then openTabs = GetNumSpellTabs() end -- on classic there are no specializations so all tabs are same
 	openTabs = GetNumSpellTabs()
 
 	for tab = 1, openTabs do -- scan first two tabs of player spell book (general and current spec) for player spells on cooldown
@@ -289,29 +296,27 @@ function MOD:SetCooldownDefaults()
 		end
 	end
 
-	if MOD.isModernAPI then
-		local tabs = GetNumSpellTabs()
-		if tabs and tabs > 3 then
-			for tab = 4, tabs do -- scan inactive tabs of player spell book for icons
-				local spellLine, spellIcon, offset, numSpells = GetSpellTabInfo(tab)
-				for i = 1, numSpells do
-					local index = i + offset
-					local spellName = GetSpellBookItemName(index, book)
-					if not spellName then break end
-					local stype, id = GetSpellBookItemInfo(index, book)
-					if id then -- make sure valid spell book item
-						if stype == "SPELL" then -- in this case, id is not the spell id despite what online docs say
-							local name, _, icon = getSpellInfo(index, book)
-							if name and name ~= "" and icon then iconCache[name] = icon end
-						elseif stype == "FLYOUT" then -- in this case, id is flyout id
-							local _, _, numSlots, known = GetFlyoutInfo(id)
-							if known then
-								for slot = 1, numSlots do
-									local spellID, _, _, name = GetFlyoutSlotInfo(id, slot)
-									if spellID then
-										local name, _, icon = getSpellInfo(spellID)
-										if name and name ~= "" and icon then iconCache[name] = icon end
-									end
+	local tabs = GetNumSpellTabs()
+	if tabs and tabs > 3 then
+		for tab = 4, tabs do -- scan inactive tabs of player spell book for icons
+			local spellLine, spellIcon, offset, numSpells = GetSpellTabInfo(tab)
+			for i = 1, numSpells do
+				local index = i + offset
+				local spellName = GetSpellBookItemName(index, book)
+				if not spellName then break end
+				local stype, id = GetSpellBookItemInfo(index, book)
+				if id then -- make sure valid spell book item
+					if stype == "SPELL" then -- in this case, id is not the spell id despite what online docs say
+						local name, _, icon = getSpellInfo(index, book)
+						if name and name ~= "" and icon then iconCache[name] = icon end
+					elseif stype == "FLYOUT" then -- in this case, id is flyout id
+						local _, _, numSlots, known = GetFlyoutInfo(id)
+						if known then
+							for slot = 1, numSlots do
+								local spellID, _, _, name = GetFlyoutSlotInfo(id, slot)
+								if spellID then
+									local name, _, icon = getSpellInfo(spellID)
+									if name and name ~= "" and icon then iconCache[name] = icon end
 								end
 							end
 						end
@@ -319,23 +324,23 @@ function MOD:SetCooldownDefaults()
 				end
 			end
 		end
+	end
 
-		if MOD.ExpansionIsOrAbove(LE_EXPANSION_CATACLYSM) then
-			local p = professions -- scan professions for spells on cooldown
-			p[1], p[2], p[3], p[4], p[5], p[6] = GetProfessions()
-			for index = 1, 6 do
-				if p[index] then
-					local prof, _, _, _, numSpells, offset = GetProfessionInfo(p[index])
-					for i = 1, numSpells do
-						local stype = GetSpellBookItemInfo(i + offset, book)
-						if stype == "SPELL" then
-							local name, _, icon, _, _, _, spellID = getSpellInfo(i + offset, book)
-							if name and name ~= "" and icon and spellID then -- make sure valid spell
-								bst[name] = spellID
-								iconCache[name] = icon
-								local duration = GetSpellBaseCooldown(spellID) -- duration is in milliseconds
-								if duration and duration > 1500 then cds[spellID] = duration / 1000 end -- don't include spells with global cooldowns
-							end
+	if MOD.ExpansionIsOrAbove(LE_EXPANSION_CATACLYSM) then
+		local p = professions -- scan professions for spells on cooldown
+		p[1], p[2], p[3], p[4], p[5], p[6] = GetProfessions()
+		for index = 1, 6 do
+			if p[index] then
+				local prof, _, _, _, numSpells, offset = GetProfessionInfo(p[index])
+				for i = 1, numSpells do
+					local stype = GetSpellBookItemInfo(i + offset, book)
+					if stype == "SPELL" then
+						local name, _, icon, _, _, _, spellID = getSpellInfo(i + offset, book)
+						if name and name ~= "" and icon and spellID then -- make sure valid spell
+							bst[name] = spellID
+							iconCache[name] = icon
+							local duration = GetSpellBaseCooldown(spellID) -- duration is in milliseconds
+							if duration and duration > 1500 then cds[spellID] = duration / 1000 end -- don't include spells with global cooldowns
 						end
 					end
 				end
@@ -1105,7 +1110,8 @@ MOD.DefaultProfile = {
 	profile = {
 		enabled = true,					-- enable Raven
 		hideBlizz = true,				-- hide Blizzard UI parts
-		hideBlizzBuffs = true,			-- hide Blizzard buff/debuff and temp enchant frames
+		hideBlizzBuffs = true,			-- hide Blizzard buff and temp enchant frames
+		hideBlizzDebuffs = true,		-- hide Blizzard debuff frame
 		hideBlizzMirrors = false,		-- hide Blizzard mirror bars
 		hideBlizzXP = false,			-- hide Blizzard XP and reputation bars
 		hideBlizzAzerite = false,		-- hide Blizzard Azerite bar
@@ -1134,5 +1140,6 @@ MOD.DefaultProfile = {
 		InCombatBar = {},				-- settings for the in-combat bar used to cancel buffs in combat
 		InCombatBuffs = {},				-- list of buffs that can be cancelled in-combat
 		WeaponBuffDurations = {},		-- cache of buff durations used for weapon buffs
+		version = 0,					-- allows step-by-step migrations to support splitting options while preserving backwards compatibility
 	},
 }

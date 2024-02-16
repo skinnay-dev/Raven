@@ -1014,36 +1014,15 @@ function MOD:GetTooltipNumber(ttType, ttID, ttUnit, ttOffset)
 	if not ttOffset or ttOffset > #numberPatterns then ttOffset = 1 end -- determine offset into numberPatterns
 	local tt = nil
 	if ttType == "buff" then
-		if MOD.isModernAPI then
-			tt = C_TooltipInfo.GetUnitAura(ttUnit, ttID, "HELPFUL")
-		else
-			tt = MOD:GetBuffTooltip(); tt:SetUnitAura(ttUnit, ttID, "HELPFUL") -- fill in the tooltip for the buff
-		end
+		tt = C_TooltipInfo.GetUnitAura(ttUnit, ttID, "HELPFUL") -- fill in the tooltip for the buff
 	elseif ttType == "debuff" then
-		if MOD.isModernAPI then
-			tt = C_TooltipInfo.GetUnitAura(ttUnit, ttID, "HARMFUL")
-		else
-			tt = MOD:GetBuffTooltip(); tt:SetUnitAura(ttUnit, ttID, "HARMFUL") -- fill in the tooltip for the debuff
-		end
+		tt = C_TooltipInfo.GetUnitAura(ttUnit, ttID, "HARMFUL") -- fill in the tooltip for the debuff
 	elseif (ttType == "spell id") or (ttType == "internal") or (ttType == "alert") then
-		if MOD.isModernAPI then
-			tt = C_TooltipInfo.GetSpellByID(ttID)
-		else
-			tt = MOD:GetBuffTooltip(); tt:SetSpellByID(ttID)
-		end
+		tt = C_TooltipInfo.GetSpellByID(ttID)
 	elseif (tt == "item id") then
-		if MOD.isModernAPI then
-			tt = C_TooltipInfo.GetItemByID(ttID)
-		else
-			GameTooltip:SetItemByID(ttID)
-		end
+		tt = C_TooltipInfo.GetItemByID(ttID)
 	elseif (ttType == "inventory") or (ttType == "weapon") then
-		if MOD.isModernAPI then
-			tt = C_TooltipInfo.GetInventoryItem("player", ttID)
-		else
-			tt = MOD:GetBuffTooltip()
-			tt:SetInventoryItem("player", ttID)
-		end
+		tt = C_TooltipInfo.GetInventoryItem("player", ttID)
 	end
 	if tt then
 		local pattern = numberPatterns[ttOffset]
