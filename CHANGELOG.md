@@ -1,3 +1,6 @@
+# 22 February 2024
+- Split hiding Blizzard's buffs and debuffs into separate configuration options.
+
 # 9 February 2024
 - Disabled the tracking type for auto buffs bars in Classic.
 
