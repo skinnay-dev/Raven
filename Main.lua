@@ -178,6 +178,11 @@ local band = bit.band -- shortcut for common bit logic operator
 
 -- Functions for reading Auras
 function MOD:GetAuraData(unitToken, index, filter)
+	-- Rely on the LCD shim when reading target buffs and debuffs.
+	if MOD.isClassic and unitToken == "target" then
+		return UnitAura(unitToken, index, filter)
+	end
+
 	if C_UnitAuras and C_UnitAuras.GetAuraDataByIndex and AuraUtil.UnpackAuraData then
 		return AuraUtil.UnpackAuraData(C_UnitAuras.GetAuraDataByIndex(unitToken, index, filter))
 	else
@@ -1691,19 +1696,18 @@ end
 
 -- Add tracking auras (updated for Cataclysm which allows multiple active tracking types)
 local function GetTracking()
+	if MOD.isVanilla then
+		return
+	end
+
 	local found = false
 	local trackingTypes = nil
 
 	if C_Minimap.GetNumTrackingTypes == nil then
-		if MOD.ExpansionIsOrAbove(LE_EXPANSION_WRATH_OF_THE_LICH_KING) then
-			trackingTypes = GetNumTrackingTypes()
-		else
-			return
-		end
+		trackingTypes = GetNumTrackingTypes()
 	else
 		trackingTypes = C_Minimap.GetNumTrackingTypes()
 	end
-
 
 	for i = 1, trackingTypes do
 		local tracking, trackingIcon, active = C_Minimap.GetTrackingInfo(i)
