@@ -1,3 +1,10 @@
+# 24 March 2024
+- Removed tracking from the player's auto group bars.
+- Fixed enemy buffs in target auto group bars.
+
+# 23 March 2024
+- Fixed Cataclysm beta API bug.
+
 # 22 February 2024
 - Split hiding Blizzard's buffs and debuffs into separate configuration options.
 

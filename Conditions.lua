@@ -703,7 +703,7 @@ function MOD:UpdateConditions()
 		stat.inInstance = false; stat.inArena = false; stat.inBattleground = false end
 	stat.isResting = IsResting()
 	stat.isMounted = CheckMounted()
-	if MOD.ExpansionIsOrAbove(LE_EXPANSION_CATACLYSM) then
+	if MOD.ExpansionIsOrAbove(LE_EXPANSION_MISTS_OF_PANDARIA) then
 		stat.inVehicle = UnitHasVehicleUI("player")
 		stat.specialization = GetSpecialization()
 	end
