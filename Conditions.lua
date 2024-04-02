@@ -218,13 +218,13 @@ local function CheckItemReady(item, ready, checkCount, count, checkCharges, char
 	end
 	if id then item = id end
 	if IsOn(checkCount) then
-		n = GetItemCount(item, false, false)
+		n = C_Item.GetItemCount(item, false, false)
 		if not n then n = 0 end
 		if not count then count = 1 end -- set to default value used in options panel
 		if checkCount == true then if n >= count then return false end else if n < count then return false end end
 	end
 	if IsOn(checkCharges) then
-		n = GetItemCount(item, false, true)
+		n = C_Item.GetItemCount(item, false, true)
 		if not n then n = 0 end
 		if not charges then charges = 1 end -- set to default value used in options panel
 		if checkCharges == true then if n >= charges then return false end else if n < charges then return false end end
@@ -366,7 +366,7 @@ end
 local function CheckWeapon(islot, level)
 	local id = GetInventoryItemLink("player", islot)
 	if id and level then
-		local iname, _, _, ilevel = GetItemInfo(id)
+		local iname, _, _, ilevel = C_Item.GetItemInfo(id)
 		if iname and (ilevel >= level) then return true end
 	end
 	return false

@@ -1930,7 +1930,7 @@ local function UpdateBarGroupBars(bp, vbp, bg)
 							bar.barLabel = saveLabel -- restore in case of multiple bar copies
 						end
 						if not found and bar.enableReady and aname then -- see if need aura ready bar
-							if (bar.readyNotUsable or MOD:CheckSpellStatus(aname, true, true) or IsUsableItem(aname)) then -- check if really usable
+							if (bar.readyNotUsable or MOD:CheckSpellStatus(aname, true, true) or C_Item.IsUsableItem(aname)) then -- check if really usable
 								if not bar.readyTime then bar.readyTime = 0 end
 								if bar.readyTime == 0 then bar.startReady = nil end
 								if not bar.startReady or ((GetTime() - bar.startReady) < bar.readyTime) then
@@ -1949,12 +1949,12 @@ local function UpdateBarGroupBars(bp, vbp, bg)
 								found = true
 							end
 						end
-						if not found and bar.enableReady and aname and (bar.readyNotUsable or MOD:CheckSpellStatus(aname, true) or IsUsableItem(aname)) then -- see if need cooldown ready bar
+						if not found and bar.enableReady and aname and (bar.readyNotUsable or MOD:CheckSpellStatus(aname, true) or C_Item.IsUsableItem(aname)) then -- see if need cooldown ready bar
 							if not bar.readyTime then bar.readyTime = 0 end
 							if bar.readyTime == 0 then bar.startReady = nil end
 							if not bar.startReady or ((GetTime() - bar.startReady) < bar.readyTime) then
 								if not bar.startReady then bar.startReady = GetTime() end
-								local iname, _, _, _, _, _, _, _, _, icon = GetItemInfo(aname)
+								local iname, _, _, _, _, _, _, _, _, icon = C_Item.GetItemInfo(aname)
 								if not iname then icon = MOD:GetIcon(aname) end
 								local _, charges = GetSpellCharges(aname); if charges and charges <= 1 then charges = nil end -- show max charges on ready bar
 								UpdateBar(bp, vbp, bg, bar, icon, 0, 0, charges, nil, "text", aname, nil, nil, true)
@@ -2114,7 +2114,7 @@ function MOD:UpdateBars()
 
 	-- cache the icon for the player's tabard, if any, to support filtering tabard spells
 	local itemID = GetInventoryItemID("player", INVSLOT_TABARD)
-	if itemID then tabardIcon = GetItemIcon(itemID) else tabardIcon = nil end
+	if itemID then tabardIcon = C_Item.GetItemIcon(itemID) else tabardIcon = nil end
 
 	table.wipe(frequentBars) -- clear the table of frequent bars, it will be rebuilt during update
 
