@@ -2094,9 +2094,8 @@ end
 local function CheckItemCooldown(itemID)
 	local start = 0
 	local duration = 0
-	local ignore = 0
 	if _G.C_Item.GetItemCooldown == nil then
-		start, duration, ignore = C_Container.GetItemCooldown(itemID)
+		start, duration = GetItemCooldown(itemID)
 	else
 		start, duration = C_Item.GetItemCooldown(itemID)
 	end
