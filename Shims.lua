@@ -29,11 +29,18 @@ end
 
 -- C_Item
 function SHIM:GetItemCooldown(item)
+	-- Retail
 	if _G.C_Item.GetItemCooldown ~= nil then
-		return C_Item.GetItemCooldown(itemID)
+		return C_Item.GetItemCooldown(item)
 	end
 
-	return GetItemCooldown(itemID)
+	-- Classic
+	if _G.C_Container.GetItemCooldown ~= nil then
+		return C_Container.GetItemCooldown(item)
+	end
+
+	-- Wrath
+	return GetItemCooldown(item)
 end
 
 function SHIM:GetItemCount(item, includeBank, includeCharges)
@@ -44,9 +51,9 @@ function SHIM:GetItemCount(item, includeBank, includeCharges)
 	return GetItemCount(item, includeBank, includeCharges)
 end
 
-function SHIM:GetItemIcon(itemID)
-	if _G.C_Item.GetItemIcon ~= nil then
-		return C_Item.GetItemIcon(itemID)
+function SHIM:GetItemIconByID(itemID)
+	if _G.C_Item.GetItemIconByID ~= nil then
+		return C_Item.GetItemIconByID(itemID)
 	end
 
 	return GetItemIcon(itemID)

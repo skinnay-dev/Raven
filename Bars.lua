@@ -2115,7 +2115,7 @@ function MOD:UpdateBars()
 
 	-- cache the icon for the player's tabard, if any, to support filtering tabard spells
 	local itemID = GetInventoryItemID("player", INVSLOT_TABARD)
-	if itemID then tabardIcon = SHIM:GetItemIcon(itemID) else tabardIcon = nil end
+	if itemID then tabardIcon = SHIM:GetItemIconByID(itemID) else tabardIcon = nil end
 
 	table.wipe(frequentBars) -- clear the table of frequent bars, it will be rebuilt during update
 
