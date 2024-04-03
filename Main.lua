@@ -22,17 +22,13 @@ local L = LibStub("AceLocale-3.0"):GetLocale("Raven")
 local media = LibStub("LibSharedMedia-3.0")
 local MOD = Raven
 local MOD_Options = "Raven_Options"
+local SHIM = {}
+MOD.SHIM = SHIM
 local _
 local addonInitialized = false -- set when the addon is initialized
 local addonEnabled = false -- set when the addon is enabled
 local optionsLoaded = false -- set when the load-on-demand options panel module has been loaded
 local optionsFailed = false -- set if loading the option panel module failed
-local v, b, d, t = GetBuildInfo()
--- check if v is 3.4.1 or higher
-local v1, v2, v3 = strsplit(".", v)
-local release = tonumber(v1);
-local major = tonumber(v2);
-local minor = tonumber(v3)
 
 MOD.isVanilla = LE_EXPANSION_LEVEL_CURRENT == 0;
 MOD.isWrath = LE_EXPANSION_LEVEL_CURRENT == LE_EXPANSION_WRATH_OF_THE_LICH_KING
@@ -221,6 +217,7 @@ function MOD:OnInitialize()
 	C_AddOns.LoadAddOn("LibDBIcon-1.0")
 	C_AddOns.LoadAddOn("LibBossIDs-1.0", true)
 	MOD.MSQ = LibStub("Masque", true)
+	SHIM = MOD.SHIM
 	now = GetTime() -- start tracking time
 	suppressTime = now -- start suppression period for certain special effects
 end
@@ -1035,12 +1032,12 @@ function MOD:UNIT_INVENTORY_CHANGED(e, unit)
 		for slot = 0, 19 do -- check each inventory slot for usable items
 			local itemID = GetInventoryItemID("player", slot)
 			if itemID then
-				local _, spellID = C_Item.GetItemSpell(itemID)
+				local _, spellID = SHIM:GetItemSpell(itemID)
 				if spellID then inventoryCooldowns[itemID] = slot end
 			end
 		end
 	end
-	-- for k, v in pairs(inventoryCooldowns) do local name = C_Item.GetItemInfo(k); MOD.Debug("slot", name, v) end
+	-- for k, v in pairs(inventoryCooldowns) do local name = SHIM:GetItemInfo(k); MOD.Debug("slot", name, v) end
 end
 
 -- Event called when content of the player's bags changes
@@ -1048,29 +1045,18 @@ function MOD:BAG_UPDATE(e)
 	TriggerCooldownUpdate()
 	table.wipe(bagCooldowns) -- update bag item cooldown table
 	for bag = 0, NUM_BAG_SLOTS do
-		local numSlots
-		if _G.GetContainerNumSlots == nil then
-			numSlots = C_Container.GetContainerNumSlots(bag)
-		else
-			numSlots = GetContainerNumSlots(bag)
-		end
+		local numSlots = SHIM:GetContainerNumSlots(bag)
 
 		for slot = 1, numSlots do
-			local itemID
-
-			if _G.GetContainerItemID == nil then
-				itemID = C_Container.GetContainerItemID(bag, slot)
-			else
-				itemID = GetContainerItemID(bag, slot)
-			end
+			local itemID = SHIM:GetContainerItemID(bag, slot)
 
 			if itemID then
-				local _, spellID = C_Item.GetItemSpell(itemID)
+				local _, spellID = SHIM:GetItemSpell(itemID)
 				if spellID then bagCooldowns[itemID] = spellID end
 			end
 		end
 	end
-	-- for k, v in pairs(bagCooldowns) do local name = C_Item.GetItemInfo(k); MOD.Debug("bag", name, v) end
+	-- for k, v in pairs(bagCooldowns) do local name = SHIM:GetItemInfo(k); MOD.Debug("bag", name, v) end
 end
 
 -- Create cache of talent info
@@ -1592,7 +1578,7 @@ local function GetWeaponBuffs()
 
 		if not mhbuff then -- if tooltip scan fails then use fallback of weapon name or slot name
 			local weaponLink = GetInventoryItemLink("player", islot)
-			if weaponLink then mhbuff = C_Item.GetItemInfo(weaponLink) end
+			if weaponLink then mhbuff = SHIM:GetItemInfo(weaponLink) end
 			if not mhbuff then mhbuff = L["Mainhand Weapon"] end
 		end
 
@@ -1620,7 +1606,7 @@ local function GetWeaponBuffs()
 
 		if not ohbuff then -- if tooltip scan fails then use fallback of weapon name or slot name
 			local weaponLink = GetInventoryItemLink("player", islot)
-			if weaponLink then ohbuff = C_Item.GetItemInfo(weaponLink) end
+			if weaponLink then ohbuff = SHIM:GetItemInfo(weaponLink) end
 			if not ohbuff then ohbuff = L["Offhand Weapon"] end
 		end
 
@@ -2056,8 +2042,8 @@ function MOD:UpdateCooldownTimes() for _, b in pairs(activeCooldowns) do Validat
 local function CheckInventoryCooldown(itemID, slot)
 	local start, duration, enable = GetInventoryItemCooldown("player", slot)
 	if start and (start > 0) and (enable == 1) and (duration > 1.5) then
-		local spell = C_Item.GetItemSpell(itemID)
-		local name, _, _, _, _, _, _, _, equipSlot, icon = C_Item.GetItemInfo(itemID)
+		local spell = SHIM:GetItemSpell(itemID)
+		local name, _, _, _, _, _, _, _, equipSlot, icon = SHIM:GetItemInfo(itemID)
 		if spell and equipSlot ~= "INVTYPE_TRINKET" then name = spell end
 		if name and icon then AddCooldown(name, slot, icon, start, duration, "inventory", slot, "player") end
 	end
@@ -2092,18 +2078,14 @@ end
 
 -- Check if an item is on cooldown
 local function CheckItemCooldown(itemID)
-	local start = 0
-	local duration = 0
-	if _G.C_Item.GetItemCooldown == nil then
-		start, duration = GetItemCooldown(itemID)
-	else
-		start, duration = C_Item.GetItemCooldown(itemID)
-	end
+	local start, duration = SHIM:GetItemCooldown(itemID);
+
 	if start == nil or duration == nil then
 		return
 	end
+
 	if (start > 0) and (duration > 1.5) then -- don't include global cooldowns or really short cooldowns
-		local name, link, _, _, _, itemType, itemSubType, _, _, icon = C_Item.GetItemInfo(itemID)
+		local name, link, _, _, _, itemType, itemSubType, _, _, icon = SHIM:GetItemInfo(itemID)
 		if name then
 			local found = false
 			if itemType == "Consumable" and (itemID ~= 86569) then -- check for shared cooldowns for potions/elixirs/flasks (special case Crystal of Insanity)

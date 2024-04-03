@@ -22,6 +22,7 @@
 -- Raven:RegisterBarGroupFilter(barGroupName, "Buff"|"Debuff"|"Cooldown", spellNameOrID)
 
 local MOD = Raven
+local SHIM = MOD.SHIM
 local L = LibStub("AceLocale-3.0"):GetLocale("Raven")
 local LSPELL = MOD.LocalSpellNames
 local getSpellInfo = GetSpellInfo
@@ -429,7 +430,7 @@ function MOD:SetInternalCooldownDefaults()
 	local ict = MOD.DefaultProfile.global.InternalCooldowns
 	for _, cd in pairs(MOD.internalCooldowns) do
 		local name, _, icon = getSpellInfo(cd.id)
-		if name and (name ~= "") and icon and (not ict[name] or not cd.item or C_Item.IsUsableItem(cd.item)) then
+		if name and (name ~= "") and icon and (not ict[name] or not cd.item or SHIM:IsUsableItem(cd.item)) then
 			local t = { id = cd.id, duration = cd.duration, icon = icon, item = cd.item, class = cd.class }
 			if cd.cancel then
 				t.cancel = {}

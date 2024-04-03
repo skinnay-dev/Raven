@@ -3,6 +3,7 @@
 -- Values.lua contains functions used by value bars.
 
 local MOD = Raven
+local SHIM = MOD.SHIM
 local L = LibStub("AceLocale-3.0"):GetLocale("Raven")
 local valueFunctions, colorFunctions
 local mirrorIcons
@@ -607,16 +608,16 @@ end
 local function ValueGold(unit, fmt)
 	local money = GetMoney()
 	local gold = math.floor(money / 10000)
-	local s = C_CurrencyInfo.GetCoinTextureString(money)
-	local g = C_CurrencyInfo.GetCoinTextureString(gold * 10000)
+	local s = SHIM:GetCoinTextureString(money)
+	local g = SHIM:GetCoinTextureString(gold * 10000)
 	if gold <= 10 then g = s end -- only show rounded amount when get a bit of gold
 	goldTable[1] = "|cffffcc00Gold|r"
 	goldTable[2] = "|cffffff00Current|r " .. s
 	local change = money - startMoney
 	if change >= 0 then
-		goldTable[3] = "|cffffff00Session Profit|r " .. C_CurrencyInfo.GetCoinTextureString(change)
+		goldTable[3] = "|cffffff00Session Profit|r " .. SHIM:GetCoinTextureString(change)
 	else
-		goldTable[3] = "|cffffff00Session Loss|r " .. C_CurrencyInfo.GetCoinTextureString(-change)
+		goldTable[3] = "|cffffff00Session Loss|r " .. SHIM:GetCoinTextureString(-change)
 	end
 	return true, gold, gold, g, nil, iconCurrency, "lines", goldTable
 end
@@ -644,7 +645,7 @@ local function ValueDurability(unit, fmt)
 	durabilityTable[1] = "|cffffff00Durability|r"
 	durabilityTable[2] = string.format("|cffffff00Lowest Equipped|r %d%%", lowestDurability)
 	durabilityTable[3] = string.format("|cffffff00Average Equipped|r %d%%", averageDurability)
-	durabilityTable[4] = string.format("|cffffff00Repair Cost|r %s ", C_CurrencyInfo.GetCoinTextureString(repairCost))
+	durabilityTable[4] = string.format("|cffffff00Repair Cost|r %s ", SHIM:GetCoinTextureString(repairCost))
 	local s = GetFormattedText(fmt, lowestDurability, 100)
 	return true, lowestDurability, 100, s, nil, iconDurability, "lines", durabilityTable
 end

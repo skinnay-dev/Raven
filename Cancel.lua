@@ -13,6 +13,7 @@
 -- Also, use the overlaid frames to either capture mouse events or let them reach the secure buttons, as required.
 
 local MOD = Raven
+local SHIM = MOD.SHIM
 local L = LibStub("AceLocale-3.0"):GetLocale("Raven")
 local inCombatBar = {} -- keep track of current settings for in-combat bar
 local overlayPool = {} -- pool of overlays to use for clicking off buffs

@@ -9,6 +9,7 @@
 -- Raven:GetConditionText(name) returns a string containing a detailed description of the condition
 
 local MOD = Raven
+local SHIM = MOD.SHIM
 local L = LibStub("AceLocale-3.0"):GetLocale("Raven")
 local LSPELL = MOD.LocalSpellNames
 local timeEvents = {} -- table of times at which to trigger a simulated event during update processing
@@ -206,7 +207,7 @@ local function CheckItemReady(item, ready, checkCount, count, checkCharges, char
 		if id then -- in 4.0.2 GetItemCooldown was changed to only work with item IDs
 			local start, duration
 
-			start, duration = C_Container.GetItemCooldown(id)
+			start, duration = SHIM:GetItemCooldown(id)
 
 			if (start > 0) and (duration > 0) then
 				isReady = false
@@ -218,13 +219,13 @@ local function CheckItemReady(item, ready, checkCount, count, checkCharges, char
 	end
 	if id then item = id end
 	if IsOn(checkCount) then
-		n = C_Item.GetItemCount(item, false, false)
+		n = SHIM:GetItemCount(item, false, false)
 		if not n then n = 0 end
 		if not count then count = 1 end -- set to default value used in options panel
 		if checkCount == true then if n >= count then return false end else if n < count then return false end end
 	end
 	if IsOn(checkCharges) then
-		n = C_Item.GetItemCount(item, false, true)
+		n = SHIM:GetItemCount(item, false, true)
 		if not n then n = 0 end
 		if not charges then charges = 1 end -- set to default value used in options panel
 		if checkCharges == true then if n >= charges then return false end else if n < charges then return false end end
@@ -366,7 +367,7 @@ end
 local function CheckWeapon(islot, level)
 	local id = GetInventoryItemLink("player", islot)
 	if id and level then
-		local iname, _, _, ilevel = C_Item.GetItemInfo(id)
+		local iname, _, _, ilevel = SHIM:GetItemInfo(id)
 		if iname and (ilevel >= level) then return true end
 	end
 	return false

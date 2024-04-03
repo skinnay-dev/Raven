@@ -21,6 +21,7 @@ Values.lua
 Bars.lua
 Cancel.lua
 Nest.lua
+Shims.lua
 
 Presets\DeathKnight.lua
 Presets\DemonHunter.lua

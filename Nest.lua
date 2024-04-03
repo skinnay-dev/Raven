@@ -3,6 +3,7 @@
 -- Each bar has a fixed set of graphical components (icon, iconText, foreground bar, background bar, labelText, timeText, spark).
 
 local MOD = Raven
+local SHIM = MOD.SHIM
 local L = LibStub("AceLocale-3.0"):GetLocale("Raven")
 
 MOD.Nest_SupportedConfigurations = { -- table of configurations can be used in dialogs to select appropriate options
