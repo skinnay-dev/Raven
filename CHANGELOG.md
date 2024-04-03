@@ -1,3 +1,6 @@
+# 03 April 2024
+- Fixed new API changes thanks to @arnvid
+
 # 24 March 2024
 - Removed tracking from the player's auto group bars.
 - Fixed enemy buffs in target auto group bars.
