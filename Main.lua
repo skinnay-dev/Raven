@@ -1035,12 +1035,12 @@ function MOD:UNIT_INVENTORY_CHANGED(e, unit)
 		for slot = 0, 19 do -- check each inventory slot for usable items
 			local itemID = GetInventoryItemID("player", slot)
 			if itemID then
-				local _, spellID = GetItemSpell(itemID)
+				local _, spellID = C_Item.GetItemSpell(itemID)
 				if spellID then inventoryCooldowns[itemID] = slot end
 			end
 		end
 	end
-	-- for k, v in pairs(inventoryCooldowns) do local name = GetItemInfo(k); MOD.Debug("slot", name, v) end
+	-- for k, v in pairs(inventoryCooldowns) do local name = C_Item.GetItemInfo(k); MOD.Debug("slot", name, v) end
 end
 
 -- Event called when content of the player's bags changes
@@ -1065,12 +1065,12 @@ function MOD:BAG_UPDATE(e)
 			end
 
 			if itemID then
-				local _, spellID = GetItemSpell(itemID)
+				local _, spellID = C_Item.GetItemSpell(itemID)
 				if spellID then bagCooldowns[itemID] = spellID end
 			end
 		end
 	end
-	-- for k, v in pairs(bagCooldowns) do local name = GetItemInfo(k); MOD.Debug("bag", name, v) end
+	-- for k, v in pairs(bagCooldowns) do local name = C_Item.GetItemInfo(k); MOD.Debug("bag", name, v) end
 end
 
 -- Create cache of talent info
@@ -1592,7 +1592,7 @@ local function GetWeaponBuffs()
 
 		if not mhbuff then -- if tooltip scan fails then use fallback of weapon name or slot name
 			local weaponLink = GetInventoryItemLink("player", islot)
-			if weaponLink then mhbuff = GetItemInfo(weaponLink) end
+			if weaponLink then mhbuff = C_Item.GetItemInfo(weaponLink) end
 			if not mhbuff then mhbuff = L["Mainhand Weapon"] end
 		end
 
@@ -1620,7 +1620,7 @@ local function GetWeaponBuffs()
 
 		if not ohbuff then -- if tooltip scan fails then use fallback of weapon name or slot name
 			local weaponLink = GetInventoryItemLink("player", islot)
-			if weaponLink then ohbuff = GetItemInfo(weaponLink) end
+			if weaponLink then ohbuff = C_Item.GetItemInfo(weaponLink) end
 			if not ohbuff then ohbuff = L["Offhand Weapon"] end
 		end
 
@@ -2056,8 +2056,8 @@ function MOD:UpdateCooldownTimes() for _, b in pairs(activeCooldowns) do Validat
 local function CheckInventoryCooldown(itemID, slot)
 	local start, duration, enable = GetInventoryItemCooldown("player", slot)
 	if start and (start > 0) and (enable == 1) and (duration > 1.5) then
-		local spell = GetItemSpell(itemID)
-		local name, _, _, _, _, _, _, _, equipSlot, icon = GetItemInfo(itemID)
+		local spell = C_Item.GetItemSpell(itemID)
+		local name, _, _, _, _, _, _, _, equipSlot, icon = C_Item.GetItemInfo(itemID)
 		if spell and equipSlot ~= "INVTYPE_TRINKET" then name = spell end
 		if name and icon then AddCooldown(name, slot, icon, start, duration, "inventory", slot, "player") end
 	end
@@ -2095,16 +2095,16 @@ local function CheckItemCooldown(itemID)
 	local start = 0
 	local duration = 0
 	local ignore = 0
-	if _G.GetItemCooldown == nil then
+	if _G.C_Item.GetItemCooldown == nil then
 		start, duration, ignore = C_Container.GetItemCooldown(itemID)
 	else
-		start, duration = GetItemCooldown(itemID)
+		start, duration = C_Item.GetItemCooldown(itemID)
 	end
 	if start == nil or duration == nil then
 		return
 	end
 	if (start > 0) and (duration > 1.5) then -- don't include global cooldowns or really short cooldowns
-		local name, link, _, _, _, itemType, itemSubType, _, _, icon = GetItemInfo(itemID)
+		local name, link, _, _, _, itemType, itemSubType, _, _, icon = C_Item.GetItemInfo(itemID)
 		if name then
 			local found = false
 			if itemType == "Consumable" and (itemID ~= 86569) then -- check for shared cooldowns for potions/elixirs/flasks (special case Crystal of Insanity)
