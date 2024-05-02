@@ -176,15 +176,15 @@ local band = bit.band -- shortcut for common bit logic operator
 -- Functions for reading Auras
 function MOD:GetAuraData(unitToken, index, filter)
 	-- Rely on the LCD shim when reading target buffs and debuffs.
-	if MOD.isClassic and unitToken == "target" then
+	if MOD.isClassic and not MOD.isCata and unitToken == "target" then
 		return UnitAura(unitToken, index, filter)
 	end
 
 	if C_UnitAuras and C_UnitAuras.GetAuraDataByIndex and AuraUtil.UnpackAuraData then
 		return AuraUtil.UnpackAuraData(C_UnitAuras.GetAuraDataByIndex(unitToken, index, filter))
-	else
-		return UnitAura(unitToken, index, filter)
 	end
+
+	return UnitAura(unitToken, index, filter)
 end
 
 
