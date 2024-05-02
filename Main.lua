@@ -32,7 +32,8 @@ local optionsFailed = false -- set if loading the option panel module failed
 
 MOD.isVanilla = LE_EXPANSION_LEVEL_CURRENT == 0;
 MOD.isWrath = LE_EXPANSION_LEVEL_CURRENT == LE_EXPANSION_WRATH_OF_THE_LICH_KING
-MOD.isClassic = MOD.isWrath or MOD.isVanilla
+MOD.isCata = LE_EXPANSION_LEVEL_CURRENT == LE_EXPANSION_CATACLYSM
+MOD.isClassic = MOD.isWrath or MOD.isVanilla or MOD.isCata
 MOD.isModernUI = LE_EXPANSION_LEVEL_CURRENT >= LE_EXPANSION_DRAGONFLIGHT
 
 function MOD.ExpansionIsOrAbove(exp)
