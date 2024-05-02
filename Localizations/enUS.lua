@@ -1675,6 +1675,7 @@ L['Enter a spell name (or numeric identifier) to test is known in the spellbook.
 L["Weapons"] = true
 L["Mainhand"] = true
 L["Offhand"] = true
+L["Ranged"] = true
 L["Stance"] = true
 L["Talent"] = TALENT
 L["Specialization"] = SPECIALIZATION
@@ -2012,6 +2013,7 @@ L["Set scale factor for the bar."] = true
 L["Set normal opacity for the bar."] = true
 L["Mainhand Weapon"] = true
 L["Offhand Weapon"] = true
+L["Ranged Weapon"] = true
 L["Enter name of anchor frame to attach to (leave blank to enable manual positioning)."] = true
 L["Enable icon pulse when buff icon is started."] = true
 L["Enable icon pulse when buff icon is expiring."] = true
