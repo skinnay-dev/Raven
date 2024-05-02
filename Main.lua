@@ -1640,7 +1640,7 @@ local function GetWeaponBuffs()
 		if not rangedBuff then -- if tooltip scan fails then use fallback of weapon name or slot name
 			local weaponLink = GetInventoryItemLink("player", invSlot)
 			if weaponLink then rangedBuff = SHIM:GetItemInfo(weaponLink) end
-			if not rangedBuff then rangedBuff = L["Offhand Weapon"] end
+			if not rangedBuff then rangedBuff = L["Ranged Weapon"] end
 		end
 
 		local icon = GetInventoryItemTexture("player", invSlot)
