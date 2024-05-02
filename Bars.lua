@@ -749,7 +749,7 @@ local function Bar_OnUpdate(bar)
 		if slotid == "MainHandSlot" then slotid = 16 end
 		if slotid == "SecondaryHandSlot" then slotid = 17 end
 		if slotid == "RangedSlot" then slotid = 18 end
-		if (slotid == 16) or (slotid == 17) then GameTooltip:SetInventoryItem("player", slotid) end
+		if (slotid == 16) or (slotid == 17) or (slotid == 18) then GameTooltip:SetInventoryItem("player", slotid) end
 	elseif (tt == "spell id") or (tt == "internal") or (tt == "alert") then
 		GameTooltip:SetSpellByID(id)
 	elseif (tt == "item id") then
