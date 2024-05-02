@@ -116,7 +116,7 @@ local function Overlay_OnEnter(b)
 				if slotid == "MainHandSlot" then slotid = 16 end
 				if slotid == "SecondaryHandSlot" then slotid = 17 end
 				if slotid == "RangedSlot" then slotid = 18 end
-				if (slotid == 16) or (slotid == 17) then GameTooltip:SetInventoryItem("player", slotid) end
+				if (slotid == 16) or (slotid == 17) or (slotid == 18) then GameTooltip:SetInventoryItem("player", slotid) end
 			end
 		elseif b.aura_tt == "buff" then
 			if not MOD:GetAuraData("player", b.aura_id, "HELPFUL") then return end
