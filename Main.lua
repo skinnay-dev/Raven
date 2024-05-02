@@ -1605,7 +1605,7 @@ local function GetWeaponBuffs()
 		mainHandLastBuff = nil
 	end
 
-	if offHandEnchant then -- add the offhand buff, if any, to the table
+	if hasOffHandEnchant then -- add the offhand buff, if any, to the table
 		local invSlot = INVSLOT_OFFHAND
 		local offHandBuff
 
