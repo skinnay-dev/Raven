@@ -1,3 +1,6 @@
+# 02 May 2024
+- Added Cataclysm TOCs.
+
 # 03 April 2024
 - Fixed new API changes thanks to @arnvid
 
