@@ -120,8 +120,9 @@ local throttleCounter = 0 -- throttle counter included for testing
 local throttleTracker = 0 -- throttle max count seen included for testing
 local now = 0 -- refresh time value set at combat log and update events
 local buffTooltip = nil -- used to store tooltip for scanning weapon buffs
-local mhLastBuff = nil -- saves name of most recent main hand weapon buff
-local ohLastBuff = nil -- saves name of most recent off hand weapon buff
+local mainHandLastBuff = nil -- saves name of most recent main hand weapon buff
+local offHandLastBuff = nil -- saves name of most recent off hand weapon buff
+local rangedLastBuff = nil -- saves name of most recent ranged weapon buff
 local iconGCD = nil -- icon for global cooldown
 local iconPotion = nil -- icon for shared potions cooldown
 local iconElixir = nil -- icon for shared elixirs cooldown
@@ -1555,72 +1556,103 @@ local function ResetWeaponBuffDuration(buff) MOD.db.profile.WeaponBuffDurations[
 -- Add player weapon buffs for mainhand and offhand to the aura table
 local function GetWeaponBuffs()
 	-- old weapons buffs are now out-of-date so release them before regenerating
-	if mhLastBuff then
-		ReleasePlayerBuff(mhLastBuff)
+	if mainHandLastBuff then
+		ReleasePlayerBuff(mainHandLastBuff)
 	end
 
-	if ohLastBuff then
-		ReleasePlayerBuff(ohLastBuff)
+	if offHandLastBuff then
+		ReleasePlayerBuff(offHandLastBuff)
+	end
+
+	if MOD.isCata and rangedLastBuff then
+		ReleasePlayerBuff(rangedLastBuff)
 	end
 
 	-- first check if there are weapon auras then, only if necessary, use tooltip to scan for the buff names
-	local mh, mhms, mhc, mx, oh, ohms, ohc, ox = GetWeaponEnchantInfo()
-	if mh then -- add the mainhand buff, if any, to the table
-		local islot = INVSLOT_MAINHAND
-		local mhbuff
+	local hasMainHandEnchant, mainHandExpiration, mainHandCharges, _,
+	      hasOffHandEnchant, offHandExpiration, offHandCharges, _,
+	      hasRangedEnchant, rangedExpiration, rangedCharges, _
+	      = GetWeaponEnchantInfo()
+
+	if hasMainHandEnchant then -- add the mainhand buff, if any, to the table
+		local invSlot = INVSLOT_MAINHAND
+		local mainHandBuff
 
 		if not MOD.isClassic then
-			mhbuff = GetWeaponBuffName(islot)
+			mainHandBuff = GetWeaponBuffName(invSlot)
 		else
-			mhbuff = GetWeaponBuffNameOld(islot)
+			mainHandBuff = GetWeaponBuffNameOld(invSlot)
 		end
+
 		local name, rank, icon, castTime, minRange, maxRange
-		= GetSpellInfo(spellId or spellName or spellLink)
+			= GetSpellInfo(spellId or spellName or spellLink)
 
-		if not mhbuff then -- if tooltip scan fails then use fallback of weapon name or slot name
-			local weaponLink = GetInventoryItemLink("player", islot)
-			if weaponLink then mhbuff = SHIM:GetItemInfo(weaponLink) end
-			if not mhbuff then mhbuff = L["Mainhand Weapon"] end
+		if not mainHandBuff then -- if tooltip scan fails then use fallback of weapon name or slot name
+			local weaponLink = GetInventoryItemLink("player", invSlot)
+			if weaponLink then mainHandBuff = SHIM:GetItemInfo(weaponLink) end
+			if not mainHandBuff then mainHandBuff = L["Mainhand Weapon"] end
 		end
 
-		local icon = GetInventoryItemTexture("player", islot)
-		local timeLeft = mhms / 1000
+		local icon = GetInventoryItemTexture("player", invSlot)
+		local timeLeft = mainHandExpiration / 1000
 		local expire = now + timeLeft
-		local duration = GetWeaponBuffDuration(mhbuff, timeLeft)
+		local duration = GetWeaponBuffDuration(mainHandBuff, timeLeft)
 
-		AddAura("player", mhbuff, true, nil, mhc, "Mainhand", duration, "player", nil, nil, 1, icon, expire, "weapon", "MainHandSlot")
-		mhLastBuff = mhbuff -- caches the name of the weapon buff so can clear it later
-	elseif mhLastBuff then
-		ResetWeaponBuffDuration(mhLastBuff);
-		mhLastBuff = nil
+		AddAura("player", mainHandBuff, true, nil, mainHandCharges, "Mainhand", duration, "player", nil, nil, 1, icon, expire, "weapon", "MainHandSlot")
+		mainHandLastBuff = mainHandBuff -- caches the name of the weapon buff so can clear it later
+	elseif mainHandLastBuff then
+		ResetWeaponBuffDuration(mainHandLastBuff);
+		mainHandLastBuff = nil
 	end
 
-	if oh then -- add the offhand buff, if any, to the table
-		local islot = INVSLOT_OFFHAND
-		local ohbuff
+	if offHandEnchant then -- add the offhand buff, if any, to the table
+		local invSlot = INVSLOT_OFFHAND
+		local offHandBuff
 
 		if not MOD.isClassic then
-			ohbuff = GetWeaponBuffName(islot)
+			offHandBuff = GetWeaponBuffName(invSlot)
 		else
-			ohbuff = GetWeaponBuffNameOld(islot)
+			offHandBuff = GetWeaponBuffNameOld(invSlot)
 		end
 
-		if not ohbuff then -- if tooltip scan fails then use fallback of weapon name or slot name
-			local weaponLink = GetInventoryItemLink("player", islot)
-			if weaponLink then ohbuff = SHIM:GetItemInfo(weaponLink) end
-			if not ohbuff then ohbuff = L["Offhand Weapon"] end
+		if not offHandBuff then -- if tooltip scan fails then use fallback of weapon name or slot name
+			local weaponLink = GetInventoryItemLink("player", invSlot)
+			if weaponLink then offHandBuff = SHIM:GetItemInfo(weaponLink) end
+			if not offHandBuff then offHandBuff = L["Offhand Weapon"] end
 		end
 
-		local icon = GetInventoryItemTexture("player", islot)
-		local timeLeft = ohms / 1000
+		local icon = GetInventoryItemTexture("player", invSlot)
+		local timeLeft = offHandExpiration / 1000
 		local expire = now + timeLeft
-		local duration = GetWeaponBuffDuration(ohbuff, timeLeft)
+		local duration = GetWeaponBuffDuration(offHandBuff, timeLeft)
 
-		AddAura("player", ohbuff, true, nil, ohc, "Offhand", duration, "player", nil, nil, 1, icon, expire, "weapon", "SecondaryHandSlot")
-		ohLastBuff = ohbuff -- caches the name of the weapon buff so can clear it later
-	elseif ohLastBuff then
-		ResetWeaponBuffDuration(ohLastBuff);
-		ohLastBuff = nil
+		AddAura("player", offHandBuff, true, nil, offHandCharges, "Offhand", duration, "player", nil, nil, 1, icon, expire, "weapon", "SecondaryHandSlot")
+		offHandLastBuff = offHandBuff -- caches the name of the weapon buff so can clear it later
+	elseif offHandEnchantLastBuff then
+		ResetWeaponBuffDuration(offHandLastBuff);
+		offHandLastBuff = nil
+	end
+
+	if MOD.isCata and hasRangedEnchant then -- add the offhand buff, if any, to the table
+		local invSlot = INVSLOT_RANGED
+		local rangedBuff = GetWeaponBuffNameOld(invSlot)
+
+		if not rangedBuff then -- if tooltip scan fails then use fallback of weapon name or slot name
+			local weaponLink = GetInventoryItemLink("player", invSlot)
+			if weaponLink then rangedBuff = SHIM:GetItemInfo(weaponLink) end
+			if not rangedBuff then rangedBuff = L["Offhand Weapon"] end
+		end
+
+		local icon = GetInventoryItemTexture("player", invSlot)
+		local timeLeft = rangedExpiration / 1000
+		local expire = now + timeLeft
+		local duration = GetWeaponBuffDuration(rangedBuff, timeLeft)
+
+		AddAura("player", rangedBuff, true, nil, rangedCharges, "Ranged", duration, "player", nil, nil, 1, icon, expire, "weapon", "RangedSlot")
+		rangedLastBuff = rangedBuff -- caches the name of the weapon buff so can clear it later
+	elseif rangedLastBuff then
+		ResetWeaponBuffDuration(rangedLastBuff);
+		rangedLastBuff = nil
 	end
 end
 

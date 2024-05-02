@@ -1,6 +1,7 @@
 # 02 May 2024
 - Added Cataclysm TOCs.
 - Fixed issues with Tooltip API.
+- Added support for tracking weapon buffs on ranged weapons in Cataclysm.
 
 # 03 April 2024
 - Fixed new API changes thanks to @arnvid

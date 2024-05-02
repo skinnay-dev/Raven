@@ -19,7 +19,7 @@ local inCombatBar = {} -- keep track of current settings for in-combat bar
 local overlayPool = {} -- pool of overlays to use for clicking off buffs
 local overlayCount = 0 -- number of allocated overlays
 local gridLayout = {} -- layout info for overlay grid used for in-combat clicking off buffs
-local weaponSlots = { ["MainHandSlot"] = 16, ["SecondaryHandSlot"] = 17 }
+local weaponSlots = { ["MainHandSlot"] = 16, ["SecondaryHandSlot"] = 17, ["RangedSlot"] = 18 }
 local displayWidth, displayHeight = UIParent:GetWidth(), UIParent:GetHeight()
 
 local overlayDefaults = { -- backdrop initialization for overlay grid
@@ -115,6 +115,7 @@ local function Overlay_OnEnter(b)
 				local slotid = b.aura_id
 				if slotid == "MainHandSlot" then slotid = 16 end
 				if slotid == "SecondaryHandSlot" then slotid = 17 end
+				if slotid == "RangedSlot" then slotid = 18 end
 				if (slotid == 16) or (slotid == 17) then GameTooltip:SetInventoryItem("player", slotid) end
 			end
 		elseif b.aura_tt == "buff" then
