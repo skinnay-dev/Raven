@@ -704,10 +704,17 @@ function MOD:UpdateConditions()
 		stat.inInstance = false; stat.inArena = false; stat.inBattleground = false end
 	stat.isResting = IsResting()
 	stat.isMounted = CheckMounted()
+
 	if MOD.ExpansionIsOrAbove(LE_EXPANSION_MISTS_OF_PANDARIA) then
-		stat.inVehicle = UnitHasVehicleUI("player")
 		stat.specialization = GetSpecialization()
+	elseif MOD.ExpansionIsOrAbove(LE_EXPANSION_CATACLYSM) then
+		stat.specialization = GetPrimaryTalentTree()
 	end
+
+	if MOD.ExpansionIsOrAbove(LE_EXPANSION_WRATH_OF_THE_LICH_KING) then
+		stat.inVehicle = UnitHasVehicleUI("player")
+	end
+
 	stat.isPvP = UnitIsPVP("player")
 	stat.isStealthed = IsStealthed()
 	stat.level = UnitLevel("player")

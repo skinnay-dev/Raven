@@ -1,3 +1,7 @@
+# 13 May 2024
+- Restored support for specialization tests in Cataclysm.
+- Restored support for hiding bar groups while in a vehicle in Cataclysm.
+
 # 02 May 2024
 - Added Cataclysm TOCs.
 - Fixed issues with Tooltip API.
