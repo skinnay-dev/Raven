@@ -25,7 +25,6 @@ local MOD = Raven
 local SHIM = MOD.SHIM
 local L = LibStub("AceLocale-3.0"):GetLocale("Raven")
 local LSPELL = MOD.LocalSpellNames
-local getSpellInfo = GetSpellInfo
 
 local dispelTypes = {} -- table of debuff types that the character can dispel
 local spellColors = {} -- table of default spell colors
@@ -167,14 +166,14 @@ function MOD:SetSpellDefaults()
 	local id = maxSpellID
 	while id > 1 do -- find the highest actual spell id by scanning down from a really big number
 		id = id - 1
-		local n = getSpellInfo(id)
+		local n = SHIM:GetSpellInfo(id)
 		if n then break end
 	end
 	maxSpellID = id + 1
 
 	for id, hex in pairs(MOD.defaultColors) do -- add spell colors with localized names to the profile
 		local c = MOD.HexColor(hex) -- convert from hex coded string
-		local name = getSpellInfo(id) -- get localized name from the spell id
+		local name = SHIM:GetSpellInfo(id) -- get localized name from the spell id
 		if name and c then MOD.DefaultProfile.global.SpellColors[name] = c end-- sets default color in the shared color table
 	end
 
@@ -191,7 +190,7 @@ function MOD:SetSpellDefaults()
 
 	if MOD.myClass == "DEATHKNIGHT" then -- localize rune spell names
 		local t = {}
-		for k, p in pairs(MOD.runeSpells) do if p.id then local name = getSpellInfo(p.id); if name and name ~= "" then t[name] = p end end end
+		for k, p in pairs(MOD.runeSpells) do if p.id then local name = SHIM:GetSpellInfo(p.id); if name and name ~= "" then t[name] = p end end end
 		MOD.runeSpells = t
 	end
 
@@ -227,26 +226,26 @@ function MOD:SetCooldownDefaults()
 	end
 
 	for _, p in pairs(MOD.lockSpells) do -- add in all known spells from the table of spells used to test for lockouts
-		local name = getSpellInfo(p.id)
+		local name = SHIM:GetSpellInfo(p.id)
 		if name and name ~= "" then cls[name] = { school = p.school, id = p.id } end
 	end
 
 	local openTabs = 3 -- on live first two tabs are open to all specializations and the third is current spec
-	openTabs = GetNumSpellTabs()
+	openTabs = SHIM:GetNumSpellTabs()
 
 	for tab = 1, openTabs do -- scan first two tabs of player spell book (general and current spec) for player spells on cooldown
-		local spellLine, spellIcon, offset, numSpells = GetSpellTabInfo(tab)
+		local spellLine, spellIcon, offset, numSpells = SHIM:GetSpellTabInfo(tab)
 		for i = 1, numSpells do
 			local index = i + offset
-			local spellName = GetSpellBookItemName(index, book)
+			local spellName = SHIM:GetSpellBookItemName(index, book)
 			if not spellName then
 				break
 			end
 
-			local stype, id = GetSpellBookItemInfo(index, book)
+			local stype, id = SHIM:GetSpellBookItemInfo(index, book)
 			if id then -- Only index valid spells
 				if stype == "SPELL" then -- in this case, id is not always the spell id despite what online docs say
-					local name, _, icon, _, _, _, spellID = getSpellInfo(index, book)
+					local name, _, icon, _, _, _, spellID = SHIM:GetSpellInfo(index, book)
 					if name and name ~= "" and icon and spellID and not IsPassiveSpell(spellID) then -- don't index passive spells as they have no cooldown
 						bst[name] = spellID
 						iconCache[name] = icon
@@ -280,7 +279,7 @@ function MOD:SetCooldownDefaults()
 						for slot = 1, numSlots do
 							local spellID, _, _, name = GetFlyoutSlotInfo(id, slot)
 							if spellID then
-								local name, _, icon = getSpellInfo(spellID)
+								local name, _, icon = SHIM:GetSpellInfo(spellID)
 								if name and name ~= "" and icon then -- make sure we have a valid spell
 									bst[name] = spellID
 									iconCache[name] = icon
@@ -297,18 +296,18 @@ function MOD:SetCooldownDefaults()
 		end
 	end
 
-	local tabs = GetNumSpellTabs()
+	local tabs = SHIM:GetNumSpellTabs()
 	if tabs and tabs > 3 then
 		for tab = 4, tabs do -- scan inactive tabs of player spell book for icons
-			local spellLine, spellIcon, offset, numSpells = GetSpellTabInfo(tab)
+			local spellLine, spellIcon, offset, numSpells = SHIM:GetSpellTabInfo(tab)
 			for i = 1, numSpells do
 				local index = i + offset
-				local spellName = GetSpellBookItemName(index, book)
+				local spellName = SHIM:GetSpellBookItemName(index, book)
 				if not spellName then break end
-				local stype, id = GetSpellBookItemInfo(index, book)
+				local stype, id = SHIM:GetSpellBookItemInfo(index, book)
 				if id then -- make sure valid spell book item
 					if stype == "SPELL" then -- in this case, id is not the spell id despite what online docs say
-						local name, _, icon = getSpellInfo(index, book)
+						local name, _, icon = SHIM:GetSpellInfo(index, book)
 						if name and name ~= "" and icon then iconCache[name] = icon end
 					elseif stype == "FLYOUT" then -- in this case, id is flyout id
 						local _, _, numSlots, known = GetFlyoutInfo(id)
@@ -316,7 +315,7 @@ function MOD:SetCooldownDefaults()
 							for slot = 1, numSlots do
 								local spellID, _, _, name = GetFlyoutSlotInfo(id, slot)
 								if spellID then
-									local name, _, icon = getSpellInfo(spellID)
+									local name, _, icon = SHIM:GetSpellInfo(spellID)
 									if name and name ~= "" and icon then iconCache[name] = icon end
 								end
 							end
@@ -334,9 +333,9 @@ function MOD:SetCooldownDefaults()
 			if p[index] then
 				local prof, _, _, _, numSpells, offset = GetProfessionInfo(p[index])
 				for i = 1, numSpells do
-					local stype = GetSpellBookItemInfo(i + offset, book)
+					local stype = SHIM:GetSpellBookItemInfo(i + offset, book)
 					if stype == "SPELL" then
-						local name, _, icon, _, _, _, spellID = getSpellInfo(i + offset, book)
+						local name, _, icon, _, _, _, spellID = SHIM:GetSpellInfo(i + offset, book)
 						if name and name ~= "" and icon and spellID then -- make sure valid spell
 							bst[name] = spellID
 							iconCache[name] = icon
@@ -349,14 +348,14 @@ function MOD:SetCooldownDefaults()
 		end
 	end
 
-	local numSpells, token = HasPetSpells() -- get number of pet spells
+	local numSpells, token = SHIM:HasPetSpells() -- get number of pet spells
 
 	if numSpells and UnitExists("pet") then -- this works because SPELLS_CHANGED fires when pets are called and dismissed
 		book = "pet" -- switch to scanning the spellbook for pet spells with cooldowns, no need to look for charges
 		for i = 1, numSpells do
-			local stype, id = GetSpellBookItemInfo(i, book) -- verify this is a pet action
+			local stype, id = SHIM:GetSpellBookItemInfo(i, book) -- verify this is a pet action
 			if stype == "PETACTION" then
-				local name, _, icon, _, _, _, spellID = getSpellInfo(i, book)
+				local name, _, icon, _, _, _, spellID = SHIM:GetSpellInfo(i, book)
 				if name and name ~= "" and icon and spellID then
 					iconCache[name] = icon
 					local duration = GetSpellBaseCooldown(spellID) -- duration is in milliseconds
@@ -391,14 +390,14 @@ function MOD:SetCooldownDefaults()
 		MOD:RegisterCooldownDefault(190456, 11)
 	end
 
-	iconCache[L["GCD"]] = GetSpellTexture(61304) -- cache special spell with GCD cooldown, must be valid
+	iconCache[L["GCD"]] = SHIM:GetSpellTexture(61304) -- cache special spell with GCD cooldown, must be valid
 
 	-- local function getn(t) local count = 0; if t then for _ in pairs(t) do count = count + 1 end end return count end
 	-- local function getl(t) local count = 0; if t then for k, v in pairs(t) do if v.index then count = count + 1 end end end return count end
 	-- MOD.Debug("spell and icon caches, cooldowns: ", getn(cds), " charges: ", getn(chs), " pet: ", getn(cpet), " locks: ", getl(cls), " icons: ", getn(iconCache))
-	-- for k, v in pairs(cds) do local name = getSpellInfo(k); MOD.Debug("cooldown", name, k, v) end
-	-- for k, v in pairs(chs) do local name = getSpellInfo(k); MOD.Debug("charge", name, k, v) end
-	-- for k, v in pairs(cpet) do local name = getSpellInfo(k); MOD.Debug("pet", name, k, v) end
+	-- for k, v in pairs(cds) do local name = SHIM:GetSpellInfo(k); MOD.Debug("cooldown", name, k, v) end
+	-- for k, v in pairs(chs) do local name = SHIM:GetSpellInfo(k); MOD.Debug("charge", name, k, v) end
+	-- for k, v in pairs(cpet) do local name = SHIM:GetSpellInfo(k); MOD.Debug("pet", name, k, v) end
 	-- for k, v in pairs(cls) do if v.index then MOD.Debug("lock", k, v.index, v.label) end end
 	-- for k, v in pairs(iconCache) do MOD.Debug("icons", k, v) end
 end
@@ -414,7 +413,7 @@ function MOD:RegisterCooldownDefaultBySpellID(spellID)
 end
 
 function MOD:RegisterCooldownDefault(spellID, cooldown)
-	local name = getSpellInfo(spellID)
+	local name = SHIM:GetSpellInfo(spellID)
 
 	if not name then
 		return
@@ -429,12 +428,12 @@ end
 function MOD:SetInternalCooldownDefaults()
 	local ict = MOD.DefaultProfile.global.InternalCooldowns
 	for _, cd in pairs(MOD.internalCooldowns) do
-		local name, _, icon = getSpellInfo(cd.id)
+		local name, _, icon = SHIM:GetSpellInfo(cd.id)
 		if name and (name ~= "") and icon and (not ict[name] or not cd.item or SHIM:IsUsableItem(cd.item)) then
 			local t = { id = cd.id, duration = cd.duration, icon = icon, item = cd.item, class = cd.class }
 			if cd.cancel then
 				t.cancel = {}
-				for k, c in pairs(cd.cancel) do local n = getSpellInfo(c); if n and n ~= "" then t.cancel[k] = n end end
+				for k, c in pairs(cd.cancel) do local n = SHIM:GetSpellInfo(c); if n and n ~= "" then t.cancel[k] = n end end
 			end
 			ict[name] = t
 		end
@@ -447,11 +446,11 @@ end
 function MOD:SetSpellEffectDefaults()
 	local ect = MOD.DefaultProfile.global.SpellEffects
 	for _, ec in pairs(MOD.spellEffects) do
-		local name, _, icon = getSpellInfo(ec.id)
+		local name, _, icon = SHIM:GetSpellInfo(ec.id)
 		if name and name ~= "" then
 			local id, spell, talent = ec.id, nil, nil
-			if ec.spell then spell = getSpellInfo(ec.spell); id = ec.spell end -- must be valid
-			if ec.talent then talent = getSpellInfo(ec.talent) end -- must be valid
+			if ec.spell then spell = SHIM:GetSpellInfo(ec.spell); id = ec.spell end -- must be valid
+			if ec.talent then talent = SHIM:GetSpellInfo(ec.talent) end -- must be valid
 			local t = { duration = ec.duration, icon = icon, spell = spell, id = id, renew = ec.renew, talent = talent, kind = ec.kind }
 			ect[name] = t
 		end
@@ -611,7 +610,7 @@ function MOD:GetSpellID(name)
 	local id = spellIDs[name]
 	if id then
 		if (id == 0) then return nil end -- only scan invalid ones once in a session
-		if (name ~= getSpellInfo(id)) then id = nil end -- verify it is still valid
+		if (name ~= SHIM:GetSpellInfo(id)) then id = nil end -- verify it is still valid
 	end
 	if not id and not InCombatLockdown() then -- disallow the search when in combat due to script time limit
 		local sid = 1 -- scan all possible spell ids (time consuming so cache the result)
@@ -619,7 +618,7 @@ function MOD:GetSpellID(name)
 		while sid < maxSpellID do -- determined during initialization
 			sid = sid + 1
 			if not badSpellIDs[sid] then -- bogus spell ids that trigger a (recoverable) crash report in Shadowlands beta
-				if (name == getSpellInfo(sid)) then -- found the name!
+				if (name == SHIM:GetSpellInfo(sid)) then -- found the name!
 					spellIDs[name] = sid -- remember valid spell name and id pairs
 					return sid
 				end
@@ -644,17 +643,17 @@ function MOD:GetIcon(name, spellID)
 
 	local id = nil -- next check if the name is a numeric spell id (with or without preceding # sign)
 	if string.find(name, "^#%d+") then id = tonumber(string.sub(name, 2)) else id = tonumber(name) end
-	if id then return GetSpellTexture(id) end -- found what is supposed to be a spell id number
+	if id then return SHIM:GetSpellTexture(id) end -- found what is supposed to be a spell id number
 
 	local tex = iconCache[name] -- check the in-memory icon cache which is initialized from player's spell book
 	if not tex then -- if not found then try to look it up through spell API
-		tex = GetSpellTexture(name)
+		tex = SHIM:GetSpellTexture(name)
 		if tex and tex ~= "" then
 			iconCache[name] = tex -- only cache textures found by looking up the name
 		else
 			id = spellID or MOD:GetSpellID(name)
 			if id then
-				tex = GetSpellTexture(id) -- then try based on id
+				tex = SHIM:GetSpellTexture(id) -- then try based on id
 				if tex == "" then tex = nil end
 			end
 		end
@@ -727,7 +726,7 @@ function MOD:GetLabel(name, spellID)
 	if not label and name and string.find(name, "^#%d+") then
 		local id = tonumber(string.sub(name, 2))
 		if id then
-			local t = getSpellInfo(id)
+			local t = SHIM:GetSpellInfo(id)
 			if t then label = t .. " (" .. name .. ")" end -- special case format: spellname (#spellid)
 		end
 	end
@@ -801,37 +800,37 @@ end
 
 -- Get localized names for all spells used internally or in built-in conditions, spell ids must be valid
 function MOD:SetSpellNameDefaults()
-	LSPELL["Freezing Trap"] = getSpellInfo(1499)
-	LSPELL["Ice Trap"] = getSpellInfo(13809)
-	LSPELL["Immolation Trap"] = getSpellInfo(13795)
-	LSPELL["Explosive Trap"] = getSpellInfo(13813)
-	LSPELL["Black Arrow"] = getSpellInfo(3674)
-	LSPELL["Frost Shock"] = getSpellInfo(8056)
-	LSPELL["Flame Shock"] = getSpellInfo(8050)
-	LSPELL["Earth Shock"] = getSpellInfo(8042)
-	LSPELL["Defensive Stance"] = getSpellInfo(71)
-	LSPELL["Berserker Stance"] = getSpellInfo(2458)
-	LSPELL["Battle Stance"] = getSpellInfo(2457)
-	LSPELL["Battle Shout"] = getSpellInfo(6673)
-	LSPELL["Commanding Shout"] = getSpellInfo(469)
-	LSPELL["Flight Form"] = getSpellInfo(33943)
-	LSPELL["Swift Flight Form"] = getSpellInfo(40120)
-	LSPELL["Earthliving Weapon"] = getSpellInfo(51730)
-	LSPELL["Flametongue Weapon"] = getSpellInfo(8024)
-	LSPELL["Frostbrand Weapon"] = getSpellInfo(8033)
-	LSPELL["Rockbiter Weapon"] = getSpellInfo(8017)
-	LSPELL["Windfury Weapon"] = getSpellInfo(8232)
-	LSPELL["Crusader Strike"] = getSpellInfo(35395)
-	LSPELL["Hammer of the Righteous"] = getSpellInfo(53595)
-	LSPELL["Combustion"] = getSpellInfo(83853)
-	LSPELL["Pyroblast"] = getSpellInfo(11366)
-	LSPELL["Living Bomb"] = getSpellInfo(44457)
-	LSPELL["Ignite"] = getSpellInfo(12654)
+	LSPELL["Freezing Trap"] = SHIM:GetSpellInfo(1499)
+	LSPELL["Ice Trap"] = SHIM:GetSpellInfo(13809)
+	LSPELL["Immolation Trap"] = SHIM:GetSpellInfo(13795)
+	LSPELL["Explosive Trap"] = SHIM:GetSpellInfo(13813)
+	LSPELL["Black Arrow"] = SHIM:GetSpellInfo(3674)
+	LSPELL["Frost Shock"] = SHIM:GetSpellInfo(8056)
+	LSPELL["Flame Shock"] = SHIM:GetSpellInfo(8050)
+	LSPELL["Earth Shock"] = SHIM:GetSpellInfo(8042)
+	LSPELL["Defensive Stance"] = SHIM:GetSpellInfo(71)
+	LSPELL["Berserker Stance"] = SHIM:GetSpellInfo(2458)
+	LSPELL["Battle Stance"] = SHIM:GetSpellInfo(2457)
+	LSPELL["Battle Shout"] = SHIM:GetSpellInfo(6673)
+	LSPELL["Commanding Shout"] = SHIM:GetSpellInfo(469)
+	LSPELL["Flight Form"] = SHIM:GetSpellInfo(33943)
+	LSPELL["Swift Flight Form"] = SHIM:GetSpellInfo(40120)
+	LSPELL["Earthliving Weapon"] = SHIM:GetSpellInfo(51730)
+	LSPELL["Flametongue Weapon"] = SHIM:GetSpellInfo(8024)
+	LSPELL["Frostbrand Weapon"] = SHIM:GetSpellInfo(8033)
+	LSPELL["Rockbiter Weapon"] = SHIM:GetSpellInfo(8017)
+	LSPELL["Windfury Weapon"] = SHIM:GetSpellInfo(8232)
+	LSPELL["Crusader Strike"] = SHIM:GetSpellInfo(35395)
+	LSPELL["Hammer of the Righteous"] = SHIM:GetSpellInfo(53595)
+	LSPELL["Combustion"] = SHIM:GetSpellInfo(83853)
+	LSPELL["Pyroblast"] = SHIM:GetSpellInfo(11366)
+	LSPELL["Living Bomb"] = SHIM:GetSpellInfo(44457)
+	LSPELL["Ignite"] = SHIM:GetSpellInfo(12654)
 end
 
 -- Check if a spell id is available to the player (i.e., in the active spell book)
 local function RavenCheckSpellKnown(spellID)
-	local name = getSpellInfo(spellID)
+	local name = SHIM:GetSpellInfo(spellID)
 	if not name or name == "" then return false end
 	return MOD.bookSpells[name]
 end
@@ -931,7 +930,7 @@ function MOD:RegisterBarGroupFilter(bgName, list, spell)
 	elseif list == "Cooldown" then listName = "filterCooldownList" end
 
 	local id = tonumber(spell) -- convert to spell name if provided a number
-	if id then spell = getSpellInfo(id); if spell == "" then spell = nil end end
+	if id then spell = SHIM:GetSpellInfo(id); if spell == "" then spell = nil end end
 
 	if bgName and listName and spell then
 		local bg = MOD.db.profile.BarGroups[bgName]
@@ -953,10 +952,10 @@ function MOD:RegisterSpellList(name, spellList, reset)
 	for _, spell in pairs(spellList) do
 		local n, id = spell, tonumber(spell) -- convert to spell name if provided a number
 		if string.find(n, "^#%d+") then
-			id = tonumber(string.sub(n, 2)); if id and getSpellInfo(id) == "" then id = nil end -- support #12345 format for spell ids
+			id = tonumber(string.sub(n, 2)); if id and SHIM:GetSpellInfo(id) == "" then id = nil end -- support #12345 format for spell ids
 		else
 			if id then -- otherwise look up the id
-				n = getSpellInfo(id)
+				n = SHIM:GetSpellInfo(id)
 				if n == "" then n = nil end -- make sure valid return
 			else
 				id = MOD:GetSpellID(n)

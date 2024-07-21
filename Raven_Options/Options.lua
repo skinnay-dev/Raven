@@ -10375,7 +10375,7 @@ MOD.OptionsTable = {
 											set = function(info, value) SetTestField("Player Status", "checkEssence", value) end,
 										},
 										EssenceRange = {
-											type = "range", order = 3, name = "", min = 1, max = 5, step = 1,
+											type = "range", order = 3, name = "", min = 1, max = 6, step = 1,
 											disabled = function(info) return IsTestFieldOff("Player Status", "checkEssence") end,
 											get = function(info) return GetTestField("Player Status", "minEssence") end,
 											set = function(info, value) SetTestField("Player Status", "minEssence", value) end,

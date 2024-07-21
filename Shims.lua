@@ -82,3 +82,138 @@ function SHIM:IsUsableItem(item)
 
 	return IsUsableItem(item)
 end
+
+function SHIM:GetSpellInfo(spellID)
+    if _G.C_Spell.GetSpellInfo ~= nil then
+        local info = C_Spell.GetSpellInfo(spellID)
+
+        if info == nil then
+            return nil
+        end
+
+        return info.name,
+            nil, -- rank
+            info.iconID,
+            info.castTime,
+            info.minRange,
+            info.maxRange,
+            info.spellID
+    end
+
+    return GetSpellInfo(spellID)
+end
+
+function SHIM:GetNumSpellTabs()
+    if _G.C_SpellBook.GetNumSpellBookSkillLines ~= nil then
+        return C_SpellBook.GetNumSpellBookSkillLines()
+    end
+
+    return GetNumSpellTabs()
+end
+
+function SHIM:GetSpellTabInfo(tabIndex)
+    if _G.C_SpellBook.GetSpellBookSkillLineInfo ~= nil then
+        local info = C_SpellBook.GetSpellBookSkillLineInfo(tabIndex)
+
+        return info.name,
+            info.iconID,
+            info.itemIndexOffset,
+            info.numSpellBookItems,
+            info.isGuild,
+            info.shouldHide,
+            info.specID,
+            info.offSpecID
+    end
+
+    return GetSpellTabInfo(tabIndex)
+end
+
+function SHIM:GetSpellBookItemName(index, bookType)
+    if _G.C_SpellBook.GetSpellBookItemName ~= nil then
+        if bookType == "spell" then
+            bookType = Enum.SpellBookSpellBank.Player
+        elseif bookType == "pet" then
+            bookType = Enum.SpellBookSpellBank.Pet
+        end
+
+        return C_SpellBook.GetSpellBookItemName(index, bookType)
+    end
+
+    return GetSpellBookItemName(index, bookType)
+end
+
+function SHIM:GetSpellBookItemInfo(index, bookType)
+    if _G.C_SpellBook.GetSpellBookItemInfo ~= nil then
+        if bookType == "spell" then
+            bookType = Enum.SpellBookSpellBank.Player
+        elseif bookType == "pet" then
+            bookType = Enum.SpellBookSpellBank.Pet
+        end
+
+        local info = C_SpellBook.GetSpellBookItemInfo(index, bookType)
+
+        return info.itemType, info.spellID
+    end
+
+    return GetSpellBookItemInfo(index, bookType)
+end
+
+function SHIM:HasPetSpells()
+    if _G.C_SpellBook.HasPetSpells ~= nil then
+        return C_SpellBook.HasPetSpells()
+    end
+
+    return HasPetSpells()
+end
+
+function SHIM:GetSpellTexture(spellID)
+    if _G.GetSpellTexture == nil then
+        local info = C_Spell.GetSpellInfo(spellID)
+
+        if info == nil then
+            return nil
+        end
+
+        return info.iconID
+    end
+
+    return GetSpellTexture(spellID)
+end
+
+function SHIM:GetSpellCooldown(spellID)
+    if _G.C_Spell.GetSpellCooldown ~= nil then
+        local info = C_Spell.GetSpellCooldown(spellID)
+
+        if info == nil then
+            return nil
+        end
+
+        return info.startTime,
+            info.duration,
+            info.isEnabled,
+            info.modRate
+    end
+
+    return GetSpellCooldown(spellID)
+end
+
+function SHIM:GetSpellBookItemCooldown(index, spellBank)
+    if _G.C_Spell.GetSpellBookItemCooldown ~= nil then
+        if (spellBank == "spell") then
+            spellBank = Enum.SpellBookSpellBank.Player
+        end
+
+        local info = C_Spell.GetSpellBookItemCooldown(index, spellBank)
+
+        if info == nil then
+            return nil
+        end
+
+        return info.startTime,
+            info.duration,
+            info.isEnabled,
+            info.modRate
+    end
+
+    return GetSpellCooldown(index, spellBank)
+end

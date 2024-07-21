@@ -1754,7 +1754,7 @@ local function CheckSharedCooldowns(b, bp)
 	if MOD.myClass == "WARLOCK" then
 		if bp.detectSharedGrimoires then
 			if id == 111895 or id == 111896 or id == 111897 or id == 111898 then return false end
-			if id == 111859 then b.barLabel = GetSpellInfo(216187); return true end
+			if id == 111859 then b.barLabel = SHIM:GetSpellInfo(216187); return true end
 		end
 		if bp.detectSharedInfernals then
 			if id == 18540 then return false end
