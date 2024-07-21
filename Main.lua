@@ -1092,7 +1092,6 @@ local function InitializeTalents()
                     if (entryInfo.definitionID)  then
                         definitionInfo = C_Traits.GetDefinitionInfo(entryInfo.definitionID)
                         name, rank, icon = SHIM:GetSpellInfo(definitionInfo.spellID)
-MOD.Debug(name)
                         if name then
                             local talentActive;
 
@@ -2044,7 +2043,7 @@ function MOD:CheckSpellStatus(name, usable, ready)
 
 			if spellID then -- spell is known by the player
 				if usable then
-					result = not IsPassiveSpell(spellID) and IsUsableSpell(name) -- check non-passive and has resources
+					result = SHIM:IsUsableSpell(name) -- check has resources
 				else
 					result = true
 				end

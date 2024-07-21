@@ -655,7 +655,7 @@ local function ValueTooltip(unit, fmt, spell, position)
 		local id = nil
 		if string.find(spell, "^#%d+") then id = tonumber(string.sub(spell, 2)) else id = tonumber(spell) end
 		if not id then id = MOD:GetSpellID(spell) end
-		local name, _, icon, _, _, _, spellID = GetSpellInfo(id)
+		local name, _, icon, _, _, _, spellID = SHIM:GetSpellInfo(id)
 		if name and name ~= "" then
 			local s = MOD:GetTooltipNumber("spell id", spellID, nil, tonumber(position))
 			local c = MOD:GetColor(name, spellID)

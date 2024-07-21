@@ -152,7 +152,7 @@ function SHIM:GetSpellBookItemInfo(index, bookType)
 
         local info = C_SpellBook.GetSpellBookItemInfo(index, bookType)
 
-        return info.itemType, info.spellID
+        return info.itemType, info.spellID, info.isPassive
     end
 
     return GetSpellBookItemInfo(index, bookType)
@@ -216,4 +216,12 @@ function SHIM:GetSpellBookItemCooldown(index, spellBank)
     end
 
     return GetSpellCooldown(index, spellBank)
+end
+
+function SHIM:IsUsableSpell(spell)
+    if _G.C_Spell.IsSpellUsable ~= nil then
+        return C_Spell.IsSpellUsable(spell)
+    end
+
+    return IsUsableSpell(spell)
 end
