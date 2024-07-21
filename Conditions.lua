@@ -175,7 +175,7 @@ local function CheckSpellReady(spell, unit, usable, checkCharges, charges)
 	end
 	if usable and not MOD:CheckSpellStatus(spell, true) then return false end -- checks player has learned the spell, has mana and/or reagents, and reactive conditions are met
 	if IsOn(checkCharges) then -- optionally check for remaining spell charges (can't count on the value of cd if not on cooldown)
-		local n = GetSpellCharges(spell) -- this has to be done separate from cooldown check in order to correctly handle the check for "less than"
+		local n = SHIM:GetSpellChargesByID(spell) -- this has to be done separate from cooldown check in order to correctly handle the check for "less than"
 		if not n then n = 0 end
 		if not charges then charges = 1 end -- set to default value used in options panel
 		if checkCharges == true then if n >= charges then return false end else if n < charges then return false end end

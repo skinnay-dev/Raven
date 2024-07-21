@@ -2233,7 +2233,7 @@ function MOD:UpdateCooldowns()
 		for spellID in pairs(MOD.chargeSpells) do -- check all player spells with charges
 			local name, _, icon = SHIM:GetSpellInfo(spellID)
 			if name and name ~= "" and icon then -- make sure we have a valid spell name
-				local count, charges, start, duration = GetSpellCharges(spellID)
+				local count, charges, start, duration = SHIM:GetSpellChargesByID(spellID)
 				if count and charges and count < charges then
 					if start and start > 0 and duration and duration > 1.5 then -- don't include global cooldowns
 						if (MOD.myClass ~= "DEATHKNIGHT") or CheckRuneCooldown(name, duration) then -- if death knight check rune cooldown

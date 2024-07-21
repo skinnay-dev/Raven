@@ -249,7 +249,7 @@ function MOD:SetCooldownDefaults()
 					if name and name ~= "" and icon and spellID and not isPassive then -- don't index passive spells as they have no cooldown
 						bst[name] = spellID
 						iconCache[name] = icon
-						local _, charges = GetSpellCharges(index, book)
+						local _, charges = SHIM:GetSpellCharges(index, book)
 
 						if charges and charges > 0 then
 							chs[spellID] = charges

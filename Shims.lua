@@ -238,3 +238,19 @@ function SHIM:IsUsableSpell(spell)
 
     return IsUsableSpell(spell)
 end
+
+function SHIM:GetSpellCharges(index, book)
+    if _G.C_Spell.GetSpellCharges ~= nil then
+        return C_Spell.GetSpellCharges(index, book)
+    end
+
+    return GetSpellCharges(index, book)
+end
+
+function SHIM:GetSpellChargesByID(spellID)
+    if _G.C_Spell.GetSpellCharges ~= nil then
+        return C_Spell.GetSpellCharges(spellID)
+    end
+
+    return GetSpellCharges(spellID)
+end
