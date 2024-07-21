@@ -152,7 +152,20 @@ function SHIM:GetSpellBookItemInfo(index, bookType)
 
         local info = C_SpellBook.GetSpellBookItemInfo(index, bookType)
 
-        return info.itemType, info.spellID, info.isPassive
+        local itemType = "UNKNOWN"
+        if info.itemType == Enum.SpellBookItemType.Spell then
+            itemType = "SPELL"
+        elseif info.itemType == Enum.SpellBookItemType.None then
+            itemType = "NONE"
+        elseif info.itemType == Enum.SpellBookItemType.Flyout then
+            itemType = "FLYOUT"
+        elseif info.itemType == Enum.SpellBookItemType.FutureSpell then
+            itemType = "FUTURESPELL"
+        elseif info.itemType == Enum.SpellBookItemType.PetAction then
+            itemType = "PETACTION"
+        end
+
+        return itemType, info.spellID, info.isPassive
     end
 
     return GetSpellBookItemInfo(index, bookType)
