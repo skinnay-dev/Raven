@@ -307,7 +307,7 @@ function MOD:SetCooldownDefaults()
 				local stype, id = SHIM:GetSpellBookItemInfo(index, book)
 				if id then -- make sure valid spell book item
 					if stype == "SPELL" then -- in this case, id is not the spell id despite what online docs say
-						local name, _, icon = SHIM:GetSpellInfo(index, book)
+						local name, _, icon = SHIM:GetSpellInfo(id)
 						if name and name ~= "" and icon then iconCache[name] = icon end
 					elseif stype == "FLYOUT" then -- in this case, id is flyout id
 						local _, _, numSlots, known = GetFlyoutInfo(id)
@@ -355,7 +355,7 @@ function MOD:SetCooldownDefaults()
 		for i = 1, numSpells do
 			local stype, id = SHIM:GetSpellBookItemInfo(i, book) -- verify this is a pet action
 			if stype == "PETACTION" then
-				local name, _, icon, _, _, _, spellID = SHIM:GetSpellInfo(i, book)
+				local name, _, icon, _, _, _, spellID = SHIM:GetSpellInfo(id)
 				if name and name ~= "" and icon and spellID then
 					iconCache[name] = icon
 					local duration = GetSpellBaseCooldown(spellID) -- duration is in milliseconds
