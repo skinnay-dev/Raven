@@ -245,7 +245,7 @@ function MOD:SetCooldownDefaults()
 			local stype, id, isPassive = SHIM:GetSpellBookItemInfo(index, book)
 			if id then -- Only index valid spells
 				if stype == "SPELL" then -- in this case, id is not always the spell id despite what online docs say
-					local name, _, icon, _, _, _, spellID = SHIM:GetSpellInfo(index, book)
+					local name, _, icon, _, _, _, spellID = SHIM:GetSpellInfo(id)
 					if name and name ~= "" and icon and spellID and not isPassive then -- don't index passive spells as they have no cooldown
 						bst[name] = spellID
 						iconCache[name] = icon
