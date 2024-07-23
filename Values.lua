@@ -655,7 +655,7 @@ local function ValueTooltip(unit, fmt, spell, position)
 		local id = nil
 		if string.find(spell, "^#%d+") then id = tonumber(string.sub(spell, 2)) else id = tonumber(spell) end
 		if not id then id = MOD:GetSpellID(spell) end
-		local name, _, icon, _, _, _, spellID = GetSpellInfo(id)
+		local name, _, icon, _, _, _, spellID = SHIM:GetSpellInfo(id)
 		if name and name ~= "" then
 			local s = MOD:GetTooltipNumber("spell id", spellID, nil, tonumber(position))
 			local c = MOD:GetColor(name, spellID)
@@ -752,38 +752,38 @@ function MOD:InitializeValues()
 	startTime = GetTime()
 	scanTooltip = CreateFrame("GameTooltip", "Puffin_ScanTip", nil, "GameTooltipTemplate")
 	scanTooltip:SetOwner(UIParent, "ANCHOR_NONE")
-	mirrorIcons = { BREATH = GetSpellTexture(5697), DEATH = GetSpellTexture(10848), EXHAUSTION = GetSpellTexture(9256), FEIGNDEATH = GetSpellTexture(5384) }
-	iconXP = GetItemIcon(122270)
-	iconRested = GetItemIcon(10940)
-	iconMail = GetItemIcon(9555)
-	iconClock = GetItemIcon(134376)
-	iconCurrency = GetSpellTexture(2481)
-	iconLatency = GetSpellTexture(2006)
-	iconFramerate = GetItemIcon(12947)
-	iconMap = GetItemIcon(4851)
-	iconMapX = GetSpellTexture(87219) or iconMap
-	iconMapY = GetSpellTexture(74922) or iconMap
-	iconArrow = GetItemIcon(11104)
-	iconLevel = GetItemIcon(8545)
-	iconHealth = GetSpellTexture(150554) or GetItemIcon(19711)
-	iconPower = GetSpellTexture(334538) or GetItemIcon(19714)
-	iconCombo = GetItemIcon(16040)
-	iconChi = GetSpellTexture(179126) or iconPower
-	iconArcaneCharge = GetSpellTexture(190427)
-	iconSoulShard = GetSpellTexture(138556)
+	mirrorIcons = { BREATH = SHIM:GetSpellTexture(5697), DEATH = SHIM:GetSpellTexture(10848), EXHAUSTION = SHIM:GetSpellTexture(9256), FEIGNDEATH = SHIM:GetSpellTexture(5384) }
+	iconXP = SHIM:GetItemIconByID(122270)
+	iconRested = SHIM:GetItemIconByID(10940)
+	iconMail = SHIM:GetItemIconByID(9555)
+	iconClock = SHIM:GetItemIconByID(134376)
+	iconCurrency = SHIM:GetSpellTexture(2481)
+	iconLatency = SHIM:GetSpellTexture(2006)
+	iconFramerate = SHIM:GetItemIconByID(12947)
+	iconMap = SHIM:GetItemIconByID(4851)
+	iconMapX = SHIM:GetSpellTexture(87219) or iconMap
+	iconMapY = SHIM:GetSpellTexture(74922) or iconMap
+	iconArrow = SHIM:GetItemIconByID(11104)
+	iconLevel = SHIM:GetItemIconByID(8545)
+	iconHealth = SHIM:GetSpellTexture(150554) or SHIM:GetItemIconByID(19711)
+	iconPower = SHIM:GetSpellTexture(334538) or SHIM:GetItemIconByID(19714)
+	iconCombo = SHIM:GetItemIconByID(16040)
+	iconChi = SHIM:GetSpellTexture(179126) or iconPower
+	iconArcaneCharge = SHIM:GetSpellTexture(190427)
+	iconSoulShard = SHIM:GetSpellTexture(138556)
 	iconRune = [[Interface\PlayerFrame\UI-PlayerFrame-Deathknight-SingleRune]]
-	iconHeals = GetSpellTexture(25297)
-	iconAbsorb = GetSpellTexture(5102)
-	iconStagger = GetSpellTexture(25750)
-	iconThreat = GetSpellTexture(26658)
-	iconDurability = GetItemIcon(14387)
-	iconAzerite = GetItemIcon(1706)
-	iconCombat = GetSpellTexture(674)
-	iconHonor = GetItemIcon(20560)
-	iconHonorHorde = GetItemIcon(21438)
-	iconHonorAlliance = GetItemIcon(21436)
-	iconReputation = GetItemIcon(20077)
-	iconClassification = GetItemIcon(17442)
+	iconHeals = SHIM:GetSpellTexture(25297)
+	iconAbsorb = SHIM:GetSpellTexture(5102)
+	iconStagger = SHIM:GetSpellTexture(25750)
+	iconThreat = SHIM:GetSpellTexture(26658)
+	iconDurability = SHIM:GetItemIconByID(14387)
+	iconAzerite = SHIM:GetItemIconByID(1706)
+	iconCombat = SHIM:GetSpellTexture(674)
+	iconHonor = SHIM:GetItemIconByID(20560)
+	iconHonorHorde = SHIM:GetItemIconByID(21438)
+	iconHonorAlliance = SHIM:GetItemIconByID(21436)
+	iconReputation = SHIM:GetItemIconByID(20077)
+	iconClassification = SHIM:GetItemIconByID(17442)
 	iconResting = [[Interface\Addons\Raven\Icons\ZZZ.tga]]
 end
 

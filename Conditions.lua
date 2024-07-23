@@ -170,12 +170,12 @@ local function CheckSpellReady(spell, unit, usable, checkCharges, charges)
 	if not spell or (spell == "") then return true end
 	if string.find(spell, "^#%d+") then -- check if name is in special format for specific spell id (i.e., #12345)
 		local id = tonumber(string.sub(spell, 2)) -- extract the spell id and get the name
-		spell = GetSpellInfo(id)
+		spell = SHIM:GetSpellInfo(id)
 		if not spell or (spell == "") then return false end
 	end
 	if usable and not MOD:CheckSpellStatus(spell, true) then return false end -- checks player has learned the spell, has mana and/or reagents, and reactive conditions are met
 	if IsOn(checkCharges) then -- optionally check for remaining spell charges (can't count on the value of cd if not on cooldown)
-		local n = GetSpellCharges(spell) -- this has to be done separate from cooldown check in order to correctly handle the check for "less than"
+		local n = SHIM:GetSpellChargesByID(spell) -- this has to be done separate from cooldown check in order to correctly handle the check for "less than"
 		if not n then n = 0 end
 		if not charges then charges = 1 end -- set to default value used in options panel
 		if checkCharges == true then if n >= charges then return false end else if n < charges then return false end end
@@ -245,7 +245,7 @@ local function CheckAuras(unit, auras, hasAll, isMine, buff, toggle)
 		local auraList = MOD:CheckAura(unit, aname, buff)
 		if #auraList > 0 then
 			for _, aura in pairs(auraList) do
-				if IsOff(isMine) or (isMine == (aura[6] == "player")) then -- check cast by setting
+				if (buff == false or aura[11] == "buff") and (IsOff(isMine) or (isMine == (aura[6] == "player"))) then -- check cast by setting
 					found = true -- found at least one of the auras
 					foundThis = true -- found this particular aura
 				end
@@ -321,7 +321,7 @@ end
 -- Return whether the specified talent (either spell name or spell id) is active in current spec
 function MOD.CheckTalent(talent)
 	local id = tonumber(talent)
-	if id then talent = GetSpellInfo(id); if talent == "" then talent = nil end end -- translate spell id
+	if id then talent = SHIM:GetSpellInfo(id); if talent == "" then talent = nil end end -- translate spell id
 	if talent then
 		local t = MOD.talents[talent]
 		if t and t.active then return true end
@@ -399,7 +399,7 @@ end
 local function CheckPetSpec(spec)
 	if not spec then spec = "none" end
 	local currentName = "none"
-	local ferocity = GetSpellInfo(4154) -- hack workaround to localize Ferocity, fingers crossed it works in all languages, spell id must be valid
+	local ferocity = SHIM:GetSpellInfo(4154) -- hack workaround to localize Ferocity, fingers crossed it works in all languages, spell id must be valid
 	if UnitExists("pet") then currentName = GetPetTalentTree() or ((MOD.myClass == "HUNTER") and ferocity) or "none" end
 	return spec == currentName
 end
@@ -863,7 +863,7 @@ end
 local function GetLocalizedSpellName(field)
 	if not field then return nil end
 	local id, name = tonumber(field), field
-	if id then name = GetSpellInfo(id); if name == "" then name = nil end end
+	if id then name = SHIM:GetSpellInfo(id); if name == "" then name = nil end end
 	return name
 end
 
