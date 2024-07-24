@@ -152,6 +152,10 @@ function SHIM:GetSpellBookItemInfo(index, bookType)
 
         local info = C_SpellBook.GetSpellBookItemInfo(index, bookType)
 
+        if info == nil then
+            return nil
+        end
+
         local itemType = "UNKNOWN"
         if info.itemType == Enum.SpellBookItemType.Spell then
             itemType = "SPELL"
@@ -168,10 +172,7 @@ function SHIM:GetSpellBookItemInfo(index, bookType)
         return itemType, info.spellID, info.isPassive
     end
 
-    local itemType, spellID = GetSpellBookItemInfo(index, bookType)
-    local isPassive = IsPassiveSpell(index, bookType)
-
-    return itemType, spellID, isPassive
+    return GetSpellBookItemInfo(index, bookType)
 end
 
 function SHIM:HasPetSpells()
@@ -204,9 +205,14 @@ function SHIM:GetSpellCooldown(spellID)
             return nil
         end
 
+        local isEnabled = 1
+        if not info.isEnabled then
+            isEnabled = 0
+        end
+
         return info.startTime,
             info.duration,
-            info.isEnabled,
+            isEnabled,
             info.modRate
     end
 
@@ -244,7 +250,17 @@ end
 
 function SHIM:GetSpellCharges(index, book)
     if _G.C_Spell.GetSpellCharges ~= nil then
-        return C_Spell.GetSpellCharges(index, book)
+        local info = C_Spell.GetSpellCharges(index, book)
+
+        if info == nil then
+            return nil
+        end
+
+        return info.currentCharges,
+            info.maxCharges,
+            info.cooldownStartTime,
+            info.cooldownDuration,
+            info.chargeModRate
     end
 
     return GetSpellCharges(index, book)
@@ -252,7 +268,17 @@ end
 
 function SHIM:GetSpellChargesByID(spellID)
     if _G.C_Spell.GetSpellCharges ~= nil then
-        return C_Spell.GetSpellCharges(spellID)
+        local info = C_Spell.GetSpellCharges(spellID)
+
+        if info == nil then
+            return nil
+        end
+
+        return info.currentCharges,
+            info.maxCharges,
+            info.cooldownStartTime,
+            info.cooldownDuration,
+            info.chargeModRate
     end
 
     return GetSpellCharges(spellID)
