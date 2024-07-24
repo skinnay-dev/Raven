@@ -168,7 +168,10 @@ function SHIM:GetSpellBookItemInfo(index, bookType)
         return itemType, info.spellID, info.isPassive
     end
 
-    return GetSpellBookItemInfo(index, bookType)
+    local itemType, spellID = GetSpellBookItemInfo(index, bookType)
+    local isPassive = IsPassiveSpell(index, bookType)
+
+    return itemType, spellID, isPassive
 end
 
 function SHIM:HasPetSpells()

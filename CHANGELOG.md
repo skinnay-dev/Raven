@@ -1,3 +1,9 @@
+# 24 July 2024
+- Various bugfixes for The War Within.
+
+# 23 July 2024
+- Fixed various new API changes for The War Within
+
 # 13 May 2024
 - Restored support for specialization tests in Cataclysm.
 - Restored support for hiding bar groups while in a vehicle in Cataclysm.
