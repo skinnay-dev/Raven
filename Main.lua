@@ -1585,9 +1585,6 @@ local function GetWeaponBuffs()
 			mainHandBuff = GetWeaponBuffNameOld(invSlot)
 		end
 
-		local name, rank, icon, castTime, minRange, maxRange
-			= SHIM:GetSpellInfo(spellId or spellName or spellLink)
-
 		if not mainHandBuff then -- if tooltip scan fails then use fallback of weapon name or slot name
 			local weaponLink = GetInventoryItemLink("player", invSlot)
 			if weaponLink then mainHandBuff = SHIM:GetItemInfo(weaponLink) end
@@ -2040,7 +2037,6 @@ function MOD:CheckSpellStatus(name, usable, ready)
 		if id then name = SHIM:GetSpellInfo(id) end -- may need to convert from spell id to name
 		if name and name ~= "" then
 			local spellID = MOD.bookSpells[name]
-
 			if spellID then -- spell is known by the player
 				if usable then
 					result = SHIM:IsUsableSpell(name) -- check has resources
