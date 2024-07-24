@@ -8,6 +8,7 @@
 ## SavedVariables: RavenDB
 
 ## X-WoWI-ID: 18242
+## X-Curse-Project-ID: 25068
 
 #@no-lib-strip@
 embeds.xml
