@@ -157,19 +157,28 @@ function SHIM:GetSpellBookItemInfo(index, bookType)
         end
 
         local itemType = "UNKNOWN"
-        if info.itemType == Enum.SpellBookItemType.Spell then
-            itemType = "SPELL"
-        elseif info.itemType == Enum.SpellBookItemType.None then
-            itemType = "NONE"
-        elseif info.itemType == Enum.SpellBookItemType.Flyout then
-            itemType = "FLYOUT"
-        elseif info.itemType == Enum.SpellBookItemType.FutureSpell then
-            itemType = "FUTURESPELL"
-        elseif info.itemType == Enum.SpellBookItemType.PetAction then
+        local spellID
+
+        if info.itemType == Enum.SpellBookItemType.PetAction then
             itemType = "PETACTION"
+
+            -- For whatever reason spellBookItemInfo has a different key for spellIDs... 🤦‍♂️
+            spellID = info.actionID
+        else
+            spellID = info.spellID
+
+            if info.itemType == Enum.SpellBookItemType.Spell then
+                itemType = "SPELL"
+            elseif info.itemType == Enum.SpellBookItemType.None then
+                itemType = "NONE"
+            elseif info.itemType == Enum.SpellBookItemType.Flyout then
+                itemType = "FLYOUT"
+            elseif info.itemType == Enum.SpellBookItemType.FutureSpell then
+                itemType = "FUTURESPELL"
+            end
         end
 
-        return itemType, info.spellID, info.isPassive
+        return itemType, spellID, info.isPassive
     end
 
     return GetSpellBookItemInfo(index, bookType)
