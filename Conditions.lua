@@ -177,8 +177,17 @@ local function CheckSpellReady(spell, unit, usable, checkCharges, charges)
 	if IsOn(checkCharges) then -- optionally check for remaining spell charges (can't count on the value of cd if not on cooldown)
 		local n = SHIM:GetSpellChargesByID(spell) -- this has to be done separate from cooldown check in order to correctly handle the check for "less than"
 		if not n then n = 0 end
-		if not charges then charges = 1 end -- set to default value used in options panel
-		if checkCharges == true then if n >= charges then return false end else if n < charges then return false end end
+		if not charges then
+            charges = 1 -- set to default value used in options panel
+        end
+		if checkCharges == true then
+            if n >= charges then
+                return false
+            end
+            else if n < charges then
+                return false
+            end
+        end
 	else
 		local cd = MOD:CheckCooldown(spell) -- checks if spell is on cooldown (note this should correctly ignore DK rune cooldowns)
 		if cd and ((cd[4] ~= nil) and (not cd[9] or cd[9] == 0)) then return false end -- verify is on cooldown and has a valid duration and no charges remaining
