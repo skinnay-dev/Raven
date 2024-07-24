@@ -31,7 +31,7 @@ jobs:
 
     # specify the environment variables used by the packager, matching the secrets from the project on GitHub
     env:
-      ## CF_API_KEY: ${{ secrets.CF_API_KEY }}
+      CF_API_KEY: ${{ secrets.CF_API_KEY }}
       WOWI_API_TOKEN: ${{ secrets.WOWI_API_TOKEN }}
       ## WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
       ## GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}  # "GITHUB_TOKEN" is a secret always provided to the workflow
@@ -49,8 +49,6 @@ jobs:
       # once cloned, we just run the GitHub Action for the packager project
       - name: Package and release
         uses: BigWigsMods/packager@v2
-        env:
-          WOWI_API_TOKEN: ${{ secrets.WOWI_API_TOKEN }}
 
 ##      # another example where we supply additional arguments, this example is specifically to release
 ##      # for the Wrath of the Lich King Classic version of the game and doesn't upload to WoWInterface
