@@ -348,11 +348,10 @@ function MOD:SetCooldownDefaults()
 		end
 	end
 
-	local numSpells, token = SHIM:HasPetSpells() -- get number of pet spells
-
-	if numSpells and UnitExists("pet") then -- this works because SPELLS_CHANGED fires when pets are called and dismissed
+	local petSpells = SHIM:HasPetSpells() -- get number of pet spells
+	if petSpells and UnitExists("pet") then -- this works because SPELLS_CHANGED fires when pets are called and dismissed
 		book = "pet" -- switch to scanning the spellbook for pet spells with cooldowns, no need to look for charges
-		for i = 1, numSpells do
+		for i = 1, petSpells do
 			local stype, id = SHIM:GetSpellBookItemInfo(i, book) -- verify this is a pet action
 			if stype == "PETACTION" then
 				local name, _, icon, _, _, _, spellID = SHIM:GetSpellInfo(id)
