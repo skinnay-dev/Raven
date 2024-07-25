@@ -1,3 +1,6 @@
+# 25 July 2024
+- More bugfixes for The War Within.
+
 # 24 July 2024
 - Various bugfixes for The War Within.
 
