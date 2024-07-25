@@ -257,8 +257,14 @@ function SHIM:IsUsableSpell(spell)
 end
 
 function SHIM:GetSpellCharges(index, book)
-    if _G.C_Spell.GetSpellCharges ~= nil then
-        local info = C_Spell.GetSpellCharges(index, book)
+    if _G.C_SpellBook.GetSpellBookItemCharges ~= nil then
+        if book == "spell" then
+            book = Enum.SpellBookSpellBank.Player
+        elseif book == "pet" then
+            book = Enum.SpellBookSpellBank.Pet
+        end
+
+        local info = C_SpellBook.GetSpellBookItemCharges(index, book)
 
         if info == nil then
             return nil
