@@ -1088,36 +1088,42 @@ local function InitializeTalents()
 
 				for _,entryID in pairs(nodeInfo.entryIDs) do
 					entryInfo = C_Traits.GetEntryInfo(activeConfigID, entryID)
+                    if not entryInfo.definitionID then
+                        break
+                    end
 
-                    if (entryInfo.definitionID)  then
-                        definitionInfo = C_Traits.GetDefinitionInfo(entryInfo.definitionID)
-                        name, rank, icon = SHIM:GetSpellInfo(definitionInfo.spellID)
-                        if name then
-                            local talentActive;
+                    definitionInfo = C_Traits.GetDefinitionInfo(entryInfo.definitionID)
+                    if not definitionInfo.spellID then
+                        break
+                    end
 
-                            if bit.band(nodeInfo.flags, 1) == 1 and nodeInfo.entryIDsWithCommittedRanks[1] ~= nil then
-                                talentActive = entryID == nodeInfo.entryIDsWithCommittedRanks[1]
-                            else
-                                talentActive = nodeInfo.currentRank > 0
-                            end
+                    name, rank, icon = SHIM:GetSpellInfo(definitionInfo.spellID)
+                    if name then
+                        local talentActive
 
-                            MOD.talents[name] = {
-                                tab = currentSpec,
-                                icon = icon,
-                                active = talentActive
-                            }
-                            MOD.talentList[select] = name
-                            select = select + 1
+                        if bit.band(nodeInfo.flags, 1) == 1 and nodeInfo.entryIDsWithCommittedRanks[1] ~= nil then
+                            talentActive = entryID == nodeInfo.entryIDsWithCommittedRanks[1]
+                        else
+                            talentActive = nodeInfo.currentRank > 0
                         end
-					end
+
+                        MOD.talents[name] = {
+                            tab = currentSpec,
+                            icon = icon,
+                            active = talentActive
+                        }
+                        MOD.talentList[select] = name
+                        select = select + 1
+                    end
 				end
 			end
 		end
---MOD.Debug(MOD.talentList)
+
 		table.sort(MOD.talentList)
 		for i, t in pairs(MOD.talentList) do
 			MOD.talents[t].select = i
 		end
+
 		MOD.updateDispels = true
 	end
 end
