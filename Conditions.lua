@@ -199,6 +199,9 @@ end
 -- Check if a specified spell is currently being cast or channeled by the unit
 local function CheckSpellCast(spell, unit)
 	if IsOff(unit) or not spell or (spell == "") then return true end
+
+	spell = MOD.spellOverrides[spell] or spell
+
 	local sp = UnitCastingInfo(unit)
 	if (sp ~= nil) and (spell == sp) then return true end
 	sp = UnitChannelInfo(unit)
