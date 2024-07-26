@@ -378,20 +378,10 @@ function MOD:SetCooldownDefaults()
 		-- Power Word: Shield
 		MOD:RegisterCooldownDefault(17, 10)
 	end
-	if MOD.myClass == "WARRIOR" then
-		-- Some warrior cooldowns miss a base cooldown but can gain one through talents or specializations.
-
-		-- Slam gains a cooldown through a talent.
-		-- Also see: https://github.com/Dicebar/Raven/issues/29
-		MOD:RegisterCooldownDefault(1464, 12)
-
-		-- Whirlwind gains a cooldown through a talent.
-		-- Also see: https://github.com/Dicebar/Raven/issues/36
-		MOD:RegisterCooldownDefault(1680, 14)
-
-		-- Ignore pain gains a cooldown when not playing as protection.
-		-- Also see: https://github.com/Dicebar/Raven/issues/39
-		MOD:RegisterCooldownDefault(190456, 11)
+	if MOD.myClass == "PALADIN" then
+		-- Flash of Light can gain a cooldown through the Light's Celerity talent:
+		-- https://www.wowhead.com/spell=403698/lights-celerity
+		MOD:RegisterCooldownDefault(19750, 6)
 	end
 
 	iconCache[L["GCD"]] = SHIM:GetSpellTexture(61304) -- cache special spell with GCD cooldown, must be valid
