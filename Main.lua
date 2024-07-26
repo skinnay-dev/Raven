@@ -67,6 +67,7 @@ MOD.updateDispels = true -- need to update dispel types
 MOD.knownBrokers = {} -- table of registered data brokers
 MOD.brokerList = {} -- table of brokers suitable for a selection list
 MOD.cooldownSpells = {} -- table of spell ids that have a cooldown to track, updated when spellbook changes
+MOD.spellOverrides = {} -- table of overriding spell ids
 MOD.chargeSpells = {} -- table of spell ids with max charges
 MOD.petSpells = {} -- table of pet spell ids with a cooldown to track
 MOD.professionSpells = {} -- table of profession spell ids with a cooldown to track
@@ -2023,40 +2024,54 @@ end
 
 -- Check if the named spell or item is on cooldown, return a cooldown table
 function MOD:CheckCooldown(name)
-	if name and name ~= "" then -- make sure valid name provided, could be spell name, number, or #number
-		local id = nil
-		if string.find(name, "^#%d+") then id = tonumber(string.sub(name, 2)) else id = tonumber(name) end
-		if id then name = SHIM:GetSpellInfo(id) end -- may need to convert from spell id to name
-		if name and name ~= "" then return ValidateCooldown(activeCooldowns[name]) end -- make sure cooldown is still valid
-	end
-	return nil
+    if name and name ~= "" then -- make sure valid name provided, could be spell name, number, or #number
+        local id = nil
+        if string.find(name, "^#%d+") then id = tonumber(string.sub(name, 2)) else id = tonumber(name) end
+        if id then name = SHIM:GetSpellInfo(id) end -- may need to convert from spell id to name
+        if name and name ~= "" then
+            name = MOD.spellOverrides[name] or name
+
+            -- make sure cooldown is still valid
+            return ValidateCooldown(activeCooldowns[name])
+        end
+    end
+    return nil
 end
 
 -- Check if name is a spell in the spell book and, therefore, known to the player
 -- If usable is true then verify it is not passive and has sufficient resources (e.g., mana, insanity, soul shards)
 -- If ready is true then make sure it is not on cooldown or out of charges
 function MOD:CheckSpellStatus(name, usable, ready)
-	local result = false
-	if name and name ~= "" then -- make sure valid name provided, could be spell name, number, or #number
-		local id = nil
-		if string.find(name, "^#%d+") then id = tonumber(string.sub(name, 2)) else id = tonumber(name) end
-		if id then name = SHIM:GetSpellInfo(id) end -- may need to convert from spell id to name
-		if name and name ~= "" then
-			local spellID = MOD.bookSpells[name]
-			if spellID then -- spell is known by the player
-				if usable then
-					result = SHIM:IsUsableSpell(name) -- check has resources
-				else
-					result = true
-				end
-			end
-		end
-	end
-	if result and ready then
-		local cd = ValidateCooldown(activeCooldowns[name]) -- look up in the active cooldowns table
-		result = not cd or (cd[1] == nil) or (cd[4] == nil) or (cd[9] and cd[9] > 0) -- check if ready
-	end
-	return result
+    local result = false
+    if name and name ~= "" then -- make sure valid name provided, could be spell name, number, or #number
+        local id = nil
+        if string.find(name, "^#%d+") then id = tonumber(string.sub(name, 2)) else id = tonumber(name) end
+        if id then name = SHIM:GetSpellInfo(id) end -- may need to convert from spell id to name
+        if name and name ~= "" then
+            if MOD.spellOverrides[name] then
+                name = MOD.spellOverrides[name]
+            end
+
+            local spellID = MOD.bookSpells[name]
+            if spellID then -- spell is known by the player
+                if usable then
+                    result = SHIM:IsUsableSpell(name) -- check has resources
+                else
+                    result = true
+                end
+            end
+        end
+    end
+
+    if result and ready then
+        name = MOD.spellOverrides[name] or name
+
+        local spellID = MOD.bookSpells[name]
+        local cd = ValidateCooldown(activeCooldowns[name]) -- look up in the active cooldowns table
+        result = not cd or (cd[1] == nil) or (cd[4] == nil) or (cd[9] and cd[9] > 0) -- check if ready
+    end
+
+    return result
 end
 
 -- Iterate over current cooldowns, calling the function with cooldown name, cooldown table, and optional parameters

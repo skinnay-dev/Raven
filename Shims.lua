@@ -169,10 +169,15 @@ function SHIM:GetSpellBookItemInfo(index, bookType)
             itemType = "FUTURESPELL"
         elseif info.itemType == Enum.SpellBookItemType.PetAction then
             itemType = "PETACTION"
-            spellID = bit.band(0xFFFFFF, spellID)
+            spellID = bit.band(0xFFFFFF, info.actionID)
         end
 
-        return itemType, spellID, info.isPassive
+        local spellOverrideID
+        if info.spellID ~= nil and info.spellID ~= spellID then
+            spellOverrideID = info.spellID
+        end
+
+        return itemType, spellID, info.isPassive, spellOverrideID
     end
 
     local itemType, spellID = GetSpellBookItemInfo(index, bookType)
