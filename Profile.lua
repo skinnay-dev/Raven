@@ -217,6 +217,7 @@ function MOD:SetCooldownDefaults()
 	table.wipe(cpet) -- pet cooldown spells should be reset each time the tables are rebuilt
 	table.wipe(cls) -- lockout spells should be completely reset each time the tables are rebuilt
 	table.wipe(bst) -- table of all spell names and ids in spell book (player and profession only)
+	table.wipe(MOD.spellOverrides) -- table of all overridden spells
 
 	-- Only remove special spells which show up dynamically in player's cooldown spells
 	if MOD.myClass == "HUNTER" then

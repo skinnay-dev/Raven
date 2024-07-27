@@ -1,3 +1,6 @@
+# 27 July 2024
+- More bugfixes for The War Within.
+
 # 25 July 2024
 - More bugfixes for The War Within.
 - Added support for cooldowns on Paladins' Flash of Light spell.
