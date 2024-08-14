@@ -1,3 +1,6 @@
+# 14 August 2024
+- Fixed namespace changes. 
+
 # 27 July 2024
 - More bugfixes for The War Within.
 
