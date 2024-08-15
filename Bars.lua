@@ -1774,7 +1774,7 @@ local function AutoRuneBars(bp, vbp, bg)
 		table.wipe(b); b.enableBar = true; b.sorder = 0
 		b.action = L["Rune"]; b.spellID = nil; b.barLabel = runeSlotPrefix[i] .. b.action
 		b.barType = "Cooldown"; b.uniqueID = "Cooldown"; b.group = nil
-		local icon = GetSpellTexture(207321) -- icon for Spell Eater
+		local icon = SHIM:GetSpellTexture(207321) -- icon for Spell Eater
 		if rune.ready then -- generate ready bar with no duration
 			if CheckTimeAndDuration(bp, 0, 0) then
 				UpdateBar(bp, vbp, bg, b, icon, 0, 0, nil, nil, "text", b.action, nil, nil, true)

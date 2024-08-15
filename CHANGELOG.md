@@ -1,3 +1,6 @@
+# 15 August 2024
+- Fixed namespace bugs for Raven_Options.
+
 # 14 August 2024
 - Fixed namespace changes. 
 

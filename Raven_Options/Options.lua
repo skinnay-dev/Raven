@@ -5,6 +5,8 @@
 -- current settings, bar groups, conditions, etc.
 
 local MOD = Raven
+local SHIM = MOD.SHIM
+
 local acereg = LibStub("AceConfigRegistry-3.0")
 local acedia = LibStub("AceConfigDialog-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("Raven")
@@ -73,17 +75,17 @@ end
 local function ValidateSpellName(name, allowPlusIDs, warnings)
 	if not name or (name == "") then return nil end
 	if allowPlusIDs then
-		if string.find(name, "^#%d+") then local id = tonumber(string.sub(name, 2)); if id and GetSpellTexture(id) then return name end return nil end
+		if string.find(name, "^#%d+") then local id = tonumber(string.sub(name, 2)); if id and SHIM:GetSpellTexture(id) then return name end return nil end
 	end
 	local t = tonumber(name)
 	if t then
-		name = GetSpellInfo(t) -- convert spell id to a name
+		name = SHIM:GetSpellTexture(t) -- convert spell id to a name
 		if name == "" then name = nil end
 	else
 		local found, _, idString = string.find(name, "^|c%x+|Hspell:(.+)|h%[.*%]")
-		if found then local id = tonumber(idString); if id then name = GetSpellInfo(id); if name == "" then name = nil end end end -- convert hyperlink
+		if found then local id = tonumber(idString); if id then name = SHIM:GetSpellInfo(id); if name == "" then name = nil end end end -- convert hyperlink
 	end
-	if name and not (GetSpellTexture(name) or MOD:GetSpellID(name)) then -- check if spell icon available and if not fall back to spell id search
+	if name and not (SHIM:GetSpellTexture(name) or MOD:GetSpellID(name)) then -- check if spell icon available and if not fall back to spell id search
 		if (warnings == true) or ((warnings == nil) and MOD.db.profile.spellDebug) then print(L["Not valid string"](name)); return nil end
 	end
 	return name
@@ -1355,7 +1357,7 @@ local function AddNewInternalCooldown(name)
 	local id = tonumber(name)
 	if not id then id = MOD:GetSpellID(name) end
 	if id then
-		local n, _, icon = GetSpellInfo(id) -- n must be valid
+		local n, _, icon = SHIM:GetSpellInfo(id) -- n must be valid
 		local ict = MOD.db.global.InternalCooldowns[n]
 		if not ict then
 			ict = { duration = 0; id = id; icon = icon }
@@ -1388,7 +1390,7 @@ local function GetListTable(t, listType)
 		start = nexts + 1
 	until start > string.len(s)
 	if listType == "spells" then
-		for k, v in pairs(spells) do local n = tonumber(v); if n then v = GetSpellInfo(n); spells[k] = v end end -- translate ids, must be valid
+		for k, v in pairs(spells) do local n = tonumber(v); if n then v = SHIM:GetSpellInfo(n); spells[k] = v end end -- translate ids, must be valid
 	elseif listType == "strings" then
 		for k, v in pairs(spells) do spells[k] = v end
 	end
@@ -1480,7 +1482,7 @@ local function AddNewSpellEffect(name)
 	local id = tonumber(name)
 	if not id then id = MOD:GetSpellID(name) end
 	if id then
-		local n, _, icon = GetSpellInfo(id) -- must be valid
+		local n, _, icon = SHIM:GetSpellInfo(id) -- must be valid
 		local ect = MOD.db.global.SpellEffects[n]
 		if not ect then
 			ect = { duration = 0; id = id; icon = icon }
