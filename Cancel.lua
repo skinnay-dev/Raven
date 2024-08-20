@@ -122,7 +122,7 @@ local function Overlay_OnEnter(b)
 			if not MOD:GetAuraData("player", b.aura_id, "HELPFUL") then return end
 			GameTooltip:SetUnitAura("player", b.aura_id, "HELPFUL")
 		elseif b.aura_tt == "spell name" then
-			local auraList = MOD:CheckAuras("player", b.aura_id, true)
+			local auraList = MOD:CheckAura("player", b.aura_id, true)
 			if #auraList > 0 then local aura = auraList[1]; GameTooltip:SetUnitAura("player", aura[12], "HELPFUL") end
 		end
 		if IsControlKeyDown() then

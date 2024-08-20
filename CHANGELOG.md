@@ -1,3 +1,6 @@
+# 20 August 204
+- Fixed an error in aura cancellation (thanks Road-Block for providing the fix!)
+
 # 15 August 2024
 - Fixed namespace bugs for Raven_Options.
 
