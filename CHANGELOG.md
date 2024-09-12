@@ -1,4 +1,7 @@
-# 20 August 204
+# 12 September 2024
+- Fixed the mounted condition not recognizing druids' flight and travel forms.
+
+# 20 August 2024
 - Fixed an error in aura cancellation (thanks Road-Block for providing the fix!)
 
 # 15 August 2024

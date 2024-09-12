@@ -348,8 +348,12 @@ local function CheckMounted()
 	if MOD.myClass == "DRUID" then
 		local form = GetShapeshiftForm(true)
 		if form ~= 0 then
-			local _, fname = GetShapeshiftFormInfo(form)
-			flying = (fname == LSPELL["Flight Form"]) or (fname == LSPELL["Swift Flight Form"])
+			if MOD.isClassic then
+				local _, fname = GetShapeshiftFormInfo(form)
+				flying = (fname == LSPELL["Flight Form"]) or (fname == LSPELL["Swift Flight Form"])
+			else
+				flying = form == 3
+			end
 		end
 	end
 	return IsMounted() or flying
