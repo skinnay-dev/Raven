@@ -115,6 +115,10 @@ function SHIM:GetSpellTabInfo(tabIndex)
     if _G.C_SpellBook.GetSpellBookSkillLineInfo ~= nil then
         local info = C_SpellBook.GetSpellBookSkillLineInfo(tabIndex)
 
+        if info == nil then
+            return nil
+        end
+
         return info.name,
             info.iconID,
             info.itemIndexOffset,

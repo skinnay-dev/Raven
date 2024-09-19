@@ -1,3 +1,6 @@
+# 19 September 2024
+- Fixed a bug with empty spellbook tabs.
+
 # 12 September 2024
 - Fixed the mounted condition not recognizing druids' flight and travel forms.
 
