@@ -92,8 +92,30 @@ local function ValidateSpellName(name, allowPlusIDs, warnings)
 end
 
 -- Return a sorted list suitable for an input selection widget
-local function GetSortedList(list) local i, t = 0, {}; if list then for n in pairs(list) do i = i + 1; t[i] = n end end; table.sort(t); return t end
-local function GetSortedListEntry(list, n) for i, k in pairs(GetSortedList(list)) do if n == k then return i end end return nil end
+local function GetSortedList(list)
+    local i, t = 0, {};
+
+    if list then
+        for n in pairs(list) do
+            i = i + 1
+            t[i] = tostring(n) -- Pure digits are stored as an int. Force to string to prevent lua errors.
+        end
+    end
+
+    table.sort(t)
+
+    return t
+end
+
+local function GetSortedListEntry(list, n)
+    for i, k in pairs(GetSortedList(list)) do
+        if n == k then
+            return i
+        end
+    end
+
+    return nil
+end
 
 local function CheckListEntry(list, n)
 	if n then return n end
