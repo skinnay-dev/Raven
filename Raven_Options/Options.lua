@@ -79,7 +79,7 @@ local function ValidateSpellName(name, allowPlusIDs, warnings)
 	end
 	local t = tonumber(name)
 	if t then
-		name = SHIM:GetSpellTexture(t) -- convert spell id to a name
+		name = SHIM:GetSpellInfo(t) -- convert spell id to a name
 		if name == "" then name = nil end
 	else
 		local found, _, idString = string.find(name, "^|c%x+|Hspell:(.+)|h%[.*%]")

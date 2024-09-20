@@ -1,3 +1,6 @@
+# 20 September 2024
+- Fixed bug with identifying spells by spell ID.
+
 # 19 September 2024
 - Fixed a bug with empty spellbook tabs.
 - Fixed a bug where spell list entries with just integers caused the spell list to become inaccessible. 
