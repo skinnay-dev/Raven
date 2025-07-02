@@ -33,7 +33,8 @@ local optionsFailed = false -- set if loading the option panel module failed
 MOD.isVanilla = LE_EXPANSION_LEVEL_CURRENT == 0;
 MOD.isWrath = LE_EXPANSION_LEVEL_CURRENT == LE_EXPANSION_WRATH_OF_THE_LICH_KING
 MOD.isCata = LE_EXPANSION_LEVEL_CURRENT == LE_EXPANSION_CATACLYSM
-MOD.isClassic = MOD.isWrath or MOD.isVanilla or MOD.isCata
+MOD.isMists = LE_EXPANSION_LEVEL_CURRENT == LE_EXPANSION_MISTS_OF_PANDARIA
+MOD.isClassic = MOD.isWrath or MOD.isVanilla or MOD.isCata or MOD.isMists
 MOD.isModernUI = LE_EXPANSION_LEVEL_CURRENT >= LE_EXPANSION_DRAGONFLIGHT
 
 function MOD.ExpansionIsOrAbove(exp)
@@ -1064,12 +1065,12 @@ end
 
 -- Create cache of talent info
 local function InitializeTalents()
-	if not MOD.ExpansionIsOrAbove(LE_EXPANSION_MISTS_OF_PANDARIA) then talentsInitialized = true; return end -- not supported in classic
+	if not MOD.ExpansionIsOrAbove(LE_EXPANSION_SHADOWLANDS) then talentsInitialized = true; return end -- not supported in classic
 
 	local tabs = GetNumSpecializations(false, false)
 	if tabs == 0 then return end
 
-	local currentSpec = GetSpecialization()
+	local currentSpec = SHIM:GetSpecialization()
 	talentsInitialized = true;
 	doUpdate = true
 

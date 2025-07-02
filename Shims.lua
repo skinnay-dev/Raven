@@ -306,3 +306,23 @@ function SHIM:GetSpellChargesByID(spellID)
 
     return GetSpellCharges(spellID)
 end
+
+function SHIM:GetSpecialization()
+    if _G.GetSpecialization then
+        return _G.GetSpecialization()
+    elseif C_SpecializationInfo and C_SpecializationInfo.GetSpecialization then
+        return C_SpecializationInfo.GetSpecialization()
+    elseif _G.GetPrimaryTalentTree then
+        return _G.GetPrimaryTalentTree()
+    end
+
+    return 1
+end
+
+function SHIM:GetSpecializationInfo(specIndex)
+    if _G.C_SpecializationInfo.GetSpecializationInfo ~= nil then
+        return C_SpecializationInfo.GetSpecialization(specIndex)
+    end
+
+    return GetSpecializationInfo(specIndex)
+end

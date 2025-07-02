@@ -394,7 +394,7 @@ end
 function MOD.CheckSpec(spec, specList)
 	local stat = MOD.status
 	local currentSpec = stat.specialization
-	local currentName = currentSpec and (MOD.ExpansionIsOrAbove(LE_EXPANSION_MISTS_OF_PANDARIA) and select(2, GetSpecializationInfo(currentSpec))) or "none"
+	local currentName = currentSpec and (MOD.ExpansionIsOrAbove(LE_EXPANSION_MISTS_OF_PANDARIA) and select(2, SHIM:GetSpecializationInfo(currentSpec))) or "none"
 	if specList then
 		for _, name in pairs(specList) do
 			local id = tonumber(name)
@@ -723,7 +723,7 @@ function MOD:UpdateConditions()
 	stat.isMounted = CheckMounted()
 
 	if MOD.ExpansionIsOrAbove(LE_EXPANSION_MISTS_OF_PANDARIA) then
-		stat.specialization = GetSpecialization()
+		stat.specialization = SHIM:GetSpecialization()
 	elseif MOD.ExpansionIsOrAbove(LE_EXPANSION_CATACLYSM) then
 		stat.specialization = GetPrimaryTalentTree()
 	end

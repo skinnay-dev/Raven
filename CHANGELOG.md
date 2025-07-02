@@ -1,3 +1,6 @@
+# 2 July 2025
+- Added support for Mists of Pandaria Classic.
+
 # 20 September 2024
 - Fixed bug with identifying spells by spell ID.
 
