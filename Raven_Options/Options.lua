@@ -3711,10 +3711,16 @@ MOD.OptionsTable = {
 									set = function(info, value) MOD.db.global.SpellAlerts.showArena = value end,
 								},
 								ShowInRaid = {
-									type = "toggle", order = 11, name = L["In Raid"], width = "half",
-									desc = L["Show spell alerts when player is in a raid group."],
+									type = "toggle", order = 11, name = L["In Raid > 5"], width = "half",
+									desc = L["Show spell alerts when player is in a raid group with greater than 5 members."],
 									get = function(info) return MOD.db.global.SpellAlerts.showRaid end,
 									set = function(info, value) MOD.db.global.SpellAlerts.showRaid = value end,
+								},
+								ShowInRaid5 = {
+									type = "toggle", order = 11, name = L["In Raid <= 5)"], width = "half",
+									desc = L["Show spell alerts when player is in a raid group with 5 members or less."],
+									get = function(info) return MOD.db.global.SpellAlerts.showRaid5 end,
+									set = function(info, value) MOD.db.global.SpellAlerts.showRaid5 = value end,
 								},
 								ShowInParty = {
 									type = "toggle", order = 12, name = L["In Party"], width = "half",
@@ -5230,6 +5236,12 @@ MOD.OptionsTable = {
 									desc = L["If checked, bar group is shown when the player is in a raid."],
 									get = function(info) return GetBarGroupField("showRaid") end,
 									set = function(info, value) SetBarGroupField("showRaid", value) end,
+								},
+								RaidGroup5 = {
+									type = "toggle", order = 32, name = L["In Raid (<5 members)"],
+									desc = L["If checked, bar group is shown when the player is in a raid that has less than 5 members."],
+									get = function(info) return GetBarGroupField("showRaid5") end,
+									set = function(info, value) SetBarGroupField("showRaid5", value) end,
 								},
 								BattlegroundGroup = {
 									type = "toggle", order = 33, name = L["In Battleground"],

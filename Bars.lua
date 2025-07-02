@@ -76,7 +76,7 @@ MOD.BarGroupTemplate = { -- default bar group settings
 	stripeFullWidth = false, stripeWidth = 500, stripeHeight = 30, stripeInset = 0, stripeOffset = 0, stripeTexture = "Blizzard",
 	stripeBarInset = 4, stripeBarOffset = 0, stripeColor = false, stripeAltColor = false, stripeCheckCondition = false, stripeCondition = false,
 	stripeBorderTexture = "None", stripeBorderWidth = 4, stripeBorderOffset = 1, stripeBorderColor = false,
-	showSolo = true, showParty = true, showRaid = true, showCombat = true, showOOC = true, showStealth = true, showFocusTarget = true,
+	showSolo = true, showParty = true, showRaid = true, showRaid5 = true, showCombat = true, showOOC = true, showStealth = true, showFocusTarget = true,
 	showInstance = true, showNotInstance = true, showArena = true, showBattleground = true, showPetBattle = false, showOnTaxi = true, showSpecialization = "",
 	showResting = true, showMounted = true, showVehicle = true, showFriend = true, showEnemy = true, showNeutral = true, showBlizz = true, showNotBlizz = true,
 	detectBuffs = false, detectDebuffs = false, detectAllBuffs = false, detectAllDebuffs = false,
@@ -1859,10 +1859,18 @@ end
 -- Each condition (e.g., "in combat") is checked and if true then that condition must be enabled for the bar group
 local function CheckShow(bp)
 	local stat, pst = MOD.status, "solo"
-	if GetNumGroupMembers() > 0 then if IsInRaid() then pst = "raid" else pst = "party" end end
+	if GetNumGroupMembers() > 0 and IsInRaid() then 
+        if GetNumGroupMembers() <= 5 then 
+            pst = "raid5" 
+        else 
+            pst = "raid" 
+        end
+    else 
+        pst = "party" 
+    end
 
 	if InCinematic() or (MOD.ExpansionIsOrAbove(LE_EXPANSION_MISTS_OF_PANDARIA) and C_PetBattles.IsInBattle() and not bp.showPetBattle) or (UnitOnTaxi("player") and not bp.showOnTaxi) or
-			(pst == "solo" and not bp.showSolo) or (pst == "party" and not bp.showParty) or (pst == "raid" and not bp.showRaid) or
+			(pst == "solo" and not bp.showSolo) or (pst == "party" and not bp.showParty) or (pst == "raid5" and not bp.showRaid5) or (pst == "raid" and not bp.showRaid) or
 			(stat.inCombat and not bp.showCombat) or (not stat.inCombat and not bp.showOOC) or
 			(not MOD.db.profile.hideBlizz and not bp.showBlizz) or (MOD.db.profile.hideBlizz and not bp.showNotBlizz) or
 			(stat.isResting and not bp.showResting) or (stat.isStealthed and not bp.showStealth) or
