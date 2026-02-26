@@ -369,7 +369,7 @@ local function CheckBlizzFrames()
 	local p = MOD.db.profile
 	HideShow("buffs", _G.BuffFrame, p.hideBlizzBuffs, "buffs")
 
-	if MOD.ExpansionIsOrAbove(LE_EXPANSION_DRAGONFLIGHT) then
+	if MOD.ExpansionIsOrAbove(LE_EXPANSION_DRAGONFLIGHT) or MOD.isTBC then
 		HideShow("debuffs", _G.DebuffFrame, p.hideBlizzDebuffs, "debuffs")
 	end
 
