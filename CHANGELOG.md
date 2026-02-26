@@ -1,3 +1,6 @@
+# 26 February 2026
+- Updated Raven to support TBC Anniversary edition.
+
 # 7 October 2025
 - Resolved issue with bars render frequency.
 
