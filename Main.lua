@@ -31,10 +31,11 @@ local optionsLoaded = false -- set when the load-on-demand options panel module 
 local optionsFailed = false -- set if loading the option panel module failed
 
 MOD.isVanilla = LE_EXPANSION_LEVEL_CURRENT == 0
+MOD.isTBC = LE_EXPANSION_LEVEL_CURRENT == LE_EXPANSION_BURNING_CRUSADE
 MOD.isWrath = LE_EXPANSION_LEVEL_CURRENT == LE_EXPANSION_WRATH_OF_THE_LICH_KING
 MOD.isCata = LE_EXPANSION_LEVEL_CURRENT == LE_EXPANSION_CATACLYSM
 MOD.isMists = LE_EXPANSION_LEVEL_CURRENT == LE_EXPANSION_MISTS_OF_PANDARIA
-MOD.isClassic = MOD.isWrath or MOD.isVanilla or MOD.isCata or MOD.isMists
+MOD.isClassic = MOD.isWrath or MOD.isVanilla or MOD.isCata or MOD.isMists or MOD.isTBC
 MOD.isModernUI = LE_EXPANSION_LEVEL_CURRENT >= LE_EXPANSION_DRAGONFLIGHT
 
 function MOD.ExpansionIsOrAbove(exp)
