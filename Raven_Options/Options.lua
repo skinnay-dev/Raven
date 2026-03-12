@@ -9884,10 +9884,10 @@ MOD.OptionsTable = {
 									name = L["In Raid <= 5"],
 									desc = L["If checked, bar group is shown when the player is in a raid with 5 members or less."],
 									get = function(info)
-										return GetBarGroupField("showRaid")
+										return GetBarGroupField("showRaid5")
 									end,
 									set = function(info, value)
-										SetBarGroupField("showRaid", value)
+										SetBarGroupField("showRaid5", value)
 									end,
 								},
 								BattlegroundGroup = {
